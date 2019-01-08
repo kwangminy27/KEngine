@@ -47,6 +47,17 @@ void K::RenderingManager::Initialize()
 		_CreateShader(BASIC_ANIMATION_2D_SHADER, cso_desc_vector, input_element_desc_vector, SHADER_PATH);
 
 		cso_desc_vector.clear();
+		cso_desc_vector.push_back({ SHADER_TYPE::VERTEX, L"BasicNormalVS.cso" });
+		cso_desc_vector.push_back({ SHADER_TYPE::PIXEL, L"BasicNormalPS.cso" });
+
+		input_element_desc_vector.clear();
+		input_element_desc_vector.push_back({ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+		input_element_desc_vector.push_back({ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+		input_element_desc_vector.push_back({ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+
+		_CreateShader(BASIC_NORMAL_SHADER, cso_desc_vector, input_element_desc_vector, SHADER_PATH);
+
+		cso_desc_vector.clear();
 		cso_desc_vector.push_back({ SHADER_TYPE::VERTEX, L"ColliderVS.cso" });
 		cso_desc_vector.push_back({ SHADER_TYPE::PIXEL, L"ColliderPS.cso" });
 

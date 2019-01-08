@@ -12,6 +12,7 @@ void K::CameraActor::Initialize()
 		auto const& object_manager = ObjectManager::singleton();
 
 		auto transform = object_manager->CreateComponent<Transform>(TAG{ TRANSFORM, 0 });
+		CPTR_CAST<Transform>(transform)->set_local_translation(Vector3{ 0.f, 0.f, -200.f });
 		AddComponent(transform);
 
 		auto camera = object_manager->CreateComponent<Camera>({ CAMERA, 0 });

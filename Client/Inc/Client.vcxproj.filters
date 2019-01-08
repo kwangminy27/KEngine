@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{37ca00aa-57fc-4765-a20f-eb2cbd4a0497}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="1. Level">
+      <UniqueIdentifier>{bf08cd7c-c99e-4e46-886f-96bf8c3faeaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2. Actor">
+      <UniqueIdentifier>{adcadda9-abf3-48cb-9468-62b71f036788}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3. Component">
+      <UniqueIdentifier>{f04265a1-14ad-4f48-b10d-aa69514e9b87}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Client.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="Level\intro_level.h">
+      <Filter>1. Level</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor\player.h">
+      <Filter>2. Actor</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Client.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Level\intro_level.cpp">
+      <Filter>1. Level</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor\player.cpp">
+      <Filter>2. Actor</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

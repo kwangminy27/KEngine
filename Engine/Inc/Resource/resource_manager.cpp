@@ -63,11 +63,86 @@ void K::ResourceManager::Initialize()
 		uint16_t instance_tex_rect_indices[6]{ 0, 1, 2, 1, 3, 2 };
 
 		MatrixTex instance_tex_rect_instances[10000]{};
+
 		_CreateMesh(
 			INSTANCE_TEX_RECT, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
 			instance_tex_rect_vertices, sizeof(VertexTex), 4, D3D11_USAGE_DEFAULT,
 			instance_tex_rect_indices, sizeof(uint16_t), 6, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R16_UINT,
 			instance_tex_rect_instances, sizeof(MatrixTex), 10000, D3D11_USAGE_DYNAMIC
+		);
+
+		// pyramid
+		Vector3 pyramid_position[5]{
+			Vector3{ 0.f, 0.5f, 0.f },
+			Vector3{ -0.5f, -0.5f, 0.5f },
+			Vector3{ 0.5f, -0.5f, 0.5f },
+			Vector3{ 0.5f, -0.5f, -0.5f },
+			Vector3{ -0.5f, -0.5f, -0.5f }
+		};
+
+		Vector3 side_face_normal[4]{};
+		Vector3 edge1{}, edge2{};
+		
+		edge1 = pyramid_position[4] - pyramid_position[0];
+		edge2 = pyramid_position[1] - pyramid_position[0];
+		edge1.Normalize();
+		edge2.Normalize();
+		side_face_normal[0] = edge1.Cross(edge2);
+		side_face_normal[0].Normalize();
+
+		edge1 = pyramid_position[1] - pyramid_position[0];
+		edge2 = pyramid_position[2] - pyramid_position[0];
+		edge1.Normalize();
+		edge2.Normalize();
+		side_face_normal[1] = edge1.Cross(edge2);
+		side_face_normal[1].Normalize();
+
+		edge1 = pyramid_position[2] - pyramid_position[0];
+		edge2 = pyramid_position[3] - pyramid_position[0];
+		edge1.Normalize();
+		edge2.Normalize();
+		side_face_normal[2] = edge1.Cross(edge2);
+		side_face_normal[2].Normalize();
+
+		edge1 = pyramid_position[3] - pyramid_position[0];
+		edge2 = pyramid_position[4] - pyramid_position[0];
+		edge1.Normalize();
+		edge2.Normalize();
+		side_face_normal[3] = edge1.Cross(edge2);
+		side_face_normal[3].Normalize();
+
+		Vector3 pyramid_normal[4]{};
+
+		pyramid_normal[0] = side_face_normal[0] + side_face_normal[1];
+		pyramid_normal[0].Normalize();
+
+		pyramid_normal[1] = side_face_normal[1] + side_face_normal[2];
+		pyramid_normal[1].Normalize();
+
+		pyramid_normal[2] = side_face_normal[2] + side_face_normal[3];
+		pyramid_normal[2].Normalize();
+
+		pyramid_normal[3] = side_face_normal[3] + side_face_normal[0];
+		pyramid_normal[3].Normalize();
+
+		VertexNormalColor pyramid_vertices[9]{
+			VertexNormalColor{ pyramid_position[0], Vector3::UnitY, DirectX::Colors::Red.v },
+			VertexNormalColor{ pyramid_position[1], pyramid_normal[0], DirectX::Colors::Green.v },
+			VertexNormalColor{ pyramid_position[2], pyramid_normal[1], DirectX::Colors::Blue.v },
+			VertexNormalColor{ pyramid_position[3], pyramid_normal[2], DirectX::Colors::Red.v },
+			VertexNormalColor{ pyramid_position[4], pyramid_normal[3], DirectX::Colors::Green.v },
+			VertexNormalColor{ pyramid_position[1], -Vector3::UnitY, DirectX::Colors::Blue.v },
+			VertexNormalColor{ pyramid_position[2], -Vector3::UnitY, DirectX::Colors::Red.v },
+			VertexNormalColor{ pyramid_position[3], -Vector3::UnitY, DirectX::Colors::Green.v },
+			VertexNormalColor{ pyramid_position[4], -Vector3::UnitY, DirectX::Colors::Blue.v }
+		};
+
+		uint16_t pyramid_indices[18]{ 1, 0, 4, 2, 0, 1, 3, 0, 2, 4, 0, 3, 5, 8, 6, 6, 8, 7 };
+
+		_CreateMesh(
+			NORMAL_PYRAMID, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+			pyramid_vertices, sizeof(VertexNormalColor), 9, D3D11_USAGE_DEFAULT,
+			pyramid_indices, sizeof(uint16_t), 18, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R16_UINT
 		);
 #pragma endregion
 

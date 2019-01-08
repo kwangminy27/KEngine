@@ -23,6 +23,7 @@ namespace K
 	constexpr auto COLLIDER_RECT = "ColliderRect";
 	constexpr auto COLLIDER_CIRCLE = "ColliderCircle";
 	constexpr auto INSTANCE_TEX_RECT = "InstanceTexRect";
+	constexpr auto NORMAL_PYRAMID = "NormalPyramid";
 
 	//////////////////// Sampler Key ////////////////////
 	constexpr auto LINEAR_SAMPLER = "LinearSampler";
@@ -31,6 +32,7 @@ namespace K
 	constexpr auto BASIC_SHADER = "BasicShader";
 	constexpr auto BASIC_TEX_SHADER = "BasicTexShader";
 	constexpr auto BASIC_ANIMATION_2D_SHADER = "BasicAnimation2DShader";
+	constexpr auto BASIC_NORMAL_SHADER = "BasicNormalShader";
 	constexpr auto COLLIDER_SHADER = "ColliderShader";
 	constexpr auto INSTANCE_TEX_SHADER = "InstanceTexShader";
 
@@ -39,6 +41,7 @@ namespace K
 	constexpr auto DEPTH_DISABLE = "DepthDisable";
 
 	//////////////////// Common Key ////////////////////
+	constexpr auto BACKGROUND = "Background";
 	constexpr auto DEFAULT = "Default";
 	constexpr auto UI = "UI";
 
@@ -106,6 +109,13 @@ namespace K
 		Vector4 color;
 	};
 
+	struct VertexNormalColor
+	{
+		Vector3 position;
+		Vector3 normal;
+		Vector4 color;
+	};
+
 	struct VertexTex
 	{
 		Vector3 position;
@@ -143,6 +153,20 @@ namespace K
 		std::vector<ANIMATION_2D_FRAME_DESC> frame_vector;
 	};
 
+	struct LIGHT_DESC
+	{
+		int type;
+		Vector4 diffuse;
+		Vector4 ambient;
+		Vector4 specular;
+		Vector3 direction;
+		Vector3 position;
+		float range;
+		float in_angle;
+		float out_angle;
+		Vector2 padding;
+	};
+
 	struct TransformConstantBuffer
 	{
 		Matrix world;
@@ -154,5 +178,8 @@ namespace K
 	struct MaterialConstantBuffer
 	{
 		Vector4 diffuse;
+		Vector4 ambient;
+		Vector4 specular;
+		Vector4 emissive;
 	};
 }

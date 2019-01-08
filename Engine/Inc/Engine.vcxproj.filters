@@ -103,29 +103,32 @@
     <Filter Include="12. Object\1. Actor\2. TileMapActor">
       <UniqueIdentifier>{fcdf7e84-a28a-4768-920c-488e2de21a90}</UniqueIdentifier>
     </Filter>
-    <Filter Include="12. Object\2. Component\1. Transform">
+    <Filter Include="12. Object\2. Component\01. Transform">
       <UniqueIdentifier>{c8d21253-c677-4612-912e-f4f460be1d20}</UniqueIdentifier>
     </Filter>
-    <Filter Include="12. Object\2. Component\2. Camera">
+    <Filter Include="12. Object\2. Component\02. Camera">
       <UniqueIdentifier>{b714b71b-fb23-4cb6-b8fb-230a81c3e9f1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="12. Object\2. Component\3. Text">
+    <Filter Include="12. Object\2. Component\03. Text">
       <UniqueIdentifier>{0f502195-2aef-4cf3-87a4-df9f697e96d3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="12. Object\2. Component\4. Material">
+    <Filter Include="12. Object\2. Component\04. Material">
       <UniqueIdentifier>{19408bfa-94bd-4c80-8205-5bb2f5338aa0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="12. Object\2. Component\5. Renderer">
+    <Filter Include="12. Object\2. Component\05. Renderer">
       <UniqueIdentifier>{153cdbb5-7e17-453d-be05-2ea47f0cf13c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="12. Object\2. Component\6. Animation2D">
+    <Filter Include="12. Object\2. Component\06. Animation2D">
       <UniqueIdentifier>{9631f5c3-26a5-4c64-90ab-e9336e9516b2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="12. Object\2. Component\7. Collider">
+    <Filter Include="12. Object\2. Component\07. Collider">
       <UniqueIdentifier>{30e8dcfc-d2a6-439a-9a14-716d817c4d57}</UniqueIdentifier>
     </Filter>
-    <Filter Include="12. Object\2. Component\8. Navigator">
+    <Filter Include="12. Object\2. Component\08. Navigator">
       <UniqueIdentifier>{60358ae8-5b6d-4640-9536-9178783a145d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="12. Object\2. Component\09. Light">
+      <UniqueIdentifier>{28c1eeef-a055-4066-8fb8-c5c351eec414}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -220,40 +223,40 @@
       <Filter>12. Object</Filter>
     </ClInclude>
     <ClInclude Include="Object\Component\transform.h">
-      <Filter>12. Object\2. Component\1. Transform</Filter>
+      <Filter>12. Object\2. Component\01. Transform</Filter>
     </ClInclude>
     <ClInclude Include="Object\Component\camera.h">
-      <Filter>12. Object\2. Component\2. Camera</Filter>
+      <Filter>12. Object\2. Component\02. Camera</Filter>
     </ClInclude>
     <ClInclude Include="Object\Component\text.h">
-      <Filter>12. Object\2. Component\3. Text</Filter>
+      <Filter>12. Object\2. Component\03. Text</Filter>
     </ClInclude>
     <ClInclude Include="Object\Component\material.h">
-      <Filter>12. Object\2. Component\4. Material</Filter>
+      <Filter>12. Object\2. Component\04. Material</Filter>
     </ClInclude>
     <ClInclude Include="Object\Component\renderer.h">
-      <Filter>12. Object\2. Component\5. Renderer</Filter>
+      <Filter>12. Object\2. Component\05. Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Object\Component\animation_2d.h">
-      <Filter>12. Object\2. Component\6. Animation2D</Filter>
+      <Filter>12. Object\2. Component\06. Animation2D</Filter>
     </ClInclude>
     <ClInclude Include="Object\Component\Collider\collider.h">
-      <Filter>12. Object\2. Component\7. Collider</Filter>
+      <Filter>12. Object\2. Component\07. Collider</Filter>
     </ClInclude>
     <ClInclude Include="Object\Component\navigator.h">
-      <Filter>12. Object\2. Component\8. Navigator</Filter>
+      <Filter>12. Object\2. Component\08. Navigator</Filter>
     </ClInclude>
     <ClInclude Include="Object\Component\Collider\collider_aabb.h">
-      <Filter>12. Object\2. Component\7. Collider</Filter>
+      <Filter>12. Object\2. Component\07. Collider</Filter>
     </ClInclude>
     <ClInclude Include="Object\Component\Collider\collider_circle.h">
-      <Filter>12. Object\2. Component\7. Collider</Filter>
+      <Filter>12. Object\2. Component\07. Collider</Filter>
     </ClInclude>
     <ClInclude Include="Object\Component\Collider\collider_oobb.h">
-      <Filter>12. Object\2. Component\7. Collider</Filter>
+      <Filter>12. Object\2. Component\07. Collider</Filter>
     </ClInclude>
     <ClInclude Include="Object\Component\Collider\collider_point.h">
-      <Filter>12. Object\2. Component\7. Collider</Filter>
+      <Filter>12. Object\2. Component\07. Collider</Filter>
     </ClInclude>
     <ClInclude Include="collision_manager.h">
       <Filter>13. Collision</Filter>
@@ -269,6 +272,9 @@
     </ClInclude>
     <ClInclude Include="connection_manager.h">
       <Filter>17. Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Component\light.h">
+      <Filter>12. Object\2. Component\09. Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -354,40 +360,40 @@
       <Filter>12. Object</Filter>
     </ClCompile>
     <ClCompile Include="Object\Component\transform.cpp">
-      <Filter>12. Object\2. Component\1. Transform</Filter>
+      <Filter>12. Object\2. Component\01. Transform</Filter>
     </ClCompile>
     <ClCompile Include="Object\Component\camera.cpp">
-      <Filter>12. Object\2. Component\2. Camera</Filter>
+      <Filter>12. Object\2. Component\02. Camera</Filter>
     </ClCompile>
     <ClCompile Include="Object\Component\text.cpp">
-      <Filter>12. Object\2. Component\3. Text</Filter>
+      <Filter>12. Object\2. Component\03. Text</Filter>
     </ClCompile>
     <ClCompile Include="Object\Component\material.cpp">
-      <Filter>12. Object\2. Component\4. Material</Filter>
+      <Filter>12. Object\2. Component\04. Material</Filter>
     </ClCompile>
     <ClCompile Include="Object\Component\renderer.cpp">
-      <Filter>12. Object\2. Component\5. Renderer</Filter>
+      <Filter>12. Object\2. Component\05. Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Object\Component\animation_2d.cpp">
-      <Filter>12. Object\2. Component\6. Animation2D</Filter>
+      <Filter>12. Object\2. Component\06. Animation2D</Filter>
     </ClCompile>
     <ClCompile Include="Object\Component\Collider\collider.cpp">
-      <Filter>12. Object\2. Component\7. Collider</Filter>
+      <Filter>12. Object\2. Component\07. Collider</Filter>
     </ClCompile>
     <ClCompile Include="Object\Component\navigator.cpp">
-      <Filter>12. Object\2. Component\8. Navigator</Filter>
+      <Filter>12. Object\2. Component\08. Navigator</Filter>
     </ClCompile>
     <ClCompile Include="Object\Component\Collider\collider_aabb.cpp">
-      <Filter>12. Object\2. Component\7. Collider</Filter>
+      <Filter>12. Object\2. Component\07. Collider</Filter>
     </ClCompile>
     <ClCompile Include="Object\Component\Collider\collider_circle.cpp">
-      <Filter>12. Object\2. Component\7. Collider</Filter>
+      <Filter>12. Object\2. Component\07. Collider</Filter>
     </ClCompile>
     <ClCompile Include="Object\Component\Collider\collider_oobb.cpp">
-      <Filter>12. Object\2. Component\7. Collider</Filter>
+      <Filter>12. Object\2. Component\07. Collider</Filter>
     </ClCompile>
     <ClCompile Include="Object\Component\Collider\collider_point.cpp">
-      <Filter>12. Object\2. Component\7. Collider</Filter>
+      <Filter>12. Object\2. Component\07. Collider</Filter>
     </ClCompile>
     <ClCompile Include="collision_manager.cpp">
       <Filter>13. Collision</Filter>
@@ -403,6 +409,9 @@
     </ClCompile>
     <ClCompile Include="connection_manager.cpp">
       <Filter>17. Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Component\light.cpp">
+      <Filter>12. Object\2. Component\09. Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -432,6 +441,12 @@
     </FxCompile>
     <FxCompile Include="Rendering\HLSL\type.hlsl">
       <Filter>08. Rendering\1. Shader\1. HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\HLSL\BasicNormalVS.hlsl">
+      <Filter>08. Rendering\1. Shader\1. HLSL\1. Basic</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\HLSL\BasicNormalPS.hlsl">
+      <Filter>08. Rendering\1. Shader\1. HLSL\1. Basic</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

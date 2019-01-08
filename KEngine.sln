@@ -28,6 +28,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Physics", "Physics\Inc\Phys
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Batch Files", "1. Batch Files", "{CBE185C2-E2AE-4528-88D1-E3E3D578D8A2}"
 	ProjectSection(SolutionItems) = preProject
+		App.bat = App.bat
 		Common.bat = Common.bat
 		Engine.bat = Engine.bat
 		Network.bat = Network.bat
@@ -39,6 +40,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Inc\Engine.vcxproj", "{3F52D50C-9371-4326-A46F-AF57D68C46C2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK_Desktop_2017_Win10", "DirectXTK\DirectXTK_Desktop_2017_Win10.vcxproj", "{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Inc\Client.vcxproj", "{C502DD00-A660-4153-B657-3EE254F1440D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -88,6 +91,14 @@ Global
 		{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}.Release|x64.Build.0 = Release|x64
 		{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}.Release|x86.ActiveCfg = Release|Win32
 		{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}.Release|x86.Build.0 = Release|Win32
+		{C502DD00-A660-4153-B657-3EE254F1440D}.Debug|x64.ActiveCfg = Debug|x64
+		{C502DD00-A660-4153-B657-3EE254F1440D}.Debug|x64.Build.0 = Debug|x64
+		{C502DD00-A660-4153-B657-3EE254F1440D}.Debug|x86.ActiveCfg = Debug|Win32
+		{C502DD00-A660-4153-B657-3EE254F1440D}.Debug|x86.Build.0 = Debug|Win32
+		{C502DD00-A660-4153-B657-3EE254F1440D}.Release|x64.ActiveCfg = Release|x64
+		{C502DD00-A660-4153-B657-3EE254F1440D}.Release|x64.Build.0 = Release|x64
+		{C502DD00-A660-4153-B657-3EE254F1440D}.Release|x86.ActiveCfg = Release|Win32
+		{C502DD00-A660-4153-B657-3EE254F1440D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,6 +109,7 @@ Global
 		{CBE185C2-E2AE-4528-88D1-E3E3D578D8A2} = {D363560B-649A-4470-9A87-242C307901C8}
 		{8BBC5484-A670-4A4B-8038-737D23F7BF5B} = {283C0A3A-8D18-4BFA-AA8B-72EFC04AA02F}
 		{3F52D50C-9371-4326-A46F-AF57D68C46C2} = {E663E6D2-C747-4EA3-B07A-8268BC52D835}
+		{C502DD00-A660-4153-B657-3EE254F1440D} = {0A2ED876-2BBA-4FF4-910B-5BD21A0326F4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AA85C753-6899-4AA5-BD0E-7A13A0E74B42}

@@ -1540,7 +1540,7 @@ inline K::Matrix K::Matrix::CreatePerspectiveFieldOfView(float _fov_angle, float
 	using namespace DirectX;
 
 	Matrix R{};
-	XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&R), XMMatrixPerspectiveFovLH(_fov_angle, _aspect_ratio, _near, _far));
+	XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&R), XMMatrixPerspectiveFovLH(XMConvertToRadians(_fov_angle), _aspect_ratio, _near, _far));
 
 	return R;
 }

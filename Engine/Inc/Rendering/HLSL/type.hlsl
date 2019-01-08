@@ -9,6 +9,13 @@ struct VS_INPUT_POSITION_COLOR
 	float4 color : COLOR;
 };
 
+struct VS_INPUT_POSITION_NORMAL_COLOR
+{
+	float3 position : POSITION;
+	float3 normal : NORMAL;
+	float4 color : COLOR;
+};
+
 struct VS_INPUT_POSITION_TEX
 {
 	float3 position : POSITION;
@@ -31,6 +38,13 @@ struct VS_OUTPUT_POSITION
 struct VS_OUTPUT_POSITION_COLOR
 {
 	float4 position : SV_POSITION;
+	float4 color : COLOR;
+};
+
+struct VS_OUTPUT_POSITION_NORMAL_COLOR
+{
+	float4 position : SV_POSITION;
+	float3 normal : NORMAL;
 	float4 color : COLOR;
 };
 

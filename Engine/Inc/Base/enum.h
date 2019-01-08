@@ -38,4 +38,12 @@ namespace K
 		BLOCKED,
 		MAX
 	};
+
+	enum class LIGHT_TYPE
+	{
+		DIRECTIONAL,
+		POINT,
+		SPOT,
+		MAX
+	};
 }
