@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{320495ef-7384-4edf-bd9f-94dda64ac3dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{438ca76a-79b9-4897-bfbf-594378d85426}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="1. Address">
+      <UniqueIdentifier>{151c8cd1-0f33-4a89-868d-91996ca03fc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2. Socket">
+      <UniqueIdentifier>{44e696be-9970-4cd9-8590-35f70a454f00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3. Stream">
+      <UniqueIdentifier>{bee9b28c-7d0a-443c-a847-aebd1d70874f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2. Socket\1. UDP">
+      <UniqueIdentifier>{52e5f00f-3f33-472f-a085-8126648d47fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2. Socket\2. TCP">
+      <UniqueIdentifier>{f839617c-585b-4d54-84f8-4e87a7964c5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3. Stream\1. Memory">
+      <UniqueIdentifier>{95f6e172-77ea-4dbe-93ab-66d28dbad11c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Network.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\macro.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="address.h">
+      <Filter>1. Address</Filter>
+    </ClInclude>
+    <ClInclude Include="udp_socket.h">
+      <Filter>2. Socket\1. UDP</Filter>
+    </ClInclude>
+    <ClInclude Include="tcp_socket.h">
+      <Filter>2. Socket\2. TCP</Filter>
+    </ClInclude>
+    <ClInclude Include="socket_manager.h">
+      <Filter>2. Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="memory_stream.h">
+      <Filter>3. Stream\1. Memory</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Network.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
+    <ClCompile Include="address.cpp">
+      <Filter>1. Address</Filter>
+    </ClCompile>
+    <ClCompile Include="udp_socket.cpp">
+      <Filter>2. Socket\1. UDP</Filter>
+    </ClCompile>
+    <ClCompile Include="tcp_socket.cpp">
+      <Filter>2. Socket\2. TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="socket_manager.cpp">
+      <Filter>2. Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="memory_stream.cpp">
+      <Filter>3. Stream\1. Memory</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="memory_stream.inl">
+      <Filter>3. Stream\1. Memory</Filter>
+    </None>
+  </ItemGroup>
+</Project>
