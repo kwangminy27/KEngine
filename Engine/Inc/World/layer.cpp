@@ -4,6 +4,7 @@
 #include "world_manager.h"
 #include "level.h"
 #include "Object/Actor/actor.h"
+#include "Rendering/rendering_manager.h"
 #include "collision_manager.h"
 #include "replication_manager.h"
 
@@ -176,7 +177,8 @@ void K::Layer::_Render(float _time)
 		switch ((*iter)->tag_state())
 		{
 		case TAG_STATE::NORMAL:
-			(*iter)->__Render(_time);
+			//(*iter)->__Render(_time);
+			RenderingManager::singleton()->AddActor(*iter);
 			++iter;
 			break;
 

@@ -1442,7 +1442,7 @@ inline K::Matrix K::Matrix::CreateScaling(Vector3 const& _v)
 	using namespace DirectX;
 
 	Matrix R{};
-	XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&R), XMMatrixScaling(_v.x, _v.y, _v.x));
+	XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&R), XMMatrixScaling(_v.x, _v.y, _v.z));
 
 	return R;
 }

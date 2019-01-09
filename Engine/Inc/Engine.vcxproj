@@ -201,6 +201,7 @@
     <ClInclude Include="Rendering\depth_stencil_state.h" />
     <ClInclude Include="Rendering\rendering_manager.h" />
     <ClInclude Include="Rendering\render_state.h" />
+    <ClInclude Include="Rendering\render_target.h" />
     <ClInclude Include="Rendering\shader.h" />
     <ClInclude Include="replication_manager.h" />
     <ClInclude Include="Resource\mesh.h" />
@@ -251,6 +252,7 @@
     <ClCompile Include="Rendering\depth_stencil_state.cpp" />
     <ClCompile Include="Rendering\rendering_manager.cpp" />
     <ClCompile Include="Rendering\render_state.cpp" />
+    <ClCompile Include="Rendering\render_target.cpp" />
     <ClCompile Include="Rendering\shader.cpp" />
     <ClCompile Include="replication_manager.cpp" />
     <ClCompile Include="Resource\mesh.cpp" />

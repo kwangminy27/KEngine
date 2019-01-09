@@ -40,6 +40,9 @@ namespace K
 	constexpr auto ALPHA_BLEND = "AlphaBlend";
 	constexpr auto DEPTH_DISABLE = "DepthDisable";
 
+	//////////////////// RenderTarget Key ////////////////////
+	constexpr auto BASIC_RENDER_TARGET = "BasicRenderTarget";
+
 	//////////////////// Common Key ////////////////////
 	constexpr auto BACKGROUND = "Background";
 	constexpr auto DEFAULT = "Default";

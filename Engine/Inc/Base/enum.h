@@ -2,6 +2,13 @@
 
 namespace K
 {
+	enum class GAME_MODE
+	{
+		_2D,
+		FORWARD,
+		DEFERRED
+	};
+
 	enum class RESOLUTION
 	{
 		WIDTH = 1600,
@@ -44,6 +51,19 @@ namespace K
 		DIRECTIONAL,
 		POINT,
 		SPOT,
+		MAX
+	};
+
+	enum class RENDER_GROUP_TYPE
+	{
+		LANDSCAPE,
+		NORMAL,
+		ALPHA_1,
+		ALPHA_2,
+		ALPHA_3,
+		UI,
+		HUD,
+		LIGHT,
 		MAX
 	};
 }

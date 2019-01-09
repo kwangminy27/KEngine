@@ -3,10 +3,17 @@
 
 #include "device_manager.h"
 
-void K::DepthStencilState::SetToShader()
+void K::DepthStencilState::SetState()
 {
-	UINT stencil_ref{};
-	DeviceManager::singleton()->context()->OMSetDepthStencilState(static_cast<ID3D11DepthStencilState*>(render_state_.Get()), stencil_ref);
+	auto const& context = DeviceManager::singleton()->context();
+
+	context->OMGetDepthStencilState(reinterpret_cast<ID3D11DepthStencilState**>(old_render_state_.ReleaseAndGetAddressOf()), &old_stencil_ref_);
+	context->OMSetDepthStencilState(static_cast<ID3D11DepthStencilState*>(render_state_.Get()), stencil_ref_);
+}
+
+void K::DepthStencilState::ResetState()
+{
+	DeviceManager::singleton()->context()->OMSetDepthStencilState(static_cast<ID3D11DepthStencilState*>(old_render_state_.Get()), old_stencil_ref_);
 }
 
 K::DepthStencilState::DepthStencilState(DepthStencilState const& _other) : RenderState(_other)

@@ -3,6 +3,7 @@
 // KEngine
 #include <Engine.h>
 #include <core.h>
+#include <time_manager.h>
 #include <Resource/resource_manager.h>
 #include <Rendering/rendering_manager.h>
 #include <World/world_manager.h>
@@ -15,3 +16,4 @@
 #include <Object/Component/camera.h>
 #include <Object/Component/renderer.h>
 #include <Object/Component/material.h>
+#include <Object/Component/text.h>

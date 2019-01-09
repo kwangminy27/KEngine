@@ -6,10 +6,13 @@
 #include "render_state.h"
 #include "depth_stencil_state.h"
 #include "blend_state.h"
+#include "render_target.h"
+#include "Object/Actor/actor.h"
 
 std::shared_ptr<K::Shader> K::RenderingManager::shader_dummy_{};
-std::shared_ptr<K::RenderState> K::RenderingManager::render_state_dummy_{};
 std::shared_ptr<K::ConstantBuffer> K::RenderingManager::CB_dummy_{};
+std::shared_ptr<K::RenderState> K::RenderingManager::render_state_dummy_{};
+std::shared_ptr<K::RenderTarget> K::RenderingManager::render_target_dummy_{};
 
 void K::RenderingManager::Initialize()
 {
@@ -119,11 +122,18 @@ void K::RenderingManager::Initialize()
 #pragma endregion
 
 #pragma region ConstantBuffer
-		_CreateConstantBuffer(TRANSFORM, sizeof(TransformConstantBuffer), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL), 0);
-		_CreateConstantBuffer(MATERIAL, sizeof(MaterialConstantBuffer), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL), 1);
-		_CreateConstantBuffer(ANIMATION_2D, sizeof(ANIMATION_2D_FRAME_DESC), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL), 2);
-		_CreateConstantBuffer(COLLIDER, sizeof(Vector4), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL), 3);
+		_CreateConstantBuffer(TRANSFORM, 0, sizeof(TransformConstantBuffer), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
+		_CreateConstantBuffer(MATERIAL, 1, sizeof(MaterialConstantBuffer), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
+		_CreateConstantBuffer(ANIMATION_2D, 2, sizeof(ANIMATION_2D_FRAME_DESC), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
+		_CreateConstantBuffer(COLLIDER, 3, sizeof(Vector4), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
 #pragma endregion
+
+#pragma region RenderTarget
+		_CreateRenderTarget(BASIC_RENDER_TARGET, Vector3{ static_cast<float>(RESOLUTION::WIDTH), static_cast<float>(RESOLUTION::HEIGHT), 1.f }, Vector3::Zero);
+#pragma endregion
+
+		for (auto& render_group : render_group_array_)
+			render_group.reserve(100);
 	}
 	catch (std::exception const& _e)
 	{
@@ -165,6 +175,16 @@ std::shared_ptr<K::ConstantBuffer> const& K::RenderingManager::FindConstantBuffe
 	return iter->second;
 }
 
+std::shared_ptr<K::RenderTarget> const& K::RenderingManager::FindRenderTarget(std::string const& _tag) const
+{
+	auto iter = render_target_map_.find(_tag);
+
+	if (iter == render_target_map_.end())
+		return render_target_dummy_;
+
+	return iter->second;
+}
+
 void K::RenderingManager::UpdateConstantBuffer(std::string const& _tag, void* _data)
 {
 	auto const& context = DeviceManager::singleton()->context();
@@ -185,6 +205,49 @@ void K::RenderingManager::UpdateConstantBuffer(std::string const& _tag, void* _d
 
 	if (CB->shader_flag & static_cast<int>(SHADER_TYPE::PIXEL))
 		context->PSSetConstantBuffers(CB->slot, 1, CB->buffer.GetAddressOf());
+}
+
+void K::RenderingManager::Render(float _time)
+{
+	switch (mode_)
+	{
+	case K::GAME_MODE::_2D:
+		_Render2D(_time);
+		break;
+	case K::GAME_MODE::FORWARD:
+		_RenderForward(_time);
+		break;
+	case K::GAME_MODE::DEFERRED:
+		_RenderDeferred(_time);
+		break;
+	}
+
+	for (auto& render_group : render_group_array_)
+		render_group.clear();
+}
+
+void K::RenderingManager::AddActor(APTR const& _actor)
+{
+	auto render_group_type = _actor->render_group_type();
+
+	switch (render_group_type)
+	{
+	case RENDER_GROUP_TYPE::LIGHT:
+	case RENDER_GROUP_TYPE::MAX:
+		return;
+	}
+
+	render_group_array_.at(static_cast<int>(render_group_type)).push_back(_actor.get());
+}
+
+K::GAME_MODE K::RenderingManager::mode() const
+{
+	return mode_;
+}
+
+void K::RenderingManager::set_mode(GAME_MODE _mode)
+{
+	mode_ = _mode;
 }
 
 void K::RenderingManager::_Finalize()
@@ -261,7 +324,7 @@ void K::RenderingManager::_CreateBlendState(
 	render_state_map_.insert(std::make_pair(_tag, std::move(render_state)));
 }
 
-void K::RenderingManager::_CreateConstantBuffer(std::string const& _tag, uint32_t _size, uint8_t _shader_flag, uint32_t _slot)
+void K::RenderingManager::_CreateConstantBuffer(std::string const& _tag, uint32_t _slot, uint32_t _size, uint8_t _shader_flag)
 {
 	auto const& device = DeviceManager::singleton()->device();
 
@@ -272,9 +335,9 @@ void K::RenderingManager::_CreateConstantBuffer(std::string const& _tag, uint32_
 		delete _p;
 	} };
 
+	CB->slot = _slot;
 	CB->size = _size;
 	CB->shader_flag = _shader_flag;
-	CB->slot = _slot;
 
 	D3D11_BUFFER_DESC dbd{};
 	dbd.ByteWidth = _size;
@@ -285,4 +348,51 @@ void K::RenderingManager::_CreateConstantBuffer(std::string const& _tag, uint32_
 	ThrowIfFailed(device->CreateBuffer(&dbd, nullptr, &CB->buffer));
 
 	CB_map_.insert(std::make_pair(_tag, std::move(CB)));
+}
+
+void K::RenderingManager::_CreateRenderTarget(std::string const& _tag, Vector3 const& _scaling, Vector3 const& _translation)
+{
+	if (FindRenderTarget(_tag))
+		throw std::exception{ "RenderingManager::_CreateRenderTarget" };
+
+	auto render_target = std::shared_ptr<RenderTarget>{ new RenderTarget, [](RenderTarget* _p) {
+		delete _p;
+	} };
+
+	render_target->_CreateRenderTarget(_scaling, _translation);
+
+	render_target_map_.insert(std::make_pair(_tag, std::move(render_target)));
+}
+
+void K::RenderingManager::_Render2D(float _time)
+{
+	for (int i = 0; i <= static_cast<int>(RENDER_GROUP_TYPE::HUD); ++i)
+	{
+		for (auto const& actor : render_group_array_.at(i))
+			actor->__Render(_time);
+	}
+
+	auto const& render_target = FindRenderTarget(BASIC_RENDER_TARGET);
+
+	render_target->Clear();
+	render_target->SetTarget();
+
+	//for (int i = 0; i <= static_cast<int>(RENDER_GROUP_TYPE::HUD); ++i)
+	//{
+	//	for (auto const& actor : render_group_array_.at(i))
+	//		actor->__Render(_time);
+	//}
+
+	render_target->ResetTarget();
+
+	//for (auto& e : render_target_map_)
+	//	e.second->Render(_time);
+}
+
+void K::RenderingManager::_RenderForward(float _time)
+{
+}
+
+void K::RenderingManager::_RenderDeferred(float _time)
+{
 }

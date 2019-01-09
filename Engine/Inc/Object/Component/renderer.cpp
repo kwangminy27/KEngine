@@ -31,7 +31,7 @@ void K::Renderer::Render(float _time)
 	UpdateConstantBuffer(_time);
 
 	for (auto const& render_state : render_state_vector_)
-		render_state->SetToShader();
+		render_state->SetState();
 
 	shader_->SetToShader();
 
@@ -44,6 +44,9 @@ void K::Renderer::Render(float _time)
 			mesh_->Render(i, j);
 		}
 	}
+
+	for (auto const& render_state : render_state_vector_)
+		render_state->ResetState();
 }
 
 K::CPTR K::Renderer::Clone() const

@@ -9,6 +9,7 @@ namespace K
 	{
 		friend class Layer;
 		friend class ObjectManager;
+		friend class RenderingManager;
 	public:
 		virtual void Initialize() = 0;
 
@@ -33,11 +34,13 @@ namespace K
 		APTR parent() const;
 		std::list<CPTR> const& component_list() const;
 		std::list<APTR> const& child_list() const;
+		RENDER_GROUP_TYPE render_group_type() const;
 
 		void set_ui_flag(bool _flag);
 		void set_parent(APTR const& _actor);
 		void set_level(std::shared_ptr<Level> const& _level);
 		void set_layer(std::shared_ptr<Layer> const& _layer);
+		void set_render_group_type(RENDER_GROUP_TYPE _type);
 
 		static CPTR component_dummy_;
 		static APTR child_dummy_;
@@ -66,6 +69,7 @@ namespace K
 		std::weak_ptr<Actor> parent_{};
 		std::list<CPTR> component_list_{};
 		std::list<APTR> child_list_{};
+		RENDER_GROUP_TYPE render_group_type_{};
 	};
 
 	class ENGINE_DLL ActorClient : public Actor

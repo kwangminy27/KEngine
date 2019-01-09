@@ -10,7 +10,7 @@ void K::Player::Initialize()
 		auto const& rendering_manager = RenderingManager::singleton();
 
 		auto transform = object_manager->CreateComponent<Transform>(TAG{ TRANSFORM, 0 });
-		CPTR_CAST<Transform>(transform)->set_local_scaling(Vector3{ 100.f, 100.f, 100.f });
+		CPTR_CAST<Transform>(transform)->set_local_scaling(Vector3::One);
 		AddComponent(transform);
 
 		auto renderer = object_manager->CreateComponent<Renderer>(TAG{ RENDERER, 0 });
@@ -24,6 +24,8 @@ void K::Player::Initialize()
 		material_CB.diffuse = DirectX::Colors::White.v;
 		CPTR_CAST<Material>(material)->SetMaterialConstantBuffer(material_CB , 0, 0);
 		AddComponent(material);
+
+		set_render_group_type(RENDER_GROUP_TYPE::NORMAL);
 	}
 	catch (std::exception const& _e)
 	{
@@ -66,5 +68,5 @@ void K::Player::_Finalize()
 void K::Player::_Update(float _time)
 {
 	auto const& camera = WorldManager::singleton()->FindCamera(TAG{ DEFAULT_CAMERA, 0 });
-	camera->CreateView(Vector3{ 0.f, 100.f, -200.f }, Vector3::Zero, Vector3::UnitY);
+	camera->CreateView(Vector3{ 1.f, 1.f, -2.f }, Vector3::Zero, Vector3::UnitY);
 }

@@ -3,18 +3,33 @@
 
 #include "device_manager.h"
 
-void K::BlendState::SetToShader()
+void K::BlendState::SetState()
 {
-	UINT sample_mask{ 0xffffffff };
-	DeviceManager::singleton()->context()->OMSetBlendState(static_cast<ID3D11BlendState*>(render_state_.Get()), nullptr, sample_mask);
+	auto const& context = DeviceManager::singleton()->context();
+
+	context->OMGetBlendState(reinterpret_cast<ID3D11BlendState**>(old_render_state_.ReleaseAndGetAddressOf()), old_blend_factor_array_.data(), &old_sample_mask_);
+	context->OMSetBlendState(static_cast<ID3D11BlendState*>(render_state_.Get()), blend_factor_array_.data(), sample_mask_);
+}
+
+void K::BlendState::ResetState()
+{
+	DeviceManager::singleton()->context()->OMSetBlendState(static_cast<ID3D11BlendState*>(old_render_state_.Get()), old_blend_factor_array_.data(), old_sample_mask_);
 }
 
 K::BlendState::BlendState(BlendState const& _other) : RenderState(_other)
 {
+	sample_mask_ = _other.sample_mask_;
+	old_sample_mask_ = _other.old_sample_mask_;
+	blend_factor_array_ = _other.blend_factor_array_;
+	old_blend_factor_array_ = _other.old_blend_factor_array_;
 }
 
 K::BlendState::BlendState(BlendState&& _other) noexcept : RenderState(std::move(_other))
 {
+	sample_mask_ = std::move(_other.sample_mask_);
+	old_sample_mask_ = std::move(_other.old_sample_mask_);
+	blend_factor_array_ = std::move(_other.blend_factor_array_);
+	old_blend_factor_array_ = std::move(_other.old_blend_factor_array_);
 }
 
 void K::BlendState::_CreateState(

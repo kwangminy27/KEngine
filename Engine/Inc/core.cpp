@@ -24,14 +24,14 @@ void K::Core::Initialize()
 {
 }
 
-void K::Core::Initialize(std::wstring const& _class_name, std::wstring const& _window_name, HINSTANCE _instance)
+void K::Core::Initialize(std::wstring const& _class_name, std::wstring const& _window_name, HINSTANCE _instance, GAME_MODE _mode)
 {
 	try
 	{
 		_RegisterClass(_class_name);
 		_CreateWindow(_class_name, _window_name);
 
-		Initialize(_instance, window_);
+		Initialize(_instance, window_, _mode);
 	}
 	catch (std::exception const& _e)
 	{
@@ -43,7 +43,7 @@ void K::Core::Initialize(std::wstring const& _class_name, std::wstring const& _w
 	}
 }
 
-void K::Core::Initialize(HINSTANCE _instance, HWND _window)
+void K::Core::Initialize(HINSTANCE _instance, HWND _window, GAME_MODE _mode)
 {
 	try
 	{
@@ -60,7 +60,11 @@ void K::Core::Initialize(HINSTANCE _instance, HWND _window)
 		AudioManager::singleton()->Initialize();
 		VideoManager::singleton()->Initialize();
 		ResourceManager::singleton()->Initialize();
-		RenderingManager::singleton()->Initialize();
+		
+		auto const& rendering_manager = RenderingManager::singleton();
+		rendering_manager->Initialize();
+		rendering_manager->set_mode(_mode);
+
 		TimeManager::singleton()->Initialize();
 		InputManager::singleton()->Initialize();
 		WorldManager::singleton()->Initialize();
@@ -214,6 +218,7 @@ void K::Core::_Render(float _time)
 	device_manager->Clear();
 
 	WorldManager::singleton()->Render(_time);
+	RenderingManager::singleton()->Render(_time);
 
 	device_manager->Present();
 }

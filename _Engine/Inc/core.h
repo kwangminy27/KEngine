@@ -8,8 +8,8 @@ namespace K
 	public:
 		virtual void Initialize() override;
 
-		void Initialize(std::wstring const& _class_name, std::wstring const& _window_name, HINSTANCE _instance);
-		void Initialize(HINSTANCE _instance, HWND _window);
+		void Initialize(std::wstring const& _class_name, std::wstring const& _window_name, HINSTANCE _instance, GAME_MODE _mode);
+		void Initialize(HINSTANCE _instance, HWND _window, GAME_MODE _mode);
 
 		void Run();
 		void Logic();

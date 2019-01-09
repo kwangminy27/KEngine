@@ -8,7 +8,7 @@ void K::Camera::Initialize()
 {
 	try
 	{
-		CreateProjection(45.f, static_cast<float>(RESOLUTION::WIDTH), static_cast<float>(RESOLUTION::HEIGHT), 0.3f, 1000.f);
+		CreateProjection(90.f, static_cast<float>(RESOLUTION::WIDTH), static_cast<float>(RESOLUTION::HEIGHT), 0.3f, 1000.f);
 	}
 	catch (std::exception const& _e)
 	{

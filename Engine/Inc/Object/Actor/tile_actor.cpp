@@ -21,6 +21,8 @@ void K::TileActor::Initialize()
 		CPTR_CAST<Material>(material)->SetMaterialConstantBuffer(Material_CB, 0, 0);
 
 		AddComponent(transform);
+
+		set_render_group_type(RENDER_GROUP_TYPE::LANDSCAPE);
 	}
 	catch (std::exception const& _e)
 	{

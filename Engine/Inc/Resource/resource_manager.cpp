@@ -126,15 +126,15 @@ void K::ResourceManager::Initialize()
 		pyramid_normal[3].Normalize();
 
 		VertexNormalColor pyramid_vertices[9]{
-			VertexNormalColor{ pyramid_position[0], Vector3::UnitY, DirectX::Colors::Red.v },
-			VertexNormalColor{ pyramid_position[1], pyramid_normal[0], DirectX::Colors::Green.v },
-			VertexNormalColor{ pyramid_position[2], pyramid_normal[1], DirectX::Colors::Blue.v },
-			VertexNormalColor{ pyramid_position[3], pyramid_normal[2], DirectX::Colors::Red.v },
-			VertexNormalColor{ pyramid_position[4], pyramid_normal[3], DirectX::Colors::Green.v },
-			VertexNormalColor{ pyramid_position[1], -Vector3::UnitY, DirectX::Colors::Blue.v },
-			VertexNormalColor{ pyramid_position[2], -Vector3::UnitY, DirectX::Colors::Red.v },
-			VertexNormalColor{ pyramid_position[3], -Vector3::UnitY, DirectX::Colors::Green.v },
-			VertexNormalColor{ pyramid_position[4], -Vector3::UnitY, DirectX::Colors::Blue.v }
+			VertexNormalColor{ pyramid_position[0], Vector3::UnitY, DirectX::Colors::Black.v },
+			VertexNormalColor{ pyramid_position[1], pyramid_normal[0], DirectX::Colors::White.v },
+			VertexNormalColor{ pyramid_position[2], pyramid_normal[1], DirectX::Colors::White.v },
+			VertexNormalColor{ pyramid_position[3], pyramid_normal[2], DirectX::Colors::White.v },
+			VertexNormalColor{ pyramid_position[4], pyramid_normal[3], DirectX::Colors::White.v },
+			VertexNormalColor{ pyramid_position[1], -Vector3::UnitY, DirectX::Colors::Black.v },
+			VertexNormalColor{ pyramid_position[2], -Vector3::UnitY, DirectX::Colors::Black.v },
+			VertexNormalColor{ pyramid_position[3], -Vector3::UnitY, DirectX::Colors::Black.v },
+			VertexNormalColor{ pyramid_position[4], -Vector3::UnitY, DirectX::Colors::Black.v }
 		};
 
 		uint16_t pyramid_indices[18]{ 1, 0, 4, 2, 0, 1, 3, 0, 2, 4, 0, 3, 5, 8, 6, 6, 8, 7 };

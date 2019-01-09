@@ -335,7 +335,7 @@ void K::TileMapActor::_Render(float _time)
 	auto const& render_state = rendering_manager->FindRenderState(ALPHA_BLEND);
 	auto const& material = CPTR_CAST<Material>(tile_map_.at(0).at(0)->FindComponent(TAG{ MATERIAL, 0 }));
 
-	render_state->SetToShader();
+	render_state->SetState();
 
 	shader->SetToShader();
 
@@ -343,6 +343,8 @@ void K::TileMapActor::_Render(float _time)
 
 	mesh->SetInstanceCount(0, instance_count);
 	mesh->Render();
+
+	render_state->ResetState();
 }
 
 void K::TileMapActor::_CreateIsometricMap()

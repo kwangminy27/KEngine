@@ -106,6 +106,11 @@ std::list<K::APTR> const& K::Actor::child_list() const
 	return child_list_;
 }
 
+K::RENDER_GROUP_TYPE K::Actor::render_group_type() const
+{
+	return render_group_type_;
+}
+
 void K::Actor::set_ui_flag(bool _flag)
 {
 	ui_flag_ = _flag;
@@ -124,6 +129,11 @@ void K::Actor::set_level(std::shared_ptr<Level> const& _level)
 void K::Actor::set_layer(std::shared_ptr<Layer> const& _layer)
 {
 	layer_ = _layer;
+}
+
+void K::Actor::set_render_group_type(RENDER_GROUP_TYPE _type)
+{
+	render_group_type_ = _type;
 }
 
 K::Actor::Actor(Actor const& _other) : Tag(_other)

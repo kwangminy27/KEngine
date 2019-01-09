@@ -6,7 +6,8 @@ namespace K
 	{
 		friend class RenderingManager;
 	public:
-		virtual void SetToShader() = 0;
+		virtual void SetState() = 0;
+		virtual void ResetState() = 0;
 
 	protected:
 		RenderState() = default;
@@ -17,5 +18,6 @@ namespace K
 		virtual ~RenderState() = default;
 
 		Microsoft::WRL::ComPtr<ID3D11DeviceChild> render_state_{};
+		Microsoft::WRL::ComPtr<ID3D11DeviceChild> old_render_state_{};
 	};
 }

@@ -130,6 +130,9 @@
     <Filter Include="12. Object\2. Component\09. Light">
       <UniqueIdentifier>{28c1eeef-a055-4066-8fb8-c5c351eec414}</UniqueIdentifier>
     </Filter>
+    <Filter Include="08. Rendering\3. RenderTarget">
+      <UniqueIdentifier>{42e6b9c5-adff-4b0c-b2f1-c154f6c67237}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -276,6 +279,9 @@
     <ClInclude Include="Object\Component\light.h">
       <Filter>12. Object\2. Component\09. Light</Filter>
     </ClInclude>
+    <ClInclude Include="Rendering\render_target.h">
+      <Filter>08. Rendering\3. RenderTarget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -412,6 +418,9 @@
     </ClCompile>
     <ClCompile Include="Object\Component\light.cpp">
       <Filter>12. Object\2. Component\09. Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\render_target.cpp">
+      <Filter>08. Rendering\3. RenderTarget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

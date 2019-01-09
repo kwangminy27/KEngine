@@ -8,7 +8,8 @@ namespace K
 	{
 		friend class RenderingManager;
 	public:
-		virtual void SetToShader() override;
+		virtual void SetState() override;
+		virtual void ResetState() override;
 
 	private:
 		DepthStencilState() = default;
@@ -26,5 +27,8 @@ namespace K
 			UINT8 _stencil_write_mask,
 			D3D11_DEPTH_STENCILOP_DESC const& _front_face,
 			D3D11_DEPTH_STENCILOP_DESC const& _back_face);
+
+		uint32_t stencil_ref_{};
+		uint32_t old_stencil_ref_{};
 	};
 }

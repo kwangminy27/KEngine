@@ -70,6 +70,9 @@ cbuffer Transform : register(b0)
 cbuffer Material : register(b1)
 {
 	float4 g_diffuse;
+    float4 g_ambient;
+    float4 g_specular;
+    float4 g_emissive;
 }
 
 cbuffer Animation2D : register(b2)
