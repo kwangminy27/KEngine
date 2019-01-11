@@ -307,11 +307,13 @@ void K::TileMapActor::_Render(float _time)
 	transform_CB.world = Matrix::Identity;
 	transform_CB.view = camera->view();
 	transform_CB.projection = camera->projection();
+	transform_CB.WV = transform_CB.world * transform_CB.view;
 	transform_CB.WVP = transform_CB.world * transform_CB.view * transform_CB.projection;
 
 	transform_CB.world = transform_CB.world.Transpose();
 	transform_CB.view = transform_CB.view.Transpose();
 	transform_CB.projection = transform_CB.projection.Transpose();
+	transform_CB.WV = transform_CB.WV.Transpose();
 	transform_CB.WVP = transform_CB.WVP.Transpose();
 
 	RenderingManager::singleton()->UpdateConstantBuffer(TRANSFORM, &transform_CB);

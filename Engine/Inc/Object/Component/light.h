@@ -20,6 +20,20 @@ namespace K
 		virtual void Serialize(InputMemoryStream& _imstream) override;
 		virtual void Serialize(OutputMemoryStream& _omstream) override;
 
+		void UpdateConstantBuffer();
+
+		void set_type(int _type);
+		void set_ambient(Vector4 const& _ambient);
+		void set_diffuse(Vector4 const& _diffuse);
+		void set_specular(Vector4 const& _specular);
+		void set_position(Vector3 const& _position);
+		void set_direction(Vector3 const& _direction);
+		void set_range(float _range);
+		void set_falloff(float _falloff);
+		void set_in_angle(float _in_angle);
+		void set_out_angle(float _out_angle);
+		void set_attenuation(Vector3 const& _attenuation);
+
 	private:
 		Light() = default;
 		Light(Light const& _other);
@@ -28,5 +42,17 @@ namespace K
 		Light& operator=(Light&&) noexcept = default;
 
 		virtual void _Finalize() override;
+
+		Vector4 ambient_{};
+		Vector4 diffuse_{};
+		Vector4 specular_{};
+		Vector3 position_{};
+		Vector3 direction_{};
+		Vector3 attenuation_{};
+		float falloff_{};
+		int type_{};
+		float range_{};
+		float in_angle_{};
+		float out_angle_{};
 	};
 }

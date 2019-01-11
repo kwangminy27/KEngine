@@ -83,6 +83,8 @@ void K::Layer::_Input(float _time)
 {
 	for (auto iter = actor_list_.begin(); iter != actor_list_.end();)
 	{
+		(*iter)->_Input(_time);
+
 		switch ((*iter)->tag_state())
 		{
 		case TAG_STATE::NORMAL:
@@ -113,6 +115,8 @@ void K::Layer::_Update(float _time)
 {
 	for (auto iter = actor_list_.begin(); iter != actor_list_.end();)
 	{
+		(*iter)->_Update(_time);
+
 		switch ((*iter)->tag_state())
 		{
 		case TAG_STATE::NORMAL:
@@ -146,7 +150,6 @@ void K::Layer::_Collision(float _time)
 		switch ((*iter)->tag_state())
 		{
 		case TAG_STATE::NORMAL:
-			//(*iter)->__Collision(_time);
 			CollisionManager::singleton()->AddCollider(*iter);
 			++iter;
 			break;
@@ -174,6 +177,7 @@ void K::Layer::_Render(float _time)
 {
 	for (auto iter = actor_list_.begin(); iter != actor_list_.end();)
 	{
+		(*iter)->_Render(_time);
 		switch ((*iter)->tag_state())
 		{
 		case TAG_STATE::NORMAL:

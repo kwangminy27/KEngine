@@ -1,24 +1,8 @@
 #include "Engine.h"
 #include "core.h"
 
-#include "device_manager.h"
-#include "text_manager.h"
-#include "path_manager.h"
-#include "Resource/resource_manager.h"
-#include "Rendering/rendering_manager.h"
-#include "audio_manager.h"
-#include "video_manager.h"
-#include "time_manager.h"
-#include "input_manager.h"
-#include "World/world_manager.h"
-#include "Object/object_manager.h"
-#include "collision_manager.h"
-#include "navigation_manager.h"
-#include "registry_manager.h"
-#include "replication_manager.h"
-#include "connection_manager.h"
-
 bool K::Core::shutdown_{};
+bool K::Core::gui_show_{ true };
 
 void K::Core::Initialize()
 {
@@ -32,6 +16,9 @@ void K::Core::Initialize(std::wstring const& _class_name, std::wstring const& _w
 		_CreateWindow(_class_name, _window_name);
 
 		Initialize(_instance, window_, _mode);
+
+		auto const& device_manager = DeviceManager::singleton();
+		GUIManager::singleton()->Initialize(window_, device_manager->device().Get(), device_manager->context().Get());
 	}
 	catch (std::exception const& _e)
 	{
@@ -74,6 +61,7 @@ void K::Core::Initialize(HINSTANCE _instance, HWND _window, GAME_MODE _mode)
 		RegistryManager::singleton()->Initialize();
 		ReplicationManager::singleton()->Initialize();
 		ConnectionManager::singleton()->Initialize();
+		GUIManager::singleton()->Initialize();
 	}
 	catch (std::exception const& _e)
 	{
@@ -118,6 +106,7 @@ void K::Core::_Finalize()
 {
 	AudioManager::singleton()->Suspend();
 
+	GUIManager::singleton().reset();
 	ConnectionManager::singleton().reset();
 	ReplicationManager::singleton().reset();
 	RegistryManager::singleton().reset();
@@ -140,8 +129,12 @@ void K::Core::_Finalize()
 	CoUninitialize();
 }
 
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND _window, UINT _message, WPARAM _w_param, LPARAM _l_param);
 LRESULT K::Core::_WindowProc(HWND _window, UINT _message, WPARAM _w_param, LPARAM _l_param)
 {
+	if (ImGui_ImplWin32_WndProcHandler(_window, _message, _w_param, _l_param))
+		return true;
+
 	switch (_message)
 	{
 	case WM_DESTROY:
@@ -198,6 +191,12 @@ void K::Core::_Input(float _time)
 
 	input_manager->Update();
 
+	if (input_manager->KeyDown("ESC"))
+		DestroyWindow(window_);
+
+	if (input_manager->KeyDown("F1"))
+		gui_show_ ^= true;
+
 	WorldManager::singleton()->Input(_time);
 }
 
@@ -219,6 +218,9 @@ void K::Core::_Render(float _time)
 
 	WorldManager::singleton()->Render(_time);
 	RenderingManager::singleton()->Render(_time);
+
+	if (gui_show_)
+		GUIManager::singleton()->Render("KEngine");
 
 	device_manager->Present();
 }

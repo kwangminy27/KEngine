@@ -74,7 +74,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>../Bin/Debug/</OutDir>
     <IntDir>../Obj/Debug/</IntDir>
-    <IncludePath>$(SolutionDir)_Common/Inc/;$(SolutionDir)_Network/Inc/;$(SolutionDir)_Physics/Inc/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)_Common/Inc/;$(SolutionDir)_Network/Inc/;$(SolutionDir)_Physics/Inc/;$(SolutionDir)_Utility/Inc/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -86,7 +86,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>../Bin/Release/</OutDir>
     <IntDir>../Obj/Release/</IntDir>
-    <IncludePath>$(SolutionDir)_Common/Inc/;$(SolutionDir)_Network/Inc/;$(SolutionDir)_Physics/Inc/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)_Common/Inc/;$(SolutionDir)_Network/Inc/;$(SolutionDir)_Physics/Inc/;$(SolutionDir)_Utility/Inc/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -174,10 +174,12 @@
     <ClInclude Include="core.h" />
     <ClInclude Include="device_manager.h" />
     <ClInclude Include="Engine.h" />
+    <ClInclude Include="gui_manager.h" />
     <ClInclude Include="input_manager.h" />
     <ClInclude Include="navigation_manager.h" />
     <ClInclude Include="Object\Actor\actor.h" />
     <ClInclude Include="Object\Actor\camera_actor.h" />
+    <ClInclude Include="Object\Actor\light_actor.h" />
     <ClInclude Include="Object\Actor\tile_actor.h" />
     <ClInclude Include="Object\Actor\tile_map_actor.h" />
     <ClInclude Include="Object\Component\animation_2d.h" />
@@ -225,10 +227,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="gui_manager.cpp" />
     <ClCompile Include="input_manager.cpp" />
     <ClCompile Include="navigation_manager.cpp" />
     <ClCompile Include="Object\Actor\actor.cpp" />
     <ClCompile Include="Object\Actor\camera_actor.cpp" />
+    <ClCompile Include="Object\Actor\light_actor.cpp" />
     <ClCompile Include="Object\Actor\tile_actor.cpp" />
     <ClCompile Include="Object\Actor\tile_map_actor.cpp" />
     <ClCompile Include="Object\Component\animation_2d.cpp" />
@@ -278,6 +282,9 @@
     </ProjectReference>
     <ProjectReference Include="..\..\Physics\Inc\Physics.vcxproj">
       <Project>{a3445cd4-334c-4958-aae3-9fc0c1da714c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Utility\Inc\Utility.vcxproj">
+      <Project>{e4dd5f71-dbbd-4a69-9bb7-480459e217f2}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

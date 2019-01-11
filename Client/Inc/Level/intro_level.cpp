@@ -15,6 +15,9 @@ void K::IntroLevel::Initialize()
 
 		auto player = object_manager->CreateActor<Player>(TAG{ "Player", 0 });
 		default_layer->AddActor(player);
+
+		auto light = object_manager->CreateActor<LightActor>(TAG{ DEFAULT_LIGHT, 0 });
+		default_layer->AddActor(light);
 	}
 	catch (std::exception const& _e)
 	{

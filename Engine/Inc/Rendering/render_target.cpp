@@ -20,12 +20,14 @@ void K::RenderTarget::Render(float _time)
 	transform_CB.world = Matrix::CreateScaling(scaling_) * Matrix::CreateTranslation(translation_);
 	transform_CB.view = camera->view();
 	transform_CB.projection = camera->projection();
+	transform_CB.WV = transform_CB.world * transform_CB.view;
 	transform_CB.WVP = transform_CB.world * transform_CB.view * transform_CB.projection;
 
-	transform_CB.world.Transpose();
-	transform_CB.view.Transpose();
-	transform_CB.projection.Transpose();
-	transform_CB.WVP.Transpose();
+	transform_CB.world = transform_CB.world.Transpose();
+	transform_CB.view = transform_CB.view.Transpose();
+	transform_CB.projection = transform_CB.projection.Transpose();
+	transform_CB.WV = transform_CB.WV.Transpose();
+	transform_CB.WVP = transform_CB.WVP.Transpose();
 
 	rendering_manager->UpdateConstantBuffer(TRANSFORM, &transform_CB);
 

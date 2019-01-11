@@ -43,12 +43,12 @@
 
 #pragma comment(lib, "strmiids")
 
-// KCommon
+// Common
 #include <Common.h>
 #include <tag.h>
 #include <singleton.h>
 
-// KNetwork
+// Network
 #include <Network.h>
 #include <address.h>
 #include <socket_manager.h>
@@ -56,14 +56,39 @@
 #include <tcp_socket.h>
 #include <memory_stream.h>
 
-// KPhysics
+// Physics
 #include <Physics.h>
 #include <type.h>
+
+// Utility
+#include <Utility.h>
+#include <ImGui/imgui.h>
+#include <ImGui/imgui_impl_win32.h>
+#include <ImGui/imgui_impl_dx11.h>
 
 // Base
 #include "Base/enum.h"
 #include "Base/macro.h"
 #include "Base/term.h"
+
+// Manager
+#include "device_manager.h"
+#include "text_manager.h"
+#include "path_manager.h"
+#include "Resource/resource_manager.h"
+#include "Rendering/rendering_manager.h"
+#include "audio_manager.h"
+#include "video_manager.h"
+#include "time_manager.h"
+#include "input_manager.h"
+#include "World/world_manager.h"
+#include "Object/object_manager.h"
+#include "collision_manager.h"
+#include "navigation_manager.h"
+#include "registry_manager.h"
+#include "replication_manager.h"
+#include "connection_manager.h"
+#include "gui_manager.h"
 
 namespace K
 {

@@ -13,6 +13,9 @@
     <Filter Include="2. Singleton">
       <UniqueIdentifier>{98b6ff3f-b9ff-4897-81e9-eb40c58c9bc5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="3. Utility">
+      <UniqueIdentifier>{52d85e68-ebaf-4ea9-937f-2b52573ee22a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">

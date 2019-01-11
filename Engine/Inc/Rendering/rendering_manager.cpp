@@ -8,6 +8,7 @@
 #include "blend_state.h"
 #include "render_target.h"
 #include "Object/Actor/actor.h"
+#include "Object/Component/light.h"
 
 std::shared_ptr<K::Shader> K::RenderingManager::shader_dummy_{};
 std::shared_ptr<K::ConstantBuffer> K::RenderingManager::CB_dummy_{};
@@ -126,6 +127,7 @@ void K::RenderingManager::Initialize()
 		_CreateConstantBuffer(MATERIAL, 1, sizeof(MaterialConstantBuffer), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
 		_CreateConstantBuffer(ANIMATION_2D, 2, sizeof(ANIMATION_2D_FRAME_DESC), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
 		_CreateConstantBuffer(COLLIDER, 3, sizeof(Vector4), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
+		_CreateConstantBuffer(LIGHT, 4, sizeof(LightConstantBuffer), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
 #pragma endregion
 
 #pragma region RenderTarget
@@ -232,7 +234,6 @@ void K::RenderingManager::AddActor(APTR const& _actor)
 
 	switch (render_group_type)
 	{
-	case RENDER_GROUP_TYPE::LIGHT:
 	case RENDER_GROUP_TYPE::MAX:
 		return;
 	}
@@ -372,10 +373,10 @@ void K::RenderingManager::_Render2D(float _time)
 			actor->__Render(_time);
 	}
 
-	auto const& render_target = FindRenderTarget(BASIC_RENDER_TARGET);
+	//auto const& render_target = FindRenderTarget(BASIC_RENDER_TARGET);
 
-	render_target->Clear();
-	render_target->SetTarget();
+	//render_target->Clear();
+	//render_target->SetTarget();
 
 	//for (int i = 0; i <= static_cast<int>(RENDER_GROUP_TYPE::HUD); ++i)
 	//{
@@ -383,7 +384,7 @@ void K::RenderingManager::_Render2D(float _time)
 	//		actor->__Render(_time);
 	//}
 
-	render_target->ResetTarget();
+	//render_target->ResetTarget();
 
 	//for (auto& e : render_target_map_)
 	//	e.second->Render(_time);
@@ -391,6 +392,39 @@ void K::RenderingManager::_Render2D(float _time)
 
 void K::RenderingManager::_RenderForward(float _time)
 {
+	if (false == render_group_array_.at(static_cast<int>(RENDER_GROUP_TYPE::LIGHT)).empty())
+	{
+		auto const& light = render_group_array_.at(static_cast<int>(RENDER_GROUP_TYPE::LIGHT)).at(0)->FindComponent(TAG{ LIGHT, 0 });
+		CPTR_CAST<Light>(light)->UpdateConstantBuffer();
+	}
+
+	for (int i = 0; i <= static_cast<int>(RENDER_GROUP_TYPE::HUD); ++i)
+	{
+		for (auto const& actor : render_group_array_.at(i))
+			actor->__Render(_time);
+	}
+
+	//auto const& render_target = FindRenderTarget(BASIC_RENDER_TARGET);
+
+	//render_target->Clear();
+	//render_target->SetTarget();
+
+	//if (false == render_group_array_.at(static_cast<int>(RENDER_GROUP_TYPE::LIGHT)).empty())
+	//{
+	//	auto const& light = render_group_array_.at(static_cast<int>(RENDER_GROUP_TYPE::LIGHT)).at(0)->FindComponent(TAG{ LIGHT, 0 });
+	//	CPTR_CAST<Light>(light)->UpdateConstantBuffer();
+	//}
+
+	//for (int i = 0; i <= static_cast<int>(RENDER_GROUP_TYPE::HUD); ++i)
+	//{
+	//	for (auto const& actor : render_group_array_.at(i))
+	//		actor->__Render(_time);
+	//}
+
+	//render_target->ResetTarget();
+
+	//for (auto& e : render_target_map_)
+	//	e.second->Render(_time);
 }
 
 void K::RenderingManager::_RenderDeferred(float _time)

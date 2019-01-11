@@ -33,7 +33,9 @@ namespace K
 		void _Render(float _time);
 
 		static bool shutdown_;
-		HINSTANCE instance_{};
+		static bool gui_show_;
+
 		HWND window_{};
+		HINSTANCE instance_{};
 	};
 }

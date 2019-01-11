@@ -133,6 +133,15 @@
     <Filter Include="08. Rendering\3. RenderTarget">
       <UniqueIdentifier>{42e6b9c5-adff-4b0c-b2f1-c154f6c67237}</UniqueIdentifier>
     </Filter>
+    <Filter Include="12. Object\1. Actor\3. LightActor">
+      <UniqueIdentifier>{f4e470e0-dde0-4931-8350-fbc2fdaeb9fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="18. Utility">
+      <UniqueIdentifier>{2e4da885-65e6-49e9-bdff-0aecda59f555}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="18. Utility\1. GUI">
+      <UniqueIdentifier>{2183a85b-f01d-4cbf-8908-ab2a64fef56d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -282,6 +291,12 @@
     <ClInclude Include="Rendering\render_target.h">
       <Filter>08. Rendering\3. RenderTarget</Filter>
     </ClInclude>
+    <ClInclude Include="Object\Actor\light_actor.h">
+      <Filter>12. Object\1. Actor\3. LightActor</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_manager.h">
+      <Filter>18. Utility\1. GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -421,6 +436,12 @@
     </ClCompile>
     <ClCompile Include="Rendering\render_target.cpp">
       <Filter>08. Rendering\3. RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Actor\light_actor.cpp">
+      <Filter>12. Object\1. Actor\3. LightActor</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_manager.cpp">
+      <Filter>18. Utility\1. GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

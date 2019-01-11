@@ -53,6 +53,7 @@ namespace K
 	constexpr auto UI_CAMERA = "UICamera";
 	constexpr auto TILE = "Tile";
 	constexpr auto TILE_MAP = "TileMap";
+	constexpr auto DEFAULT_LIGHT = "DefaultLight";
 
 	//////////////////// Component Key ////////////////////
 	constexpr auto TRANSFORM = "Transform";
@@ -63,6 +64,7 @@ namespace K
 	constexpr auto ANIMATION_2D = "Animation2D";
 	constexpr auto COLLIDER = "Collider";
 	constexpr auto NAVIGATOR = "Navigator";
+	constexpr auto LIGHT = "Light";
 
 	//////////////////// Constant ////////////////////
 	const auto MTU_SIZE = 1024;
@@ -156,25 +158,12 @@ namespace K
 		std::vector<ANIMATION_2D_FRAME_DESC> frame_vector;
 	};
 
-	struct LIGHT_DESC
-	{
-		int type;
-		Vector4 diffuse;
-		Vector4 ambient;
-		Vector4 specular;
-		Vector3 direction;
-		Vector3 position;
-		float range;
-		float in_angle;
-		float out_angle;
-		Vector2 padding;
-	};
-
 	struct TransformConstantBuffer
 	{
 		Matrix world;
 		Matrix view;
 		Matrix projection;
+		Matrix WV;
 		Matrix WVP;
 	};
 
@@ -184,5 +173,22 @@ namespace K
 		Vector4 ambient;
 		Vector4 specular;
 		Vector4 emissive;
+	};
+
+	struct LightConstantBuffer
+	{
+		Vector4 ambient;
+		Vector4 diffuse;
+		Vector4 specular;
+		Vector3 position;
+		float padding1;
+		Vector3 direction;
+		float padding2;
+		Vector3 attenuation;
+		float falloff;
+		int type;
+		float range;
+		float in_angle;
+		float out_angle;
 	};
 }

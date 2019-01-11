@@ -35,6 +35,8 @@ void K::WorldManager::Input(float _time)
 {
 	for (auto iter = level_list_.begin(); iter != level_list_.end();)
 	{
+		(*iter)->_Input(_time);
+
 		switch ((*iter)->tag_state())
 		{
 		case TAG_STATE::NORMAL:
@@ -57,6 +59,8 @@ void K::WorldManager::Update(float _time)
 {
 	for (auto iter = level_list_.begin(); iter != level_list_.end();)
 	{
+		(*iter)->_Update(_time);
+
 		switch ((*iter)->tag_state())
 		{
 		case TAG_STATE::NORMAL:
@@ -79,6 +83,8 @@ void K::WorldManager::Collision(float _time)
 {
 	for (auto iter = level_list_.begin(); iter != level_list_.end();)
 	{
+		(*iter)->_Collision(_time);
+
 		switch ((*iter)->tag_state())
 		{
 		case TAG_STATE::NORMAL:
@@ -101,6 +107,8 @@ void K::WorldManager::Render(float _time)
 {
 	for (auto iter = level_list_.begin(); iter != level_list_.end();)
 	{
+		(*iter)->_Render(_time);
+
 		switch ((*iter)->tag_state())
 		{
 		case TAG_STATE::NORMAL:
