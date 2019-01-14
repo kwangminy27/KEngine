@@ -13,7 +13,7 @@ namespace K
 		friend class ObjectManager;
 	public:
 		virtual void Initialize() override;
-
+		
 		virtual void Render(float _time);
 
 		virtual CPTR Clone() const override;

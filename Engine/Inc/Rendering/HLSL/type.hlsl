@@ -120,7 +120,7 @@ SamplerState g_sampler : register(s0);
 
 void ComputeDirectionalLight(float3 _normal, float3 _to_camera, out float4 _ambient, out float4 _diffuse, out float4 _specular)
 {
-    float3 to_light = normalize(mul(float4(-g_light.direction, 0.f), g_WV)).xyz;
+    float3 to_light = normalize(mul(float4(-g_light.direction, 0.f), g_view)).xyz;
     float3 halfway = normalize(_to_camera + to_light);
 
     _ambient = g_material.ambient * g_light.ambient;
@@ -130,17 +130,17 @@ void ComputeDirectionalLight(float3 _normal, float3 _to_camera, out float4 _ambi
 
 void ComputePointLight(float3 _position, float3 _normal, float3 _to_camera, out float4 _ambient, out float4 _diffuse, out float4 _specular)
 {
-    float3 light_position = mul(float4(g_light.position, 1.f), g_WV).xyz;
+    float3 light_position = mul(float4(g_light.position, 1.f), g_view).xyz;
 
     float distance = length(light_position - _position);
     
     if(g_light.range < distance)
         return;
 
-    float attenuation = 1.f / dot(g_light.attenuation, float3(1, distance, distance * distance));
-
     float3 to_light = normalize(light_position - _position);
     float3 halfway = normalize(_to_camera + to_light);
+
+    float attenuation = 1.f / dot(g_light.attenuation, float3(1, distance, distance * distance));
 
     _ambient = g_material.ambient * g_light.ambient * attenuation;
     _diffuse = g_material.diffuse * g_light.diffuse * max(dot(_normal, to_light), 0.f) * attenuation;
@@ -149,20 +149,21 @@ void ComputePointLight(float3 _position, float3 _normal, float3 _to_camera, out 
 
 void ComputeSpotLight(float3 _position, float3 _normal, float3 _to_camera, out float4 _ambient, out float4 _diffuse, out float4 _specular)
 {
-    float3 light_position = mul(float4(g_light.position, 1.f), g_WV).xyz;
-    float3 light_direction = normalize(mul(float4(g_light.direction, 0.f), g_WV)).xyz;
+    float3 light_position = mul(float4(g_light.position, 1.f), g_view).xyz;
+    float3 light_direction = normalize(mul(float4(g_light.direction, 0.f), g_view)).xyz;
 
     float distance = length(light_position - _position);
     
     if (g_light.range < distance)
         return;
 
-    float attenuation = 1.f / dot(g_light.attenuation, float3(1, distance, distance * distance));
-
     float3 to_light = normalize(light_position - _position);
     float3 halfway = normalize(_to_camera + to_light);
 
-    _ambient = g_material.ambient * g_light.ambient * pow(max(dot(-to_light, light_direction), 0.f), g_light.falloff) * attenuation;
-    _diffuse = g_material.diffuse * g_light.diffuse * max(dot(_normal, to_light), 0.f) * attenuation;
-    _specular = g_material.specular * g_light.specular * pow(max(dot(_normal, halfway), 0.f), g_light.specular.w) * attenuation;
+    float attenuation = 1.f / dot(g_light.attenuation, float3(1, distance, distance * distance));
+    float falloff = pow(max(dot(-to_light, light_direction), 0.f), g_light.falloff);
+
+    _ambient = g_material.ambient * g_light.ambient * attenuation * falloff;
+    _diffuse = g_material.diffuse * g_light.diffuse * max(dot(_normal, to_light), 0.f) * attenuation * falloff;
+    _specular = g_material.specular * g_light.specular * pow(max(dot(_normal, halfway), 0.f), g_light.specular.w) * falloff;
 }

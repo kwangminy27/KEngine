@@ -22,17 +22,29 @@ namespace K
 
 		void UpdateConstantBuffer();
 
-		void set_type(int _type);
+		Vector4 const& ambient() const;
+		Vector4 const& diffuse() const;
+		Vector4 const& specular() const;
+		Vector3 const& position() const;
+		Vector3 const& direction() const;
+		Vector3 const& attenuation() const;
+		float falloff() const;
+		int type() const;
+		float range() const;
+		float in_angle() const;
+		float out_angle() const;
+
 		void set_ambient(Vector4 const& _ambient);
 		void set_diffuse(Vector4 const& _diffuse);
 		void set_specular(Vector4 const& _specular);
 		void set_position(Vector3 const& _position);
 		void set_direction(Vector3 const& _direction);
-		void set_range(float _range);
+		void set_attenuation(Vector3 const& _attenuation);
 		void set_falloff(float _falloff);
+		void set_type(int _type);
+		void set_range(float _range);
 		void set_in_angle(float _in_angle);
 		void set_out_angle(float _out_angle);
-		void set_attenuation(Vector3 const& _attenuation);
 
 	private:
 		Light() = default;

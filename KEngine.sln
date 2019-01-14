@@ -11,14 +11,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Editor", "3. Editor", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Engine", "4. Engine", "{E663E6D2-C747-4EA3-B07A-8268BC52D835}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. Physics", "5. Physics", "{9D386393-81AA-4BCB-81D2-A362C916187C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6. Physic", "6. Physic", "{9D386393-81AA-4BCB-81D2-A362C916187C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6. Network", "6. Network", "{283C0A3A-8D18-4BFA-AA8B-72EFC04AA02F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "7. Network", "7. Network", "{283C0A3A-8D18-4BFA-AA8B-72EFC04AA02F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "7. Common", "7. Common", "{62243C14-2FF9-49B2-AC6E-F026EEF7CADA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "8. Common", "8. Common", "{62243C14-2FF9-49B2-AC6E-F026EEF7CADA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "9. Automation", "9. Automation", "{D363560B-649A-4470-9A87-242C307901C8}"
 	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
 		ignore.txt = ignore.txt
 	EndProjectSection
 EndProject
@@ -46,7 +47,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Inc\Client
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DirectXTK", "DirectXTK", "{9B59AAB8-EE68-4E5C-AFFC-0EBC7C33B542}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "8. Utility", "8. Utility", "{6410923F-3CFA-4A25-BC83-CD0458A981C5}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. Utility", "5. Utility", "{6410923F-3CFA-4A25-BC83-CD0458A981C5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utility", "Utility\Inc\Utility.vcxproj", "{E4DD5F71-DBBD-4A69-9BB7-480459E217F2}"
 EndProject

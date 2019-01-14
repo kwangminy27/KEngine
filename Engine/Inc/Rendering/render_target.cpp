@@ -14,6 +14,7 @@ void K::RenderTarget::Render(float _time)
 {
 	auto const& resource_manager = ResourceManager::singleton();
 	auto const& rendering_manager = RenderingManager::singleton();
+
 	auto const& camera = WorldManager::singleton()->FindCamera(TAG{ DEFAULT_CAMERA, 0 });
 
 	TransformConstantBuffer transform_CB{};

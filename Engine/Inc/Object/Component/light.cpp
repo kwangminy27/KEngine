@@ -34,16 +34,16 @@ void K::Light::Initialize()
 		//set_attenuation(Vector3{ 0.1f, 0.1f, 0.1f });
 
 		set_type(static_cast<int>(LIGHT_TYPE::SPOT));
-		set_ambient(Vector4{ 0.5f, 0.5f, 0.5f, 1.f });
+		set_ambient(White.v);
 		set_diffuse(White.v);
 		set_specular(White.v);
-		set_position(Vector3{ 0.f, 0.f, -2.f });
-		set_direction(Vector3{ 0.f, 1.f, 1.f });
+		set_position(-Vector3::UnitZ);
+		set_direction(Vector3::UnitZ);
+		set_attenuation(Vector3::One);
+		set_falloff(10.f);
 		set_range(100.f);
-		set_falloff(1.f);
 		set_in_angle(0.f);
 		set_out_angle(0.f);
-		set_attenuation(Vector3{ 0.2f, 0.2f, 0.2f });
 	}
 	catch (std::exception const& _e)
 	{
@@ -90,17 +90,18 @@ void K::Light::Serialize(OutputMemoryStream& _omstream)
 void K::Light::UpdateConstantBuffer()
 {
 	LightConstantBuffer light_CB{};
-	light_CB.type = type_;
+
 	light_CB.ambient = ambient_;
 	light_CB.diffuse = diffuse_;
 	light_CB.specular = specular_;
 	light_CB.position = position_;
 	light_CB.direction = direction_;
-	light_CB.range = range_;
+	light_CB.attenuation = attenuation_;
 	light_CB.falloff = falloff_;
+	light_CB.type = type_;
+	light_CB.range = range_;
 	light_CB.in_angle = in_angle_;
 	light_CB.out_angle = out_angle_;
-	light_CB.attenuation = attenuation_;
 
 	RenderingManager::singleton()->UpdateConstantBuffer(LIGHT, &light_CB);
 }
@@ -192,4 +193,59 @@ K::Light::Light(Light&& _other) noexcept : Component(std::move(_other))
 
 void K::Light::_Finalize()
 {
+}
+
+K::Vector4 const& K::Light::ambient() const
+{
+	return ambient_;
+}
+
+K::Vector4 const& K::Light::diffuse() const
+{
+	return diffuse_;
+}
+
+K::Vector4 const& K::Light::specular() const
+{
+	return specular_;
+}
+
+K::Vector3 const& K::Light::position() const
+{
+	return position_;
+}
+
+K::Vector3 const& K::Light::direction() const
+{
+	return direction_;
+}
+
+K::Vector3 const& K::Light::attenuation() const
+{
+	return attenuation_;
+}
+
+float K::Light::falloff() const
+{
+	return falloff_;
+}
+
+int K::Light::type() const
+{
+	return type_;
+}
+
+float K::Light::range() const
+{
+	return range_;
+}
+
+float K::Light::in_angle() const
+{
+	return in_angle_;
+}
+
+float K::Light::out_angle() const
+{
+	return out_angle_;
 }

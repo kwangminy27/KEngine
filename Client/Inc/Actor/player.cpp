@@ -21,9 +21,10 @@ void K::Player::Initialize()
 
 		auto material = object_manager->CreateComponent<Material>(TAG{ MATERIAL, 0 });
 		MaterialConstantBuffer material_CB{};
-		material_CB.ambient = DirectX::Colors::White.v;
 		material_CB.diffuse = DirectX::Colors::White.v;
+		material_CB.ambient = DirectX::Colors::White.v;
 		material_CB.specular = DirectX::Colors::White.v;
+		material_CB.ambient = DirectX::Colors::White.v;
 		CPTR_CAST<Material>(material)->SetMaterialConstantBuffer(material_CB , 0, 0);
 		AddComponent(material);
 
@@ -69,6 +70,4 @@ void K::Player::_Finalize()
 
 void K::Player::_Update(float _time)
 {
-	auto const& camera = WorldManager::singleton()->FindCamera(TAG{ DEFAULT_CAMERA, 0 });
-	camera->CreateView(Vector3{ 0.f, 0.f, -3.f }, Vector3::Zero, Vector3::UnitY);
 }

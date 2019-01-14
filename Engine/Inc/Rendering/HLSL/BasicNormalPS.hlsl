@@ -12,7 +12,7 @@ PS_OUTPUT_SINGLE_TARGET BasicNormalPS(VS_OUTPUT_POSITION_NORMAL_COLOR _input)
     float4 diffuse = (float4) 0;
     float4 specular = (float4) 0;
 
-    float3 to_cameraV = normalize(mul(float4(-_input.positionV, 1.f), g_WV)).xyz;
+    float3 to_cameraV = normalize(-_input.positionV);
 
     switch (g_light.type)
     {

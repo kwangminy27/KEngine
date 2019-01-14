@@ -71,25 +71,6 @@
 #include "Base/macro.h"
 #include "Base/term.h"
 
-// Manager
-#include "device_manager.h"
-#include "text_manager.h"
-#include "path_manager.h"
-#include "Resource/resource_manager.h"
-#include "Rendering/rendering_manager.h"
-#include "audio_manager.h"
-#include "video_manager.h"
-#include "time_manager.h"
-#include "input_manager.h"
-#include "World/world_manager.h"
-#include "Object/object_manager.h"
-#include "collision_manager.h"
-#include "navigation_manager.h"
-#include "registry_manager.h"
-#include "replication_manager.h"
-#include "connection_manager.h"
-#include "gui_manager.h"
-
 namespace K
 {
 	static void ThrowIfFailed(HRESULT _result)

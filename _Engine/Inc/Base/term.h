@@ -169,8 +169,8 @@ namespace K
 
 	struct MaterialConstantBuffer
 	{
-		Vector4 diffuse;
 		Vector4 ambient;
+		Vector4 diffuse;
 		Vector4 specular;
 		Vector4 emissive;
 	};
