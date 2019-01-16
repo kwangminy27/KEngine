@@ -14,7 +14,7 @@ PS_OUTPUT_SINGLE_TARGET BasicNormalPS(VS_OUTPUT_POSITION_NORMAL_COLOR _input)
 
     float3 to_cameraV = normalize(-_input.positionV);
 
-    switch (g_light.type)
+    switch (g_light_type)
     {
         case DIRECTIONAL:
             ComputeDirectionalLight(_input.normalV, to_cameraV, ambient, diffuse, specular);

@@ -5,9 +5,10 @@ namespace K
 	class Shader;
 	class RenderState;
 	class RenderTarget;
+	class MRT;
 
 	using RenderGroup = std::vector<Actor*>;
-
+	
 	struct ConstantBuffer
 	{
 		uint32_t slot;
@@ -26,12 +27,15 @@ namespace K
 		std::shared_ptr<RenderState> const& FindRenderState(std::string const& _tag) const;
 		std::shared_ptr<ConstantBuffer> const& FindConstantBuffer(std::string const& _tag) const;
 		std::shared_ptr<RenderTarget> const& FindRenderTarget(std::string const& _tag) const;
+		std::shared_ptr<MRT> const& FindMRT(std::string const& _tag) const;
 
 		void UpdateConstantBuffer(std::string const& _tag, void* _data);
 
 		void Render(float _time);
 
 		void AddActor(APTR const& _actor);
+		void AddRTV(std::string const& _MRT_tag, std::string const& _render_target_tag);
+		void AddDSV(std::string const& _MRT_tag, std::string const& _render_target_tag);
 
 		GAME_MODE mode() const;
 		void set_mode(GAME_MODE _mode);
@@ -40,6 +44,7 @@ namespace K
 		static std::shared_ptr<ConstantBuffer> CB_dummy_;
 		static std::shared_ptr<RenderState> render_state_dummy_;
 		static std::shared_ptr<RenderTarget> render_target_dummy_;
+		static std::shared_ptr<MRT> MRT_dummy_;
 
 	private:
 		RenderingManager() = default;
@@ -71,17 +76,20 @@ namespace K
 			bool _independent_blend_enable,
 			std::vector<D3D11_RENDER_TARGET_BLEND_DESC> const& _render_target_blend_desc_vector);
 		void _CreateConstantBuffer(std::string const& _tag, uint32_t _slot, uint32_t _size, uint8_t _shader_flag);
-		void _CreateRenderTarget(std::string const& _tag, Vector3 const& _scaling, Vector3 const& _translation); // !
+		void _CreateRenderTarget(std::string const& _tag, Vector3 const& _scaling, Vector3 const& _translation);
+		void _CreateMRT(std::string const& _tag);
 
 		void _Render2D(float _time);
 		void _RenderForward(float _time);
 		void _RenderDeferred(float _time);
+		void _RenderGBuffer(float _time);
 
 		GAME_MODE mode_{};
 		std::unordered_map<std::string, std::shared_ptr<Shader>> shader_map_{};
 		std::unordered_map<std::string, std::shared_ptr<ConstantBuffer>> CB_map_{};
 		std::unordered_map<std::string, std::shared_ptr<RenderState>> render_state_map_{};
 		std::unordered_map<std::string, std::shared_ptr<RenderTarget>> render_target_map_{};
+		std::unordered_map<std::string, std::shared_ptr<MRT>> MRT_map_{};
 		std::array<RenderGroup, static_cast<int>(RENDER_GROUP_TYPE::MAX)> render_group_array_{};
 	};
 }

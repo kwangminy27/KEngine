@@ -5,6 +5,7 @@ namespace K
 	class ENGINE_DLL RenderTarget
 	{
 		friend class RenderingManager;
+		friend class MRT;
 	public:
 		void Render(float _time);
 
@@ -13,7 +14,8 @@ namespace K
 		void SetTarget();
 		void ResetTarget();
 
-		void SetToShader(int _slot);
+		void Attach(int _slot);
+		void Detach(int _slot);
 
 		void set_mesh_tag(std::string const& _tag);
 		void set_shader_tag(std::string const& _tag);

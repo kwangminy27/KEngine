@@ -142,6 +142,12 @@
     <Filter Include="18. Utility\1. GUI">
       <UniqueIdentifier>{2183a85b-f01d-4cbf-8908-ab2a64fef56d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="08. Rendering\4. MRT">
+      <UniqueIdentifier>{179c5839-e482-404f-a1af-469c9d174029}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08. Rendering\1. Shader\1. HLSL\4. Deferred Rendering">
+      <UniqueIdentifier>{d3d4a03a-179b-46fd-b129-cf3a86679e93}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -297,6 +303,9 @@
     <ClInclude Include="gui_manager.h">
       <Filter>18. Utility\1. GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Rendering\mrt.h">
+      <Filter>08. Rendering\4. MRT</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -443,6 +452,9 @@
     <ClCompile Include="gui_manager.cpp">
       <Filter>18. Utility\1. GUI</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\mrt.cpp">
+      <Filter>08. Rendering\4. MRT</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\HLSL\BasicAnimation2DVS.hlsl">
@@ -477,6 +489,12 @@
     </FxCompile>
     <FxCompile Include="Rendering\HLSL\BasicNormalPS.hlsl">
       <Filter>08. Rendering\1. Shader\1. HLSL\1. Basic</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\HLSL\GBufferVS.hlsl">
+      <Filter>08. Rendering\1. Shader\1. HLSL\4. Deferred Rendering</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\HLSL\GBufferPS.hlsl">
+      <Filter>08. Rendering\1. Shader\1. HLSL\4. Deferred Rendering</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

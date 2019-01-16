@@ -30,13 +30,12 @@ void K::Core::Initialize(std::wstring const& _class_name, std::wstring const& _w
 {
 	try
 	{
+		Initialize();
+
 		_RegisterClass(_class_name);
 		_CreateWindow(_class_name, _window_name);
 
 		Initialize(_instance, window_, _mode);
-
-		auto const& device_manager = DeviceManager::singleton();
-		GUIManager::singleton()->Initialize(window_, device_manager->device().Get(), device_manager->context().Get());
 	}
 	catch (std::exception const& _e)
 	{
@@ -59,7 +58,9 @@ void K::Core::Initialize(HINSTANCE _instance, HWND _window, GAME_MODE _mode)
 
 		SocketManager::singleton()->Initialize();
 
-		DeviceManager::singleton()->Initialize(window_);
+		auto const& device_manager = DeviceManager::singleton();
+		device_manager->Initialize(window_);
+
 		TextManager::singleton()->Initialize();
 		PathManager::singleton()->Initialize();
 		AudioManager::singleton()->Initialize();
@@ -79,7 +80,8 @@ void K::Core::Initialize(HINSTANCE _instance, HWND _window, GAME_MODE _mode)
 		RegistryManager::singleton()->Initialize();
 		ReplicationManager::singleton()->Initialize();
 		ConnectionManager::singleton()->Initialize();
-		GUIManager::singleton()->Initialize();
+
+		GUIManager::singleton()->Initialize(window_, device_manager->device().Get(), device_manager->context().Get());
 	}
 	catch (std::exception const& _e)
 	{

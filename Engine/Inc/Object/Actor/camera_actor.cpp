@@ -60,6 +60,11 @@ void K::CameraActor::CreateProjection(float _fov_angle, float _width, float _hei
 	CPTR_CAST<Camera>(FindComponent(TAG{ CAMERA, 0 }))->CreateProjection(_fov_angle, _width, _height, _near, _far);
 }
 
+float K::CameraActor::GetProjectionFar() const
+{
+	return CPTR_CAST<Camera>(FindComponent(TAG{ CAMERA, 0 }))->GetProjectionFar();
+}
+
 K::Matrix const& K::CameraActor::view() const
 {
 	return CPTR_CAST<Camera>(FindComponent(TAG{ CAMERA, 0 }))->view();

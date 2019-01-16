@@ -7,13 +7,17 @@
 #include "depth_stencil_state.h"
 #include "blend_state.h"
 #include "render_target.h"
+#include "mrt.h"
+#include "World/world_manager.h"
 #include "Object/Actor/actor.h"
+#include "Object/Actor/camera_actor.h"
 #include "Object/Component/light.h"
 
 std::shared_ptr<K::Shader> K::RenderingManager::shader_dummy_{};
 std::shared_ptr<K::ConstantBuffer> K::RenderingManager::CB_dummy_{};
 std::shared_ptr<K::RenderState> K::RenderingManager::render_state_dummy_{};
 std::shared_ptr<K::RenderTarget> K::RenderingManager::render_target_dummy_{};
+std::shared_ptr<K::MRT> K::RenderingManager::MRT_dummy_{};
 
 void K::RenderingManager::Initialize()
 {
@@ -84,6 +88,17 @@ void K::RenderingManager::Initialize()
 		input_element_desc_vector.push_back({ "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1 });
 
 		_CreateShader(INSTANCE_TEX_SHADER, cso_desc_vector, input_element_desc_vector, SHADER_PATH);
+
+		cso_desc_vector.clear();
+		cso_desc_vector.push_back({ SHADER_TYPE::VERTEX, L"GBufferVS.cso" });
+		cso_desc_vector.push_back({ SHADER_TYPE::PIXEL, L"GBufferPS.cso" });
+
+		input_element_desc_vector.clear();
+		input_element_desc_vector.push_back({ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+		input_element_desc_vector.push_back({ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+		input_element_desc_vector.push_back({ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+
+		_CreateShader(GBUFFER_SHADER, cso_desc_vector, input_element_desc_vector, SHADER_PATH);
 #pragma endregion
 
 #pragma region RenderState
@@ -128,10 +143,21 @@ void K::RenderingManager::Initialize()
 		_CreateConstantBuffer(ANIMATION_2D, 2, sizeof(ANIMATION_2D_FRAME_DESC), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
 		_CreateConstantBuffer(COLLIDER, 3, sizeof(Vector4), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
 		_CreateConstantBuffer(LIGHT, 4, sizeof(LightConstantBuffer), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
+		_CreateConstantBuffer(COMMON, 5, sizeof(CommonConstantBuffer), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
 #pragma endregion
 
 #pragma region RenderTarget
-		_CreateRenderTarget(BASIC_RENDER_TARGET, Vector3{ static_cast<float>(RESOLUTION::WIDTH), static_cast<float>(RESOLUTION::HEIGHT), 1.f }, Vector3::Zero);
+		//_CreateRenderTarget(BASIC_RENDER_TARGET, Vector3{ static_cast<float>(RESOLUTION::WIDTH), static_cast<float>(RESOLUTION::HEIGHT), 1.f }, Vector3{ 0.f, 0.f, 5.f });
+		_CreateRenderTarget(ALBEDO_RENDER_TARGET, Vector3{ 100.f, 100.f, 1.f }, Vector3{ 750.f, -400.f, 5.f });
+		_CreateRenderTarget(NORMAL_RENDER_TARGET, Vector3{ 100.f, 100.f, 1.f }, Vector3{ 750.f, -300.f, 5.f });
+		_CreateRenderTarget(DEPTH_RENDER_TARGET, Vector3{ 100.f, 100.f, 1.f }, Vector3{ 750.f, -200.f, 5.f });
+		_CreateRenderTarget(MATERIAL_RENDER_TARGET, Vector3{ 100.f, 100.f, 1.f }, Vector3{ 750.f, -100.f, 5.f });
+
+		_CreateMRT(GBUFFER_MRT);
+		AddRTV(GBUFFER_MRT, ALBEDO_RENDER_TARGET);
+		AddRTV(GBUFFER_MRT, NORMAL_RENDER_TARGET);
+		AddRTV(GBUFFER_MRT, DEPTH_RENDER_TARGET);
+		AddRTV(GBUFFER_MRT, MATERIAL_RENDER_TARGET);
 #pragma endregion
 
 		for (auto& render_group : render_group_array_)
@@ -187,6 +213,16 @@ std::shared_ptr<K::RenderTarget> const& K::RenderingManager::FindRenderTarget(st
 	return iter->second;
 }
 
+std::shared_ptr<K::MRT> const& K::RenderingManager::FindMRT(std::string const& _tag) const
+{
+	auto iter = MRT_map_.find(_tag);
+
+	if (iter == MRT_map_.end())
+		return MRT_dummy_;
+
+	return iter->second;
+}
+
 void K::RenderingManager::UpdateConstantBuffer(std::string const& _tag, void* _data)
 {
 	auto const& context = DeviceManager::singleton()->context();
@@ -224,6 +260,9 @@ void K::RenderingManager::Render(float _time)
 		break;
 	}
 
+	for (auto& e : render_target_map_)
+		e.second->Render(_time);
+
 	for (auto& render_group : render_group_array_)
 		render_group.clear();
 }
@@ -239,6 +278,26 @@ void K::RenderingManager::AddActor(APTR const& _actor)
 	}
 
 	render_group_array_.at(static_cast<int>(render_group_type)).push_back(_actor.get());
+}
+
+void K::RenderingManager::AddRTV(std::string const& _MRT_tag, std::string const& _render_target_tag)
+{
+	auto _MRT = FindMRT(_MRT_tag);
+
+	if (nullptr == _MRT)
+		throw std::exception{ "RenderingManager::AddRTV" };
+
+	_MRT->AddRTV(_render_target_tag);
+}
+
+void K::RenderingManager::AddDSV(std::string const& _MRT_tag, std::string const& _render_target_tag)
+{
+	auto _MRT = FindMRT(_MRT_tag);
+
+	if (nullptr == _MRT)
+		throw std::exception{ "RenderingManager::AddRTV" };
+
+	_MRT->AddDSV(_render_target_tag);
 }
 
 K::GAME_MODE K::RenderingManager::mode() const
@@ -365,33 +424,41 @@ void K::RenderingManager::_CreateRenderTarget(std::string const& _tag, Vector3 c
 	render_target_map_.insert(std::make_pair(_tag, std::move(render_target)));
 }
 
+void K::RenderingManager::_CreateMRT(std::string const& _tag)
+{
+	if (FindMRT(_tag))
+		throw std::exception{ "RenderingManager::_CreateMRT" };
+
+	auto _MRT = std::shared_ptr<MRT>{ new MRT, [](MRT* _p) {
+		delete _p;
+	} };
+
+	MRT_map_.insert(std::make_pair(_tag, std::move(_MRT)));
+}
+
 void K::RenderingManager::_Render2D(float _time)
 {
+	auto const& render_target = FindRenderTarget(BASIC_RENDER_TARGET);
+
+	render_target->Clear();
+	render_target->SetTarget();
+
 	for (int i = 0; i <= static_cast<int>(RENDER_GROUP_TYPE::HUD); ++i)
 	{
 		for (auto const& actor : render_group_array_.at(i))
 			actor->__Render(_time);
 	}
 
-	//auto const& render_target = FindRenderTarget(BASIC_RENDER_TARGET);
-
-	//render_target->Clear();
-	//render_target->SetTarget();
-
-	//for (int i = 0; i <= static_cast<int>(RENDER_GROUP_TYPE::HUD); ++i)
-	//{
-	//	for (auto const& actor : render_group_array_.at(i))
-	//		actor->__Render(_time);
-	//}
-
-	//render_target->ResetTarget();
-
-	//for (auto& e : render_target_map_)
-	//	e.second->Render(_time);
+	render_target->ResetTarget();
 }
 
 void K::RenderingManager::_RenderForward(float _time)
 {
+	auto const& render_target = FindRenderTarget(BASIC_RENDER_TARGET);
+
+	render_target->Clear();
+	render_target->SetTarget();
+
 	if (false == render_group_array_.at(static_cast<int>(RENDER_GROUP_TYPE::LIGHT)).empty())
 	{
 		auto const& light = render_group_array_.at(static_cast<int>(RENDER_GROUP_TYPE::LIGHT)).at(0)->FindComponent(TAG{ LIGHT, 0 });
@@ -404,29 +471,34 @@ void K::RenderingManager::_RenderForward(float _time)
 			actor->__Render(_time);
 	}
 
-	//auto const& render_target = FindRenderTarget(BASIC_RENDER_TARGET);
-
-	//render_target->Clear();
-	//render_target->SetTarget();
-
-	//if (false == render_group_array_.at(static_cast<int>(RENDER_GROUP_TYPE::LIGHT)).empty())
-	//{
-	//	auto const& light = render_group_array_.at(static_cast<int>(RENDER_GROUP_TYPE::LIGHT)).at(0)->FindComponent(TAG{ LIGHT, 0 });
-	//	CPTR_CAST<Light>(light)->UpdateConstantBuffer();
-	//}
-
-	//for (int i = 0; i <= static_cast<int>(RENDER_GROUP_TYPE::HUD); ++i)
-	//{
-	//	for (auto const& actor : render_group_array_.at(i))
-	//		actor->__Render(_time);
-	//}
-
-	//render_target->ResetTarget();
-
-	//for (auto& e : render_target_map_)
-	//	e.second->Render(_time);
+	render_target->ResetTarget();
 }
 
 void K::RenderingManager::_RenderDeferred(float _time)
 {
+	CommonConstantBuffer common_CB{};
+	common_CB.projection_far = WorldManager::singleton()->FindCamera(TAG{ DEFAULT_CAMERA, 0 })->GetProjectionFar();
+
+	UpdateConstantBuffer(COMMON, &common_CB);
+
+	_RenderGBuffer(_time);
+
+	// 2. Light ·»´õ¸µ
+	// 3. UI ·»´õ¸µ
+}
+
+void K::RenderingManager::_RenderGBuffer(float _time)
+{
+	auto const& _MRT = FindMRT(GBUFFER_MRT);
+
+	_MRT->Clear();
+	_MRT->SetTarget();
+
+	for (int i = 0; i <= static_cast<int>(RENDER_GROUP_TYPE::NORMAL); ++i)
+	{
+		for (auto const& actor : render_group_array_.at(i))
+			actor->__Render(_time);
+	}
+
+	_MRT->ResetTarget();
 }

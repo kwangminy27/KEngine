@@ -8,7 +8,7 @@ int WINAPI wWinMain(HINSTANCE _instance, HINSTANCE _prev_instance, PWSTR _cmd_li
 	auto const& core = K::Core::singleton();
 	auto const& world_manager = K::WorldManager::singleton();
 
-	core->Initialize(L"KEngine", L"KEngine", _instance, K::GAME_MODE::FORWARD);
+	core->Initialize(L"KEngine", L"KEngine", _instance, K::GAME_MODE::DEFERRED);
 
 	world_manager->CreateLevel<K::IntroLevel>(K::TAG{ "IntroLevel", 0 });
 

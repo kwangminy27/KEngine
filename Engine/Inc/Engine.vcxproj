@@ -205,6 +205,7 @@
     <ClInclude Include="registry_manager.h" />
     <ClInclude Include="Rendering\blend_state.h" />
     <ClInclude Include="Rendering\depth_stencil_state.h" />
+    <ClInclude Include="Rendering\mrt.h" />
     <ClInclude Include="Rendering\rendering_manager.h" />
     <ClInclude Include="Rendering\render_state.h" />
     <ClInclude Include="Rendering\render_target.h" />
@@ -258,6 +259,7 @@
     <ClCompile Include="registry_manager.cpp" />
     <ClCompile Include="Rendering\blend_state.cpp" />
     <ClCompile Include="Rendering\depth_stencil_state.cpp" />
+    <ClCompile Include="Rendering\mrt.cpp" />
     <ClCompile Include="Rendering\rendering_manager.cpp" />
     <ClCompile Include="Rendering\render_state.cpp" />
     <ClCompile Include="Rendering\render_target.cpp" />
@@ -377,6 +379,26 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ColliderVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Shader/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Resource/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Rendering\HLSL\GBufferPS.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">GBufferPS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">GBufferPS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Shader/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Resource/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Rendering\HLSL\GBufferVS.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">GBufferVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">GBufferVS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Shader/%(Filename).cso</ObjectFileOutput>

@@ -15,8 +15,8 @@ void K::Player::Initialize()
 
 		auto renderer = object_manager->CreateComponent<Renderer>(TAG{ RENDERER, 0 });
 		CPTR_CAST<Renderer>(renderer)->set_mesh(resource_manager->FindMesh(NORMAL_PYRAMID));
-		CPTR_CAST<Renderer>(renderer)->set_shader(rendering_manager->FindShader(BASIC_NORMAL_SHADER));
-		CPTR_CAST<Renderer>(renderer)->set_render_state(rendering_manager->FindRenderState(DEPTH_DISABLE));
+		CPTR_CAST<Renderer>(renderer)->set_shader(rendering_manager->FindShader(GBUFFER_SHADER));
+		//CPTR_CAST<Renderer>(renderer)->set_render_state(rendering_manager->FindRenderState(DEPTH_DISABLE));
 		AddComponent(renderer);
 
 		auto material = object_manager->CreateComponent<Material>(TAG{ MATERIAL, 0 });

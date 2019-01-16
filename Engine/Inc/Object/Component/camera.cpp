@@ -8,7 +8,7 @@ void K::Camera::Initialize()
 {
 	try
 	{
-		CreateProjection(90.f, static_cast<float>(RESOLUTION::WIDTH), static_cast<float>(RESOLUTION::HEIGHT), 0.3f, 1000.f);
+		CreateProjection(45.f, static_cast<float>(RESOLUTION::WIDTH), static_cast<float>(RESOLUTION::HEIGHT), 0.001f, 2.f);
 	}
 	catch (std::exception const& _e)
 	{
@@ -44,6 +44,7 @@ void K::Camera::CreateView(Vector3 const& _eye, Vector3 const& _focus, Vector3 c
 void K::Camera::CreateProjection(float _width, float _height, float _near, float _far)
 {
 	projection_ = Matrix::CreateOrthographic(_width, _height, _near, _far);
+	far_ = _far;
 }
 
 void K::Camera::CreateProjection(float _fov_angle, float _width, float _height, float _near, float _far)
@@ -51,6 +52,12 @@ void K::Camera::CreateProjection(float _fov_angle, float _width, float _height, 
 	assert(_near != 0.f);
 
 	projection_ = Matrix::CreatePerspectiveFieldOfView(_fov_angle, _width / _height, _near, _far);
+	far_ = _far;
+}
+
+float K::Camera::GetProjectionFar()
+{
+	return far_;
 }
 
 K::Matrix const& K::Camera::view() const

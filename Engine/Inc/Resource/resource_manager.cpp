@@ -23,7 +23,7 @@ void K::ResourceManager::Initialize()
 			{ { 0.5f, -0.5f, 0.f }, { 1.f, 1.f } }
 		};
 
-		uint16_t tex_rect_indices[6]{ 0, 1, 2, 1, 3, 2 };
+		uint16_t tex_rect_indices[6]{ 0, 1, 2, 0, 2, 3 };
 
 		_CreateMesh(
 			TEX_RECT, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,

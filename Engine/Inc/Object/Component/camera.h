@@ -19,6 +19,8 @@ namespace K
 		void CreateProjection(float _width, float _height, float _near, float _far);
 		void CreateProjection(float _fov_angle, float _width, float _height, float _near, float _far);
 
+		float GetProjectionFar();
+
 		Matrix const& view() const;
 		Matrix const& projection() const;
 
@@ -31,6 +33,7 @@ namespace K
 
 		virtual void _Finalize() override;
 
+		float far_{};
 		Matrix view_{ Matrix::Identity };
 		Matrix projection_{ Matrix::Identity };
 	};

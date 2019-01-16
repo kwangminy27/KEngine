@@ -16,6 +16,7 @@ void K::WorldManager::Initialize()
 		auto const& object_manager = ObjectManager::singleton();
 
 		auto ui_camera = std::static_pointer_cast<CameraActor>(object_manager->CreateActor<CameraActor>({ UI_CAMERA, 0 }));
+		ui_camera->CreateProjection(static_cast<float>(RESOLUTION::WIDTH), static_cast<float>(RESOLUTION::HEIGHT), 0.f, 1000.f);
 		camera_list_.push_back(ui_camera);
 
 		auto default_camera = std::static_pointer_cast<CameraActor>(object_manager->CreateActor<CameraActor>({ DEFAULT_CAMERA, 0 }));

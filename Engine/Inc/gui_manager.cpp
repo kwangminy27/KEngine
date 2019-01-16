@@ -1,6 +1,7 @@
 #include "Engine.h"
 #include "gui_manager.h"
 
+#include "World/world_manager.h"
 #include "Object/Actor/actor.h"
 #include "Object/Actor/camera_actor.h"
 #include "Object/Component/transform.h"
@@ -16,6 +17,8 @@ void K::GUIManager::Initialize()
 
 void K::GUIManager::Initialize(HWND _window, ID3D11Device* _device, ID3D11DeviceContext* _context)
 {
+	Initialize();
+
 	ImGui_ImplWin32_Init(_window);
 	ImGui_ImplDX11_Init(_device, _context);
 }
@@ -32,7 +35,7 @@ void K::GUIManager::Render()
 
 	ImGui::Begin("KEngine");
 	{
-		static Vector3 eye = Vector3{ 0.f, 0.f, -5.f };
+		static Vector3 eye = Vector3{ 0.f, 0.f, -2.f };
 		static Vector3 focus{};
 
 		ImGui::BulletText("Camera Modification");
@@ -44,7 +47,7 @@ void K::GUIManager::Render()
 			focus = {};
 		}
 
-		ImGui::SliderFloat3("Eye", &eye.x, -5.f, 5.f);
+		ImGui::SliderFloat3("Eye", &eye.x, -2.f, 2.f);
 		ImGui::SliderFloat3("Focus", &focus.x, -5.f, 5.f);
 
 		auto const& camera = APTR_CAST<CameraActor>(WorldManager::singleton()->FindCamera(TAG{ DEFAULT_CAMERA, 0 }));

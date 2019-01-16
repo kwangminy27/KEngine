@@ -19,6 +19,8 @@ namespace K
 		void CreateProjection(float _width, float _height, float _near, float _far);
 		void CreateProjection(float _fov_angle, float _width, float _height, float _near, float _far);
 
+		float GetProjectionFar() const;
+
 		Matrix const& view() const;
 		Matrix const& projection() const;
 

@@ -15,7 +15,7 @@ void K::RenderTarget::Render(float _time)
 	auto const& resource_manager = ResourceManager::singleton();
 	auto const& rendering_manager = RenderingManager::singleton();
 
-	auto const& camera = WorldManager::singleton()->FindCamera(TAG{ DEFAULT_CAMERA, 0 });
+	auto const& camera = WorldManager::singleton()->FindCamera(TAG{ UI_CAMERA, 0 });
 
 	TransformConstantBuffer transform_CB{};
 	transform_CB.world = Matrix::CreateScaling(scaling_) * Matrix::CreateTranslation(translation_);
@@ -34,18 +34,20 @@ void K::RenderTarget::Render(float _time)
 
 	rendering_manager->FindShader(shader_tag_)->SetToShader();
 
-	SetToShader(0);
+	Attach(0);
 
 	resource_manager->FindSampler(sampler_tag_)->SetToShader(0);
 
-	resource_manager->FindMesh(TEX_RECT)->Render();
+	resource_manager->FindMesh(mesh_tag_)->Render();
+
+	Detach(0);
 }
 
 void K::RenderTarget::Clear()
 {
 	auto const& context = DeviceManager::singleton()->context();
 
-	context->ClearRenderTargetView(RTV_.Get(), DirectX::Colors::MediumSlateBlue);
+	context->ClearRenderTargetView(RTV_.Get(), DirectX::Colors::RosyBrown);
 	context->ClearDepthStencilView(DSV_.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 }
 
@@ -68,9 +70,15 @@ void K::RenderTarget::ResetTarget()
 	DeviceManager::singleton()->context()->OMSetRenderTargets(1, old_RTV_.GetAddressOf(), old_DSV_.Get());
 }
 
-void K::RenderTarget::SetToShader(int _slot)
+void K::RenderTarget::Attach(int _slot)
 {
 	DeviceManager::singleton()->context()->PSSetShaderResources(_slot, 1, SRV_.GetAddressOf());
+}
+
+void K::RenderTarget::Detach(int _slot)
+{
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> SRV{};
+	DeviceManager::singleton()->context()->PSSetShaderResources(_slot, 1, &SRV);
 }
 
 void K::RenderTarget::set_mesh_tag(std::string const& _tag)
@@ -128,6 +136,7 @@ void K::RenderTarget::_CreateRenderTarget(Vector3 const& _scaling, Vector3 const
 	D3D11_TEXTURE2D_DESC dtd{};
 	dtd.Width = static_cast<int>(RESOLUTION::WIDTH);
 	dtd.Height = static_cast<int>(RESOLUTION::HEIGHT);
+	dtd.MipLevels = 1;
 	dtd.ArraySize = 1;
 	dtd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	dtd.SampleDesc.Count = 1;
@@ -140,6 +149,7 @@ void K::RenderTarget::_CreateRenderTarget(Vector3 const& _scaling, Vector3 const
 	dtd = {};
 	dtd.Width = static_cast<int>(RESOLUTION::WIDTH);
 	dtd.Height = static_cast<int>(RESOLUTION::HEIGHT);
+	dtd.MipLevels = 1;
 	dtd.ArraySize = 1;
 	dtd.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	dtd.SampleDesc.Count = 1;
