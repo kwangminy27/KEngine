@@ -8,7 +8,9 @@ void K::Shader::SetToShader()
 {
 	auto const& context = DeviceManager::singleton()->context();
 
-	context->IASetInputLayout(input_layout_.Get());
+	if(input_layout_)
+		context->IASetInputLayout(input_layout_.Get());
+
 	context->VSSetShader(VS_.Get(), nullptr, 0);
 	context->PSSetShader(PS_.Get(), nullptr, 0);
 }
@@ -72,13 +74,16 @@ void K::Shader::_CreateVertexShader(
 
 	cso.read(reinterpret_cast<char*>(buffer.get()), size);
 
-	ThrowIfFailed(device->CreateInputLayout(
-		_input_element_desc_vector.data(),
-		static_cast<UINT>(_input_element_desc_vector.size()),
-		reinterpret_cast<void const*>(buffer.get()),
-		static_cast<SIZE_T>(size),
-		&input_layout_
-	));
+	if (false == _input_element_desc_vector.empty())
+	{
+		ThrowIfFailed(device->CreateInputLayout(
+			_input_element_desc_vector.data(),
+			static_cast<UINT>(_input_element_desc_vector.size()),
+			reinterpret_cast<void const*>(buffer.get()),
+			static_cast<SIZE_T>(size),
+			&input_layout_
+		));
+	}
 
 	ThrowIfFailed(device->CreateVertexShader(
 		buffer.get(),

@@ -6,6 +6,7 @@
 #include "Resource/mesh.h"
 #include "Resource/sampler.h"
 #include "rendering_manager.h"
+#include "render_state.h"
 #include "shader.h"
 #include "World/world_manager.h"
 #include "Object/Actor/camera_actor.h"
@@ -23,31 +24,37 @@ void K::RenderTarget::Render(float _time)
 	transform_CB.projection = camera->projection();
 	transform_CB.WV = transform_CB.world * transform_CB.view;
 	transform_CB.WVP = transform_CB.world * transform_CB.view * transform_CB.projection;
+	transform_CB.projection_Inv = transform_CB.projection.Inverse();
 
 	transform_CB.world = transform_CB.world.Transpose();
 	transform_CB.view = transform_CB.view.Transpose();
 	transform_CB.projection = transform_CB.projection.Transpose();
 	transform_CB.WV = transform_CB.WV.Transpose();
 	transform_CB.WVP = transform_CB.WVP.Transpose();
+	transform_CB.projection_Inv = transform_CB.projection_Inv.Transpose();
 
 	rendering_manager->UpdateConstantBuffer(TRANSFORM, &transform_CB);
-
 	rendering_manager->FindShader(shader_tag_)->SetToShader();
 
-	Attach(0);
+	auto const& depth_disable = rendering_manager->FindRenderState(DEPTH_DISABLE);
 
-	resource_manager->FindSampler(sampler_tag_)->SetToShader(0);
-
-	resource_manager->FindMesh(mesh_tag_)->Render();
-
-	Detach(0);
+	depth_disable->SetState();
+	{
+		Attach(0);
+		{
+			resource_manager->FindSampler(sampler_tag_)->SetToShader(0);
+			resource_manager->FindMesh(mesh_tag_)->Render();
+		}
+		Detach(0);
+	}
+	depth_disable->ResetState();
 }
 
 void K::RenderTarget::Clear()
 {
 	auto const& context = DeviceManager::singleton()->context();
 
-	context->ClearRenderTargetView(RTV_.Get(), DirectX::Colors::RosyBrown);
+	context->ClearRenderTargetView(RTV_.Get(), DirectX::Colors::Black);
 	context->ClearDepthStencilView(DSV_.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 }
 
@@ -77,8 +84,8 @@ void K::RenderTarget::Attach(int _slot)
 
 void K::RenderTarget::Detach(int _slot)
 {
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> SRV{};
-	DeviceManager::singleton()->context()->PSSetShaderResources(_slot, 1, &SRV);
+	static Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> nulltr_SRV{};
+	DeviceManager::singleton()->context()->PSSetShaderResources(_slot, 1, nulltr_SRV.GetAddressOf());
 }
 
 void K::RenderTarget::set_mesh_tag(std::string const& _tag)
@@ -124,7 +131,7 @@ K::RenderTarget::RenderTarget(RenderTarget&& _other) noexcept
 	old_DSV_ = std::move(_other.old_DSV_);
 }
 
-void K::RenderTarget::_CreateRenderTarget(Vector3 const& _scaling, Vector3 const& _translation)
+void K::RenderTarget::_CreateRenderTarget(Vector3 const& _scaling, Vector3 const& _translation, DXGI_FORMAT _format)
 {
 	auto const& device = DeviceManager::singleton()->device();
 
@@ -138,7 +145,7 @@ void K::RenderTarget::_CreateRenderTarget(Vector3 const& _scaling, Vector3 const
 	dtd.Height = static_cast<int>(RESOLUTION::HEIGHT);
 	dtd.MipLevels = 1;
 	dtd.ArraySize = 1;
-	dtd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	dtd.Format = _format;
 	dtd.SampleDesc.Count = 1;
 	dtd.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 

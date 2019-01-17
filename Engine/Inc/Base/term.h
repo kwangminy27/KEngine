@@ -24,9 +24,11 @@ namespace K
 	constexpr auto COLLIDER_CIRCLE = "ColliderCircle";
 	constexpr auto INSTANCE_TEX_RECT = "InstanceTexRect";
 	constexpr auto NORMAL_PYRAMID = "NormalPyramid";
+	constexpr auto FULL_SCREEN_RECT = "FullScreenRect";
 
 	//////////////////// Sampler Key ////////////////////
 	constexpr auto LINEAR_SAMPLER = "LinearSampler";
+	constexpr auto POINT_SAMPLER = "PointSampler";
 
 	//////////////////// Shader Key ////////////////////
 	constexpr auto BASIC_SHADER = "BasicShader";
@@ -36,9 +38,11 @@ namespace K
 	constexpr auto COLLIDER_SHADER = "ColliderShader";
 	constexpr auto INSTANCE_TEX_SHADER = "InstanceTexShader";
 	constexpr auto GBUFFER_SHADER = "GBufferShader";
+	constexpr auto DEFERRED_LIGHTING_SHADER = "DeferredLightingShader";
 
 	//////////////////// RenderState Key ////////////////////
 	constexpr auto ALPHA_BLEND = "AlphaBlend";
+	constexpr auto LIGHT_BLEND = "LightBlend";
 	constexpr auto DEPTH_DISABLE = "DepthDisable";
 
 	//////////////////// RenderTarget Key ////////////////////
@@ -47,6 +51,9 @@ namespace K
 	constexpr auto NORMAL_RENDER_TARGET = "NormalRenderTarget";
 	constexpr auto DEPTH_RENDER_TARGET = "DepthRenderTarget";
 	constexpr auto MATERIAL_RENDER_TARGET = "MaterialRenderTarget";
+	constexpr auto LIGHT_AMBIENT_RENDER_TARGET = "LightAmbientRenderTarget";
+	constexpr auto LIGHT_DIFFUSE_RENDER_TARGET = "LightDiffuseRenderTarget";
+	constexpr auto LIGHT_SPECULAR_RENDER_TARGET = "LightSpecularRenderTarget";
 	constexpr auto GBUFFER_MRT = "GBufferMRT";
 	constexpr auto LIGHT_MRT = "LightMRT";
 
@@ -72,7 +79,6 @@ namespace K
 	constexpr auto COLLIDER = "Collider";
 	constexpr auto NAVIGATOR = "Navigator";
 	constexpr auto LIGHT = "Light";
-	constexpr auto COMMON = "Common";
 
 	//////////////////// Constant ////////////////////
 	const auto MTU_SIZE = 1024;
@@ -173,6 +179,7 @@ namespace K
 		Matrix projection;
 		Matrix WV;
 		Matrix WVP;
+		Matrix projection_Inv;
 	};
 
 	struct MaterialConstantBuffer
@@ -198,11 +205,5 @@ namespace K
 		float range;
 		float in_angle;
 		float out_angle;
-	};
-
-	struct CommonConstantBuffer
-	{
-		float projection_far;
-		Vector3 padding;
 	};
 }

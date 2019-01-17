@@ -76,13 +76,14 @@ namespace K
 			bool _independent_blend_enable,
 			std::vector<D3D11_RENDER_TARGET_BLEND_DESC> const& _render_target_blend_desc_vector);
 		void _CreateConstantBuffer(std::string const& _tag, uint32_t _slot, uint32_t _size, uint8_t _shader_flag);
-		void _CreateRenderTarget(std::string const& _tag, Vector3 const& _scaling, Vector3 const& _translation);
+		void _CreateRenderTarget(std::string const& _tag, Vector3 const& _scaling, Vector3 const& _translation, DXGI_FORMAT _format);
 		void _CreateMRT(std::string const& _tag);
 
 		void _Render2D(float _time);
 		void _RenderForward(float _time);
 		void _RenderDeferred(float _time);
 		void _RenderGBuffer(float _time);
+		void _RenderLight(float _time);
 
 		GAME_MODE mode_{};
 		std::unordered_map<std::string, std::shared_ptr<Shader>> shader_map_{};

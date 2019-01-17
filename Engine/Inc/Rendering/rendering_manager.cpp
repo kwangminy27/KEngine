@@ -99,6 +99,16 @@ void K::RenderingManager::Initialize()
 		input_element_desc_vector.push_back({ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
 
 		_CreateShader(GBUFFER_SHADER, cso_desc_vector, input_element_desc_vector, SHADER_PATH);
+
+		cso_desc_vector.clear();
+		cso_desc_vector.push_back({ SHADER_TYPE::VERTEX, L"DeferredLightingVS.cso" });
+		cso_desc_vector.push_back({ SHADER_TYPE::PIXEL, L"DeferredLightingPS.cso" });
+
+		input_element_desc_vector.clear();
+		input_element_desc_vector.push_back({ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+		input_element_desc_vector.push_back({ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+
+		_CreateShader(DEFERRED_LIGHTING_SHADER, cso_desc_vector, input_element_desc_vector, SHADER_PATH);
 #pragma endregion
 
 #pragma region RenderState
@@ -132,9 +142,25 @@ void K::RenderingManager::Initialize()
 		rtbd.BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		rtbd.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-		render_target_blend_desc_vector.push_back(std::move(rtbd));
+		render_target_blend_desc_vector.push_back(rtbd);
 
 		_CreateBlendState(ALPHA_BLEND, false, false, render_target_blend_desc_vector);
+
+		render_target_blend_desc_vector.clear();
+
+		rtbd = {};
+		rtbd.BlendEnable = true;
+		rtbd.SrcBlend = D3D11_BLEND_ONE;
+		rtbd.DestBlend = D3D11_BLEND_ONE;
+		rtbd.BlendOp = D3D11_BLEND_OP_ADD;
+		rtbd.SrcBlendAlpha = D3D11_BLEND_ONE;
+		rtbd.DestBlendAlpha = D3D11_BLEND_ZERO;
+		rtbd.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		rtbd.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+		render_target_blend_desc_vector.push_back(rtbd);
+
+		_CreateBlendState(LIGHT_BLEND, false, false, render_target_blend_desc_vector);
 #pragma endregion
 
 #pragma region ConstantBuffer
@@ -143,21 +169,30 @@ void K::RenderingManager::Initialize()
 		_CreateConstantBuffer(ANIMATION_2D, 2, sizeof(ANIMATION_2D_FRAME_DESC), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
 		_CreateConstantBuffer(COLLIDER, 3, sizeof(Vector4), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
 		_CreateConstantBuffer(LIGHT, 4, sizeof(LightConstantBuffer), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
-		_CreateConstantBuffer(COMMON, 5, sizeof(CommonConstantBuffer), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
 #pragma endregion
 
 #pragma region RenderTarget
-		//_CreateRenderTarget(BASIC_RENDER_TARGET, Vector3{ static_cast<float>(RESOLUTION::WIDTH), static_cast<float>(RESOLUTION::HEIGHT), 1.f }, Vector3{ 0.f, 0.f, 5.f });
-		_CreateRenderTarget(ALBEDO_RENDER_TARGET, Vector3{ 100.f, 100.f, 1.f }, Vector3{ 750.f, -400.f, 5.f });
-		_CreateRenderTarget(NORMAL_RENDER_TARGET, Vector3{ 100.f, 100.f, 1.f }, Vector3{ 750.f, -300.f, 5.f });
-		_CreateRenderTarget(DEPTH_RENDER_TARGET, Vector3{ 100.f, 100.f, 1.f }, Vector3{ 750.f, -200.f, 5.f });
-		_CreateRenderTarget(MATERIAL_RENDER_TARGET, Vector3{ 100.f, 100.f, 1.f }, Vector3{ 750.f, -100.f, 5.f });
+		//_CreateRenderTarget(BASIC_RENDER_TARGET, Vector3{ static_cast<float>(RESOLUTION::WIDTH), static_cast<float>(RESOLUTION::HEIGHT), 1.f }, Vector3{ 0.f, 0.f, 5.f }, DXGI_FORMAT_R8G8B8A8_UNORM);
+
+		_CreateRenderTarget(ALBEDO_RENDER_TARGET, Vector3{ 100.f, 100.f, 1.f }, Vector3{ 750.f, -400.f, 5.f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		_CreateRenderTarget(NORMAL_RENDER_TARGET, Vector3{ 100.f, 100.f, 1.f }, Vector3{ 750.f, -300.f, 5.f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		_CreateRenderTarget(DEPTH_RENDER_TARGET, Vector3{ 100.f, 100.f, 1.f }, Vector3{ 750.f, -200.f, 5.f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		_CreateRenderTarget(MATERIAL_RENDER_TARGET, Vector3{ 100.f, 100.f, 1.f }, Vector3{ 750.f, -100.f, 5.f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
+
+		_CreateRenderTarget(LIGHT_AMBIENT_RENDER_TARGET, Vector3{ 100.f, 100.f, 1.f }, Vector3{ 650.f, -400.f, 5.f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		_CreateRenderTarget(LIGHT_DIFFUSE_RENDER_TARGET, Vector3{ 100.f, 100.f, 1.f }, Vector3{ 650.f, -300.f, 5.f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		_CreateRenderTarget(LIGHT_SPECULAR_RENDER_TARGET, Vector3{ 100.f, 100.f, 1.f }, Vector3{ 650.f, -200.f, 5.f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 		_CreateMRT(GBUFFER_MRT);
 		AddRTV(GBUFFER_MRT, ALBEDO_RENDER_TARGET);
 		AddRTV(GBUFFER_MRT, NORMAL_RENDER_TARGET);
 		AddRTV(GBUFFER_MRT, DEPTH_RENDER_TARGET);
 		AddRTV(GBUFFER_MRT, MATERIAL_RENDER_TARGET);
+
+		_CreateMRT(LIGHT_MRT);
+		AddRTV(LIGHT_MRT, LIGHT_AMBIENT_RENDER_TARGET);
+		AddRTV(LIGHT_MRT, LIGHT_DIFFUSE_RENDER_TARGET);
+		AddRTV(LIGHT_MRT, LIGHT_SPECULAR_RENDER_TARGET);
 #pragma endregion
 
 		for (auto& render_group : render_group_array_)
@@ -410,7 +445,7 @@ void K::RenderingManager::_CreateConstantBuffer(std::string const& _tag, uint32_
 	CB_map_.insert(std::make_pair(_tag, std::move(CB)));
 }
 
-void K::RenderingManager::_CreateRenderTarget(std::string const& _tag, Vector3 const& _scaling, Vector3 const& _translation)
+void K::RenderingManager::_CreateRenderTarget(std::string const& _tag, Vector3 const& _scaling, Vector3 const& _translation, DXGI_FORMAT _format)
 {
 	if (FindRenderTarget(_tag))
 		throw std::exception{ "RenderingManager::_CreateRenderTarget" };
@@ -419,7 +454,7 @@ void K::RenderingManager::_CreateRenderTarget(std::string const& _tag, Vector3 c
 		delete _p;
 	} };
 
-	render_target->_CreateRenderTarget(_scaling, _translation);
+	render_target->_CreateRenderTarget(_scaling, _translation, _format);
 
 	render_target_map_.insert(std::make_pair(_tag, std::move(render_target)));
 }
@@ -442,13 +477,13 @@ void K::RenderingManager::_Render2D(float _time)
 
 	render_target->Clear();
 	render_target->SetTarget();
-
-	for (int i = 0; i <= static_cast<int>(RENDER_GROUP_TYPE::HUD); ++i)
 	{
-		for (auto const& actor : render_group_array_.at(i))
-			actor->__Render(_time);
+		for (int i = 0; i <= static_cast<int>(RENDER_GROUP_TYPE::HUD); ++i)
+		{
+			for (auto const& actor : render_group_array_.at(i))
+				actor->__Render(_time);
+		}
 	}
-
 	render_target->ResetTarget();
 }
 
@@ -458,47 +493,65 @@ void K::RenderingManager::_RenderForward(float _time)
 
 	render_target->Clear();
 	render_target->SetTarget();
-
-	if (false == render_group_array_.at(static_cast<int>(RENDER_GROUP_TYPE::LIGHT)).empty())
 	{
-		auto const& light = render_group_array_.at(static_cast<int>(RENDER_GROUP_TYPE::LIGHT)).at(0)->FindComponent(TAG{ LIGHT, 0 });
-		CPTR_CAST<Light>(light)->UpdateConstantBuffer();
-	}
+		if (false == render_group_array_.at(static_cast<int>(RENDER_GROUP_TYPE::LIGHT)).empty())
+		{
+			auto const& light = render_group_array_.at(static_cast<int>(RENDER_GROUP_TYPE::LIGHT)).at(0)->FindComponent(TAG{ LIGHT, 0 });
+			CPTR_CAST<Light>(light)->UpdateConstantBuffer();
+		}
 
-	for (int i = 0; i <= static_cast<int>(RENDER_GROUP_TYPE::HUD); ++i)
-	{
-		for (auto const& actor : render_group_array_.at(i))
-			actor->__Render(_time);
+		for (int i = 0; i <= static_cast<int>(RENDER_GROUP_TYPE::HUD); ++i)
+		{
+			for (auto const& actor : render_group_array_.at(i))
+				actor->__Render(_time);
+		}
 	}
-
 	render_target->ResetTarget();
 }
 
 void K::RenderingManager::_RenderDeferred(float _time)
 {
-	CommonConstantBuffer common_CB{};
-	common_CB.projection_far = WorldManager::singleton()->FindCamera(TAG{ DEFAULT_CAMERA, 0 })->GetProjectionFar();
-
-	UpdateConstantBuffer(COMMON, &common_CB);
-
 	_RenderGBuffer(_time);
+	_RenderLight(_time);
 
-	// 2. Light ·»´õ¸µ
-	// 3. UI ·»´õ¸µ
-}
-
-void K::RenderingManager::_RenderGBuffer(float _time)
-{
-	auto const& _MRT = FindMRT(GBUFFER_MRT);
-
-	_MRT->Clear();
-	_MRT->SetTarget();
-
-	for (int i = 0; i <= static_cast<int>(RENDER_GROUP_TYPE::NORMAL); ++i)
+	for (int i = static_cast<int>(RENDER_GROUP_TYPE::UI); i <= static_cast<int>(RENDER_GROUP_TYPE::HUD); ++i)
 	{
 		for (auto const& actor : render_group_array_.at(i))
 			actor->__Render(_time);
 	}
+}
 
-	_MRT->ResetTarget();
+void K::RenderingManager::_RenderGBuffer(float _time)
+{
+	auto const& gbuffer_mrt = FindMRT(GBUFFER_MRT);
+
+	gbuffer_mrt->Clear();
+	gbuffer_mrt->SetTarget();
+	{
+		for (int i = 0; i <= static_cast<int>(RENDER_GROUP_TYPE::NORMAL); ++i)
+		{
+			for (auto const& actor : render_group_array_.at(i))
+				actor->__Render(_time);
+		}
+	}
+	gbuffer_mrt->ResetTarget();
+}
+
+void K::RenderingManager::_RenderLight(float _time)
+{
+	auto const& light_mrt = FindMRT(LIGHT_MRT);
+
+	light_mrt->Clear();
+	light_mrt->SetTarget();
+	{
+		auto const& gbuffer_mrt = FindMRT(GBUFFER_MRT);
+
+		gbuffer_mrt->Attach(8);
+		{
+			for (auto const& actor : render_group_array_.at(static_cast<int>(RENDER_GROUP_TYPE::LIGHT)))
+				actor->_Render(_time);
+		}
+		gbuffer_mrt->Detach(8);
+	}
+	light_mrt->ResetTarget();
 }

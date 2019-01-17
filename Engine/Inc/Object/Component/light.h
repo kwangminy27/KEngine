@@ -10,11 +10,6 @@ namespace K
 	public:
 		virtual void Initialize() override;
 
-		virtual void Input(float _time);
-		virtual void Update(float _time);
-		virtual void Collision(float _time);
-		virtual void Render(float _time);
-
 		virtual CPTR Clone() const override;
 
 		virtual void Serialize(InputMemoryStream& _imstream) override;

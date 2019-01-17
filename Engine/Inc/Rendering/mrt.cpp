@@ -14,6 +14,8 @@ void K::MRT::AddRTV(std::string const& _tag)
 
 	RTV_vector_.push_back(iter->RTV_);
 	old_RTV_vector_.resize(RTV_vector_.size());
+
+	SRV_vector_.push_back(iter->SRV_);
 }
 
 void K::MRT::AddDSV(std::string const& _tag)
@@ -31,7 +33,7 @@ void K::MRT::Clear()
 	auto const& context = DeviceManager::singleton()->context();
 
 	for (auto& RTV : RTV_vector_)
-		context->ClearRenderTargetView(RTV.Get(), DirectX::Colors::RosyBrown);
+		context->ClearRenderTargetView(RTV.Get(), DirectX::Colors::Black);
 
 	if (DSV_)
 		context->ClearDepthStencilView(DSV_.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
@@ -59,6 +61,18 @@ void K::MRT::ResetTarget()
 
 	for (auto& old_RTV : old_RTV_vector_)
 		old_RTV = nullptr;
+}
+
+void K::MRT::Attach(int _slot)
+{
+	DeviceManager::singleton()->context()->PSSetShaderResources(_slot, static_cast<UINT>(SRV_vector_.size()), SRV_vector_.at(0).GetAddressOf());
+}
+
+void K::MRT::Detach(int _slot)
+{
+	static std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> nullptr_SRV_vector{};
+	nullptr_SRV_vector.resize(SRV_vector_.size());
+	DeviceManager::singleton()->context()->PSSetShaderResources(_slot, static_cast<UINT>(nullptr_SRV_vector.size()), nullptr_SRV_vector.at(0).GetAddressOf());
 }
 
 K::MRT::MRT(MRT const& _other)

@@ -55,22 +55,6 @@ void K::Light::Initialize()
 	}
 }
 
-void K::Light::Input(float _time)
-{
-}
-
-void K::Light::Update(float _time)
-{
-}
-
-void K::Light::Collision(float _time)
-{
-}
-
-void K::Light::Render(float _time)
-{
-}
-
 K::CPTR K::Light::Clone() const
 {
 	return CPTR{ new Light, [](Component* _p) {

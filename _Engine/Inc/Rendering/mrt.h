@@ -11,6 +11,9 @@ namespace K
 		void SetTarget();
 		void ResetTarget();
 
+		void Attach(int _slot);
+		void Detach(int _slot);
+
 		void AddRTV(std::string const& _tag);
 		void AddDSV(std::string const& _tag);
 
@@ -25,5 +28,6 @@ namespace K
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> old_DSV_{};
 		std::vector<Microsoft::WRL::ComPtr<ID3D11RenderTargetView>> RTV_vector_{};
 		std::vector<Microsoft::WRL::ComPtr<ID3D11RenderTargetView>> old_RTV_vector_{};
+		std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> SRV_vector_{};
 	};
 }

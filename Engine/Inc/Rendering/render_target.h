@@ -28,7 +28,7 @@ namespace K
 		RenderTarget& operator=(RenderTarget const&) = default;
 		RenderTarget& operator=(RenderTarget&&) noexcept = default;
 
-		void _CreateRenderTarget(Vector3 const& _scaling, Vector3 const& _translation);
+		void _CreateRenderTarget(Vector3 const& _scaling, Vector3 const& _translation, DXGI_FORMAT _format);
 
 		Vector3 scaling_{};
 		Vector3 translation_{};

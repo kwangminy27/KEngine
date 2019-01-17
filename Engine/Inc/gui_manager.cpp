@@ -35,7 +35,7 @@ void K::GUIManager::Render()
 
 	ImGui::Begin("KEngine");
 	{
-		static Vector3 eye = Vector3{ 0.f, 0.f, -2.f };
+		static Vector3 eye = Vector3{ 0.f, 0.f, -3.f };
 		static Vector3 focus{};
 
 		ImGui::BulletText("Camera Modification");
@@ -43,11 +43,11 @@ void K::GUIManager::Render()
 		ImGui::SameLine();
 		if (ImGui::Button("Camera Reset"))
 		{
-			eye = Vector3{ 0.f, 0.f, -5.f };
+			eye = Vector3{ 0.f, 0.f, -3.f };
 			focus = {};
 		}
 
-		ImGui::SliderFloat3("Eye", &eye.x, -2.f, 2.f);
+		ImGui::SliderFloat3("Eye", &eye.x, -3.f, 3.f);
 		ImGui::SliderFloat3("Focus", &focus.x, -5.f, 5.f);
 
 		auto const& camera = APTR_CAST<CameraActor>(WorldManager::singleton()->FindCamera(TAG{ DEFAULT_CAMERA, 0 }));

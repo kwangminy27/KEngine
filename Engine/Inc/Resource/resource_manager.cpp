@@ -144,6 +144,21 @@ void K::ResourceManager::Initialize()
 			pyramid_vertices, sizeof(VertexNormalColor), 9, D3D11_USAGE_DEFAULT,
 			pyramid_indices, sizeof(uint16_t), 18, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R16_UINT
 		);
+
+		VertexTex full_screen_vertices[4]{
+			{ Vector3{ -1.f, -1.f, 0.f }, Vector2{ 0.f, 1.f } },
+			{ Vector3{ -1.f, 1.f, 0.f }, Vector2{ 0.f, 0.f } },
+			{ Vector3{ 1.f, 1.f, 0.f }, Vector2{ 1.f, 0.f } },
+			{ Vector3{ 1.f, -1.f, 0.f }, Vector2{ 1.f, 1.f } }
+		};
+
+		uint16_t full_screen_indices[6]{ 0, 1, 2, 0, 2, 3 };
+
+		_CreateMesh(
+			FULL_SCREEN_RECT, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+			full_screen_vertices, sizeof(VertexTex), 4, D3D11_USAGE_DEFAULT,
+			full_screen_indices, sizeof(uint16_t), 6, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R16_UINT
+		);
 #pragma endregion
 
 #pragma region Texture
@@ -153,6 +168,14 @@ void K::ResourceManager::Initialize()
 		_CreateSampler(
 			LINEAR_SAMPLER,
 			D3D11_FILTER_MIN_MAG_MIP_LINEAR,
+			D3D11_TEXTURE_ADDRESS_CLAMP,
+			D3D11_TEXTURE_ADDRESS_CLAMP,
+			D3D11_TEXTURE_ADDRESS_CLAMP
+		);
+
+		_CreateSampler(
+			POINT_SAMPLER,
+			D3D11_FILTER_MIN_MAG_MIP_POINT,
 			D3D11_TEXTURE_ADDRESS_CLAMP,
 			D3D11_TEXTURE_ADDRESS_CLAMP,
 			D3D11_TEXTURE_ADDRESS_CLAMP

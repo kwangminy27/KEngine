@@ -148,6 +148,12 @@
     <Filter Include="08. Rendering\1. Shader\1. HLSL\4. Deferred Rendering">
       <UniqueIdentifier>{d3d4a03a-179b-46fd-b129-cf3a86679e93}</UniqueIdentifier>
     </Filter>
+    <Filter Include="08. Rendering\1. Shader\1. HLSL\4. Deferred Rendering\1. GBuffer">
+      <UniqueIdentifier>{5d0cd591-f6dc-46d6-903a-ddf4fe7d3ad0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08. Rendering\1. Shader\1. HLSL\4. Deferred Rendering\2. Deferred Lighting">
+      <UniqueIdentifier>{6b170c4c-df3c-4739-b642-a23c3c62b5de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -491,10 +497,16 @@
       <Filter>08. Rendering\1. Shader\1. HLSL\1. Basic</Filter>
     </FxCompile>
     <FxCompile Include="Rendering\HLSL\GBufferVS.hlsl">
-      <Filter>08. Rendering\1. Shader\1. HLSL\4. Deferred Rendering</Filter>
+      <Filter>08. Rendering\1. Shader\1. HLSL\4. Deferred Rendering\1. GBuffer</Filter>
     </FxCompile>
     <FxCompile Include="Rendering\HLSL\GBufferPS.hlsl">
-      <Filter>08. Rendering\1. Shader\1. HLSL\4. Deferred Rendering</Filter>
+      <Filter>08. Rendering\1. Shader\1. HLSL\4. Deferred Rendering\1. GBuffer</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\HLSL\DeferredLightingVS.hlsl">
+      <Filter>08. Rendering\1. Shader\1. HLSL\4. Deferred Rendering\2. Deferred Lighting</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\HLSL\DeferredLightingPS.hlsl">
+      <Filter>08. Rendering\1. Shader\1. HLSL\4. Deferred Rendering\2. Deferred Lighting</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
