@@ -20,10 +20,10 @@ void K::Player::Initialize()
 
 		auto material = object_manager->CreateComponent<Material>(TAG{ MATERIAL, 0 });
 		MaterialConstantBuffer material_CB{};
+		material_CB.ambient = DirectX::Colors::White.v;
 		material_CB.diffuse = DirectX::Colors::White.v;
-		material_CB.ambient = DirectX::Colors::White.v;
 		material_CB.specular = DirectX::Colors::White.v;
-		material_CB.ambient = DirectX::Colors::White.v;
+		material_CB.emissive = DirectX::Colors::White.v;
 		CPTR_CAST<Material>(material)->SetMaterialConstantBuffer(material_CB , 0, 0);
 		AddComponent(material);
 

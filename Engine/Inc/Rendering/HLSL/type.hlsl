@@ -159,7 +159,7 @@ Lighting ComputePointLight(float3 _position, float3 _normal, float3 _to_camera, 
 
     float attenuation = 1.f / dot(g_light_attenuation, float3(1, distance, distance * distance));
 
-    output.ambient = _material_ambient * g_light_ambient * attenuation;
+    output.ambient = _material_ambient * g_light_ambient;
     output.diffuse = _material_diffuse * g_light_diffuse * max(dot(_normal, to_light), 0.f) * attenuation;
     output.specular = _material_specular * g_light_specular * pow(max(dot(_normal, halfway), 0.f), g_light_specular.w) * attenuation;
 
@@ -184,7 +184,7 @@ Lighting ComputeSpotLight(float3 _position, float3 _normal, float3 _to_camera, f
     float attenuation = 1.f / dot(g_light_attenuation, float3(1, distance, distance * distance));
     float falloff = pow(max(dot(-to_light, light_direction), 0.f), g_light_falloff);
 
-    output.ambient = _material_ambient * g_light_ambient * attenuation * falloff;
+    output.ambient = _material_ambient * g_light_ambient;
     output.diffuse = _material_diffuse * g_light_diffuse * max(dot(_normal, to_light), 0.f) * attenuation * falloff;
     output.specular = _material_specular * g_light_specular * pow(max(dot(_normal, halfway), 0.f), g_light_specular.w) * falloff;
 
@@ -194,28 +194,28 @@ Lighting ComputeSpotLight(float3 _position, float3 _normal, float3 _to_camera, f
 float CompressColor(float4 _color)
 {
     uint4 color = (uint4)0;
-    color.b = uint(_color.b * 255.f);
-    color.g = uint(_color.g * 255.f);
-    color.r = uint(_color.r * 255.f);
-    color.a = uint(_color.a * 255.f);
+    color.r = (uint)(_color.r * 255.f);
+    color.g = (uint)(_color.g * 255.f);
+    color.b = (uint)(_color.b * 255.f);
+    color.a = (uint)(_color.a * 255.f);
 
     uint result = (uint)0;
-    result |= color.a << 24;
-    result |= color.r << 16;
-    result |= color.g << 8;
-    result |= color.b;
-    
-    return asfloat(result);
+    result |= color.r & 0x000000FF;
+    result |= (color.g << 8) & 0x0000FF00;
+    result |= (color.b << 16) & 0x00FF0000;
+    result |= (color.a << 24) & 0xFF000000;
+
+    return (float)result;
 }
 
 float4 DecompressColor(float _color)
 {
-    uint color = asuint(_color);
+    uint color = (uint)_color;
 
     float4 result = (float4)0;
-    result.b = (color & 0x000000FF) / 255.f;
+    result.r = (color & 0x000000FF) / 255.f;
     result.g = ((color >> 8) & 0x000000FF) / 255.f;
-    result.r = ((color >> 16) & 0x000000FF) / 255.f;
+    result.b = ((color >> 16) & 0x000000FF) / 255.f;
     result.a = ((color >> 24) & 0x000000FF) / 255.f;
 
     return result;

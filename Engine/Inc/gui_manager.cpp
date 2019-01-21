@@ -125,7 +125,7 @@ void K::GUIManager::Render()
 		ImGui::SameLine();
 		if (ImGui::Button("Light Reset"))
 		{
-			ambient = DirectX::Colors::White.v;
+			ambient = Vector4{ 0.2f, 0.2f, 0.2f, 1.f };
 			diffuse = DirectX::Colors::White.v;
 			specular = DirectX::Colors::White.v;
 			position = -Vector3::UnitZ;

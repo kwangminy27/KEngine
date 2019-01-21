@@ -34,7 +34,7 @@ void K::Light::Initialize()
 		//set_attenuation(Vector3{ 0.1f, 0.1f, 0.1f });
 
 		set_type(static_cast<int>(LIGHT_TYPE::SPOT));
-		set_ambient(White.v);
+		set_ambient(Vector4{ 0.2f, 0.2f, 0.2f, 1.f });
 		set_diffuse(White.v);
 		set_specular(White.v);
 		set_position(-Vector3::UnitZ);
