@@ -159,6 +159,8 @@ void K::ResourceManager::Initialize()
 			full_screen_vertices, sizeof(VertexTex), 4, D3D11_USAGE_DEFAULT,
 			full_screen_indices, sizeof(uint16_t), 6, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R16_UINT
 		);
+
+		_CreateSphereMesh(SPHERE_MESH, 0.5f, 64, 32);
 #pragma endregion
 
 #pragma region Texture
@@ -402,4 +404,59 @@ void K::ResourceManager::_CreateAnimation2DClip(std::string const& _tag, std::ws
 
 		animation_2d_clip->frame_vector.push_back(std::move(frame));
 	}
+}
+
+void K::ResourceManager::_CreateSphereMesh(std::string const& _tag, float _radius, int _slice_count, int _stack_count)
+{
+	std::vector<VertexNormalColor> sphere_vertices{};
+
+	float phi = DirectX::XM_PI / _stack_count;
+	float theta = DirectX::XM_2PI / _slice_count;
+
+	for (auto i = 0; i <= _stack_count; ++i)
+	{
+		for (auto j = 0; j <= _slice_count; ++j)
+		{
+			VertexNormalColor vertex{};
+
+			if (j < _slice_count / 2)
+				vertex.position = Vector3{ _radius * sin(phi * i) * cos(theta * j), _radius * cos(phi * i), _radius * sin(phi * i) * sin(theta * j) };
+			else
+				vertex.position = Vector3{ _radius * sin(phi * i) * -cos(theta * j - DirectX::XM_PI), _radius * cos(phi * i), _radius * sin(phi * i) * -sin(theta * j - DirectX::XM_PI) };
+
+			vertex.normal = vertex.position;
+			vertex.normal.Normalize();
+			vertex.color = Vector4{ (rand() % 100) / 100.f, (rand() % 100) / 100.f, (rand() % 100) / 100.f, (rand() % 100) / 100.f };
+
+			sphere_vertices.push_back(std::move(vertex));
+		}
+	}
+
+	std::vector<uint16_t> sphere_indices{};
+
+	for (auto i = 0; i <= _stack_count; ++i)
+	{
+		for (auto j = 0; j <= _slice_count; ++j)
+		{
+			uint16_t indices[6]{};
+			indices[0] = _slice_count * i + j;
+			indices[1] = _slice_count * (i + 1) + j + 1;
+			indices[2] = _slice_count * (i + 1) + j;
+			indices[3] = _slice_count * i + j;
+			indices[4] = _slice_count * i + j + 1;
+			indices[5] = _slice_count * (i + 1) + j + 1;
+
+			sphere_indices.push_back(std::move(indices[0]));
+			sphere_indices.push_back(std::move(indices[1]));
+			sphere_indices.push_back(std::move(indices[2]));
+			sphere_indices.push_back(std::move(indices[3]));
+			sphere_indices.push_back(std::move(indices[4]));
+			sphere_indices.push_back(std::move(indices[5]));
+		}
+	}
+
+	_CreateMesh(_tag, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+		sphere_vertices.data(), sizeof(VertexNormalColor), static_cast<int>(sphere_vertices.size()), D3D11_USAGE_DEFAULT,
+		sphere_indices.data(), sizeof(uint16_t), static_cast<int>(sphere_indices.size()), D3D11_USAGE_DEFAULT, DXGI_FORMAT_R16_UINT
+	);
 }

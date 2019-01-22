@@ -23,7 +23,8 @@ namespace K
 			bool _independent_blend_enable,
 			std::vector<D3D11_RENDER_TARGET_BLEND_DESC> const& _render_target_blend_desc_vector);
 
-		uint32_t sample_mask_;
+		// TODO: SAMPLE_MASK 0으로 두면 SRC랑 DEST에서 샘플링 안해옴 그래서 클리어 색상만 나왔던 것임
+		uint32_t sample_mask_{ 0xffffffff };
 		uint32_t old_sample_mask_;
 		std::array<float, 4> blend_factor_array_;
 		std::array<float, 4> old_blend_factor_array_;

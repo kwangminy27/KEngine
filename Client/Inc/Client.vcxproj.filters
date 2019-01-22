@@ -24,6 +24,9 @@
     <ClInclude Include="Actor\player.h">
       <Filter>2. Actor</Filter>
     </ClInclude>
+    <ClInclude Include="Actor\missile.h">
+      <Filter>2. Actor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -34,6 +37,9 @@
       <Filter>1. Level</Filter>
     </ClCompile>
     <ClCompile Include="Actor\player.cpp">
+      <Filter>2. Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor\missile.cpp">
       <Filter>2. Actor</Filter>
     </ClCompile>
   </ItemGroup>

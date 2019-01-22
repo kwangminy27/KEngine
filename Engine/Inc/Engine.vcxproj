@@ -442,7 +442,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="input_manager.inl" />
     <None Include="Object\object_manager.inl" />
     <None Include="World\world_manager.inl" />
   </ItemGroup>

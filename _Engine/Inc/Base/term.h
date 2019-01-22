@@ -25,6 +25,7 @@ namespace K
 	constexpr auto INSTANCE_TEX_RECT = "InstanceTexRect";
 	constexpr auto NORMAL_PYRAMID = "NormalPyramid";
 	constexpr auto FULL_SCREEN_RECT = "FullScreenRect";
+	constexpr auto SPHERE_MESH = "SphereMesh";
 
 	//////////////////// Sampler Key ////////////////////
 	constexpr auto LINEAR_SAMPLER = "LinearSampler";
@@ -84,6 +85,7 @@ namespace K
 	const auto MTU_SIZE = 1024;
 	const auto MAX_USER_SIZE = 100;
 	const auto MAX_MESSAGE_SIZE = 128;
+	const auto MAX_KEY_SIZE = 256;
 
 	//////////////////// Protocol ////////////////////
 	const auto CS_LOGIN = 1;

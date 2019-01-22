@@ -23,7 +23,7 @@ PS_OUTPUT_LIGHT DeferredLightingPS(VS_OUTPUT_POSITION_TEX _input)
     float4 HCS = float4(NDC * depth.a, depth.a);
 
     float3 positionV = mul(HCS, g_projection_Inv).xyz;
-    float3 normalV = normal.xyz;
+    float3 normalV = normal.xyz * 2.f - 1.f;
 
     float3 to_cameraV = normalize(-positionV);
 

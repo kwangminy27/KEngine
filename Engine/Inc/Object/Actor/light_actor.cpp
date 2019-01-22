@@ -61,17 +61,18 @@ void K::LightActor::_Render(float _time)
 
 	rendering_manager->FindShader(DEFERRED_LIGHTING_SHADER)->SetToShader();
 
-	//auto const& light_blend = rendering_manager->FindRenderState(LIGHT_BLEND);
+	// 라이트 블랜드를 셋 하면 안 그려지는 현상 발생.
+	auto const& light_blend = rendering_manager->FindRenderState(LIGHT_BLEND);
 	auto const& depth_disable = rendering_manager->FindRenderState(DEPTH_DISABLE);
 
-	//light_blend->SetState();
+	light_blend->SetState();
 	depth_disable->SetState();
 	{
 		resource_manager->FindSampler(POINT_SAMPLER)->SetToShader(1);
 		resource_manager->FindMesh(FULL_SCREEN_RECT)->Render();
 	}
 	depth_disable->ResetState();
-	//light_blend->ResetState();
+	light_blend->ResetState();
 }
 
 K::LightActor::LightActor(LightActor const& _other) : Actor(_other)

@@ -138,7 +138,7 @@ Lighting ComputeDirectionalLight(float3 _normal, float3 _to_camera, float4 _mate
 
     output.ambient = _material_ambient * g_light_ambient;
     output.diffuse = _material_diffuse * g_light_diffuse * max(dot(_normal, to_light), 0.f);
-    output.specular = _material_specular * g_light_specular * pow(max(dot(_normal, halfway), 0), g_light_specular.w);
+    output.specular = _material_specular * g_light_specular * pow(max(dot(_normal, halfway), 0.f), g_light_specular.w);
 
     return output;
 }

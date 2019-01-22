@@ -510,9 +510,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="input_manager.inl">
-      <Filter>10. Input</Filter>
-    </None>
     <None Include="World\world_manager.inl">
       <Filter>11. World</Filter>
     </None>

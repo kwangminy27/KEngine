@@ -72,7 +72,7 @@ void K::Core::Initialize(HINSTANCE _instance, HWND _window, GAME_MODE _mode)
 		rendering_manager->set_mode(_mode);
 
 		TimeManager::singleton()->Initialize();
-		InputManager::singleton()->Initialize();
+		InputManager::singleton()->Initialize(instance_, window_);
 		WorldManager::singleton()->Initialize();
 		ObjectManager::singleton()->Initialize();
 		CollisionManager::singleton()->Initialize();
@@ -115,9 +115,10 @@ void K::Core::Logic()
 	auto const& device_manager = DeviceManager::singleton();
 
 	time_manager->Update();
-	input_manager->Update();
-
+	
 	float time_delta = time_manager->time_delta();
+
+	input_manager->Update(time_delta);
 
 	_Input(time_delta);
 	_Update(time_delta);
@@ -128,8 +129,6 @@ void K::Core::Logic()
 		_Render(time_delta);
 	}
 	device_manager->Present();
-
-
 }
 
 void K::Core::_Finalize()
@@ -219,11 +218,11 @@ void K::Core::_Input(float _time)
 {
 	auto const& input_manager = InputManager::singleton();
 
-	if (input_manager->KeyDown("ESC"))
-		DestroyWindow(window_);
+	//if (input_manager->KeyDown("ESC"))
+	//	DestroyWindow(window_);
 
-	if (input_manager->KeyDown("F1"))
-		gui_show_ ^= true;
+	//if (input_manager->KeyDown("F1"))
+	//	gui_show_ ^= true;
 
 	WorldManager::singleton()->Input(_time);
 }

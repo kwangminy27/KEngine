@@ -24,11 +24,13 @@
 #include <d3d11.h>
 #include <d2d1.h>
 #include <dwrite.h>
+#include <dinput.h>
 
 #pragma comment(lib, "dxguid")
 #pragma comment(lib, "d3d11")
 #pragma comment(lib, "d2d1")
 #pragma comment(lib, "dwrite")
+#pragma comment(lib, "dinput8")
 
 // DirectXMath
 #include <DirectXColors.h>
