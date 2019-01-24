@@ -3,8 +3,7 @@
 
 #include "core.h"
 
-std::unique_ptr<K::KEY_AXIS, std::function<void(K::KEY_AXIS*)>> K::InputManager::key_axis_dummy_{};
-std::unique_ptr<K::KEY_ACTION, std::function<void(K::KEY_ACTION*)>> K::InputManager::key_action_dummy_{};
+std::unique_ptr<K::KEY_STATE, std::function<void(K::KEY_STATE*)>> K::InputManager::key_state_dummy_{};
 
 void K::InputManager::Initialize()
 {
@@ -22,9 +21,9 @@ void K::InputManager::Initialize(HINSTANCE _instance, HWND _window)
 		ThrowIfFailed(keyboard_->SetDataFormat(&c_dfDIKeyboard));
 		ThrowIfFailed(keyboard_->Acquire());
 
-		_CreateKeyAction(std::string{ "ESC" }, DIK_ESCAPE);
-
-
+		std::vector<uint8_t> combination_key{};
+		_CreateKeyState(std::string{ "ESC" }, DIK_ESCAPE, combination_key);
+		_CreateKeyState(std::string{ "F1" }, DIK_F1, combination_key);
 	}
 	catch (std::exception const& _e)
 	{
@@ -39,6 +38,21 @@ void K::InputManager::Initialize(HINSTANCE _instance, HWND _window)
 void K::InputManager::Update(float _time)
 {
 	_UpdateKeyboard(_time);
+}
+
+bool K::InputManager::KeyDown(std::string const& _tag) const
+{
+	return _FindKeyState(_tag)->down;
+}
+
+bool K::InputManager::KeyPress(std::string const& _tag) const
+{
+	return _FindKeyState(_tag)->press;
+}
+
+bool K::InputManager::KeyUp(std::string const& _tag) const
+{
+	return _FindKeyState(_tag)->up;
 }
 
 void K::InputManager::_Finalize()
@@ -79,96 +93,58 @@ void K::InputManager::_UpdateKeyboard(float _time)
 			keyboard_state_.up[i] = false;
 	}
 
-	for (auto const& key_axis : key_axis_map_)
-	{
-		if (keyboard_state_.press[key_axis.second->info.key])
-			key_axis.second->callback(key_axis.second->info.scale, _time);
-	}
-
-	for (auto& key_action : key_action_map_)
+	for (auto& key_state : key_state_map_)
 	{
 		int count{};
 
-		for (auto const& key : key_action.second->info.combination_key)
+		for (auto const& key : key_state.second->combination_key)
 		{
-			if (keyboard_state_.key[key] & 0x80)
+			if (keyboard_state_.press[key])
 				++count;
 		}
 
-		if (keyboard_state_.press[key_action.second->info.key] && count == key_action.second->info.combination_key.size())
+		if (keyboard_state_.press[key_state.second->key] && count == key_state.second->combination_key.size())
 		{
-			if (false == key_action.second->info.press)
+			if (false == key_state.second->press)
 			{
-				key_action.second->info.down = true;
-				key_action.second->info.press = true;
+				key_state.second->down = true;
+				key_state.second->press = true;
 			}
 			else
-				key_action.second->info.down = false;
+				key_state.second->down = false;
 		}
-		else if (key_action.second->info.press)
+		else if (key_state.second->press)
 		{
-			key_action.second->info.down = false;
-			key_action.second->info.press = false;
-			key_action.second->info.up = true;
+			key_state.second->down = false;
+			key_state.second->press = false;
+			key_state.second->up = true;
 		}
-		else if (key_action.second->info.up)
-			key_action.second->info.up = false;
-
-		// 무조건 처리하는 중인데 이러면 안됨
-		for (auto const& callback : key_action.second->callback_array)
-		{
-			if (callback)
-				callback(_time);
-		}
+		else if (key_state.second->up)
+			key_state.second->up = false;
 	}
 }
 
-std::unique_ptr<K::KEY_AXIS, std::function<void(K::KEY_AXIS*)>> const& K::InputManager::_FindKeyAxis(std::string const& _tag) const
+std::unique_ptr<K::KEY_STATE, std::function<void(K::KEY_STATE*)>> const& K::InputManager::_FindKeyState(std::string const& _tag) const
 {
-	auto iter = key_axis_map_.find(_tag);
+	auto iter = key_state_map_.find(_tag);
 
-	if (iter == key_axis_map_.end())
-		return key_axis_dummy_;
+	if (iter == key_state_map_.end())
+		return key_state_dummy_;
 
 	return iter->second;
 }
 
-std::unique_ptr<K::KEY_ACTION, std::function<void(K::KEY_ACTION*)>> const& K::InputManager::_FindKeyAction(std::string const& _tag) const
+void K::InputManager::_CreateKeyState(std::string const& _tag, uint8_t _key, std::vector<uint8_t> const& _combination_key)
 {
-	auto iter = key_action_map_.find(_tag);
+	if (_FindKeyState(_tag))
+		throw std::exception{ "InputManager::_CreateKey" };
 
-	if (iter == key_action_map_.end())
-		return key_action_dummy_;
-
-	return iter->second;
-}
-
-void K::InputManager::_CreateKeyAxis(std::string const& _tag, uint8_t _key, float _scale)
-{
-	if (_FindKeyAxis(_tag))
-		throw std::exception{ "InputManager::_CreateKeyAxis" };
-
-	auto key_axis = std::unique_ptr<KEY_AXIS, std::function<void(KEY_AXIS*)>>{ new KEY_AXIS, [](KEY_AXIS* _p) {
+	auto key_state = std::unique_ptr<KEY_STATE, std::function<void(KEY_STATE*)>>{ new KEY_STATE, [](KEY_STATE* _p) {
 		delete _p;
 	} };
 
-	key_axis->info.key = _key;
-	key_axis->info.scale = _scale;
+	key_state->key = _key;
+	key_state->combination_key = _combination_key;
 
-	key_axis_map_.insert(std::make_pair(_tag, std::move(key_axis)));
-}
-
-// 콤비네이션 키 추가 해야 함
-void K::InputManager::_CreateKeyAction(std::string const& _tag, uint8_t _key)
-{
-	if (_FindKeyAction(_tag))
-		throw std::exception{ "InputManager::_CreateKeyAction" };
-
-	auto key_action = std::unique_ptr<KEY_ACTION, std::function<void(KEY_ACTION*)>>{ new KEY_ACTION, [](KEY_ACTION* _p) {
-		delete _p;
-	} };
-
-	key_action->info.key = _key;
-
-	key_action_map_.insert(std::make_pair(_tag, std::move(key_action)));
+	key_state_map_.insert(std::make_pair(_tag, std::move(key_state)));
 }

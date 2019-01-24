@@ -218,11 +218,11 @@ void K::Core::_Input(float _time)
 {
 	auto const& input_manager = InputManager::singleton();
 
-	//if (input_manager->KeyDown("ESC"))
-	//	DestroyWindow(window_);
+	if (input_manager->KeyDown("ESC"))
+		DestroyWindow(window_);
 
-	//if (input_manager->KeyDown("F1"))
-	//	gui_show_ ^= true;
+	if (input_manager->KeyDown("F1"))
+		gui_show_ ^= true;
 
 	WorldManager::singleton()->Input(_time);
 }
