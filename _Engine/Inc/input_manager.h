@@ -12,7 +12,7 @@ namespace K
 
 	struct KEY_STATE
 	{
-		bool down;
+		bool down{};
 		bool press;
 		bool up;
 		uint8_t key;

@@ -167,13 +167,11 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Actor\missile.h" />
     <ClInclude Include="Actor\player.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Level\intro_level.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Actor\missile.cpp" />
     <ClCompile Include="Actor\player.cpp" />
     <ClCompile Include="Client.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

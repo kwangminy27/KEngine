@@ -22,7 +22,9 @@ void K::InputManager::Initialize(HINSTANCE _instance, HWND _window)
 		ThrowIfFailed(keyboard_->Acquire());
 
 		std::vector<uint8_t> combination_key{};
+		combination_key.push_back(DIK_LSHIFT);
 		_CreateKeyState(std::string{ "ESC" }, DIK_ESCAPE, combination_key);
+		combination_key.clear();
 		_CreateKeyState(std::string{ "F1" }, DIK_F1, combination_key);
 	}
 	catch (std::exception const& _e)
@@ -137,12 +139,15 @@ std::unique_ptr<K::KEY_STATE, std::function<void(K::KEY_STATE*)>> const& K::Inpu
 void K::InputManager::_CreateKeyState(std::string const& _tag, uint8_t _key, std::vector<uint8_t> const& _combination_key)
 {
 	if (_FindKeyState(_tag))
-		throw std::exception{ "InputManager::_CreateKey" };
+		throw std::exception{ "InputManager::_CreateKeyState" };
 
 	auto key_state = std::unique_ptr<KEY_STATE, std::function<void(KEY_STATE*)>>{ new KEY_STATE, [](KEY_STATE* _p) {
 		delete _p;
 	} };
 
+	key_state->down = false;
+	key_state->press = false;
+	key_state->up = false;
 	key_state->key = _key;
 	key_state->combination_key = _combination_key;
 

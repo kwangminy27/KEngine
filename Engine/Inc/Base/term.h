@@ -26,6 +26,7 @@ namespace K
 	constexpr auto NORMAL_PYRAMID = "NormalPyramid";
 	constexpr auto FULL_SCREEN_RECT = "FullScreenRect";
 	constexpr auto SPHERE_MESH = "SphereMesh";
+	constexpr auto CYLINDER_MESH = "CylinderMesh";
 
 	//////////////////// Sampler Key ////////////////////
 	constexpr auto LINEAR_SAMPLER = "LinearSampler";

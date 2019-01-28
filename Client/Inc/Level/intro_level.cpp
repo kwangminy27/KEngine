@@ -2,7 +2,6 @@
 #include "intro_level.h"
 
 #include "Actor/player.h"
-#include "Actor/missile.h"
 
 void K::IntroLevel::Initialize()
 {
@@ -14,14 +13,11 @@ void K::IntroLevel::Initialize()
 
 		auto const& object_manager = ObjectManager::singleton();
 
-		auto player = object_manager->CreateActor<Missile>(TAG{ "Player", 0 });
+		auto player = object_manager->CreateActor<Player>(TAG{ "Player", 0 });
 		default_layer->AddActor(player);
 
 		auto light = object_manager->CreateActor<LightActor>(TAG{ DEFAULT_LIGHT, 0 });
 		default_layer->AddActor(light);
-
-		//auto missile = object_manager->CreateActor<Missile>(TAG{ "Missile", 0 });
-		//default_layer->AddActor(missile);
 	}
 	catch (std::exception const& _e)
 	{

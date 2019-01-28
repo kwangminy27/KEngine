@@ -53,6 +53,7 @@ namespace K
 		void _CreateAnimation2DClip(std::string const& _tag, std::wstring const& _file_name, std::string const& _path_tag);
 
 		void _CreateSphereMesh(std::string const& _tag, float _radius, int _slice_count, int _stack_count);
+		void _CreateCylinderMesh(std::string const& _tag, float _height, float _radius, int _slice_count);
 
 		std::unordered_map<std::string, std::shared_ptr<Mesh>> mesh_map_{};
 		std::unordered_map<std::string, std::shared_ptr<Texture>> texture_map_{};
