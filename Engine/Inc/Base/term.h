@@ -25,8 +25,9 @@ namespace K
 	constexpr auto INSTANCE_TEX_RECT = "InstanceTexRect";
 	constexpr auto NORMAL_PYRAMID = "NormalPyramid";
 	constexpr auto FULL_SCREEN_RECT = "FullScreenRect";
-	constexpr auto SPHERE_MESH = "SphereMesh";
-	constexpr auto CYLINDER_MESH = "CylinderMesh";
+	constexpr auto SPHERE_VOLUME = "SphereVolume";
+	constexpr auto CYLINDER_VOLUME = "CylinderVolume";
+	constexpr auto CAPSULE_VOLUME = "CapsuleVolume";
 
 	//////////////////// Sampler Key ////////////////////
 	constexpr auto LINEAR_SAMPLER = "LinearSampler";

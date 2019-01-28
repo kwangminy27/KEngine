@@ -160,8 +160,9 @@ void K::ResourceManager::Initialize()
 			full_screen_indices, sizeof(uint16_t), 6, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R16_UINT
 		);
 
-		_CreateSphereMesh(SPHERE_MESH, 0.5f, 32, 16);
-		_CreateCylinderMesh(CYLINDER_MESH, 1.f, 0.5f, 32);
+		_CreateSphereMesh(SPHERE_VOLUME, 0.5f, 32, 16);
+		_CreateCylinderMesh(CYLINDER_VOLUME, 1.f, 0.5f, 32);
+		_CreateCapsuleMesh(CAPSULE_VOLUME, 1.f, 0.5f, 32, 16);
 #pragma endregion
 
 #pragma region Texture
@@ -427,7 +428,7 @@ void K::ResourceManager::_CreateSphereMesh(std::string const& _tag, float _radiu
 
 			vertex.normal = vertex.position;
 			vertex.normal.Normalize();
-			vertex.color = Vector4{ (rand() % 100) / 100.f, (rand() % 100) / 100.f, (rand() % 100) / 100.f, (rand() % 100) / 100.f };
+			vertex.color = Vector4{ (rand() % 100) * 0.01f, (rand() % 100) * 0.01f, (rand() % 100) * 0.01f, (rand() % 100) * 0.01f };
 
 			sphere_vertices.push_back(std::move(vertex));
 		}
@@ -439,27 +440,27 @@ void K::ResourceManager::_CreateSphereMesh(std::string const& _tag, float _radiu
 	{
 		for (auto j = 0; j < _slice_count; ++j)
 		{
-			uint16_t indices[6]{};
-			indices[0] = _slice_count * i + j;
-			indices[1] = _slice_count * (i + 1) + j + 1;
-			indices[2] = _slice_count * (i + 1) + j;
-			indices[3] = _slice_count * i + j;
-			indices[4] = _slice_count * i + j + 1;
-			indices[5] = _slice_count * (i + 1) + j + 1;
+			uint16_t index[6]{};
+			index[0] = _slice_count * i + j;
+			index[1] = _slice_count * (i + 1) + j + 1;
+			index[2] = _slice_count * (i + 1) + j;
+			index[3] = _slice_count * i + j;
+			index[4] = _slice_count * i + j + 1;
+			index[5] = _slice_count * (i + 1) + j + 1;
 
-			if (_slice_count - 1 == j)
+			if (j == _slice_count - 1)
 			{
-				indices[1] = _slice_count * i + j + 1;
-				indices[4] = _slice_count * (i - 1) + j + 1;
-				indices[5] = _slice_count * i + j + 1;
+				index[1] = _slice_count * i + j + 1;
+				index[4] = _slice_count * (i - 1) + j + 1;
+				index[5] = _slice_count * i + j + 1;
 			}
 
-			sphere_indices.push_back(std::move(indices[0]));
-			sphere_indices.push_back(std::move(indices[1]));
-			sphere_indices.push_back(std::move(indices[2]));
-			sphere_indices.push_back(std::move(indices[3]));
-			sphere_indices.push_back(std::move(indices[4]));
-			sphere_indices.push_back(std::move(indices[5]));
+			sphere_indices.push_back(std::move(index[0]));
+			sphere_indices.push_back(std::move(index[1]));
+			sphere_indices.push_back(std::move(index[2]));
+			sphere_indices.push_back(std::move(index[3]));
+			sphere_indices.push_back(std::move(index[4]));
+			sphere_indices.push_back(std::move(index[5]));
 		}
 	}
 
@@ -489,7 +490,7 @@ void K::ResourceManager::_CreateCylinderMesh(std::string const& _tag, float _hei
 			vertex.normal = vertex.position;
 			vertex.normal.y = 0.f;
 			vertex.normal.Normalize();
-			vertex.color = Vector4{ (rand() % 100) / 100.f, (rand() % 100) / 100.f, (rand() % 100) / 100.f, (rand() % 100) / 100.f };
+			vertex.color = Vector4{ (rand() % 100) * 0.01f, (rand() % 100) * 0.01f, (rand() % 100) * 0.01f, (rand() % 100) * 0.01f };
 
 			cylinder_vertices.push_back(vertex);
 			
@@ -508,57 +509,137 @@ void K::ResourceManager::_CreateCylinderMesh(std::string const& _tag, float _hei
 	// À­¸é
 	for (auto i = 0; i < _slice_count - 2; ++i)
 	{
-		uint16_t indices[3]{};
-		indices[0] = 1;
-		indices[1] = 1 + (i + 2) * 2;
-		indices[2] = 1 + (i + 1) * 2;
+		uint16_t index[3]{};
+		index[0] = 1;
+		index[1] = 1 + (i + 2) * 2;
+		index[2] = 1 + (i + 1) * 2;
 
-		cylinder_indices.push_back(std::move(indices[0]));
-		cylinder_indices.push_back(std::move(indices[1]));
-		cylinder_indices.push_back(std::move(indices[2]));
+		cylinder_indices.push_back(std::move(index[0]));
+		cylinder_indices.push_back(std::move(index[1]));
+		cylinder_indices.push_back(std::move(index[2]));
 	}
 
 	// ¿·¸é
 	for (auto i = 0; i < _slice_count; ++i)
 	{
-		uint16_t indices[6]{};
-		indices[0] = i * 2;
-		indices[1] = (i + _slice_count + 1) * 2;
-		indices[2] = (i + _slice_count) * 2;
-		indices[3] = i * 2;
-		indices[4] = (i + 1) * 2;
-		indices[5] = (i + _slice_count + 1) * 2;
+		uint16_t index[6]{};
+		index[0] = i * 2;
+		index[1] = (i + _slice_count + 1) * 2;
+		index[2] = (i + _slice_count) * 2;
+		index[3] = i * 2;
+		index[4] = (i + 1) * 2;
+		index[5] = (i + _slice_count + 1) * 2;
 
-		if (_slice_count - 1 == i)
+		if (i == _slice_count - 1)
 		{
-			indices[1] = (i + 1) * 2;
-			indices[4] = (i - _slice_count + 1) * 2;
-			indices[5] = (i + 1) * 2;
+			index[1] = (i + 1) * 2;
+			index[4] = (i - _slice_count + 1) * 2;
+			index[5] = (i + 1) * 2;
 		}
 
-		cylinder_indices.push_back(std::move(indices[0]));
-		cylinder_indices.push_back(std::move(indices[1]));
-		cylinder_indices.push_back(std::move(indices[2]));
-		cylinder_indices.push_back(std::move(indices[3]));
-		cylinder_indices.push_back(std::move(indices[4]));
-		cylinder_indices.push_back(std::move(indices[5]));
+		cylinder_indices.push_back(std::move(index[0]));
+		cylinder_indices.push_back(std::move(index[1]));
+		cylinder_indices.push_back(std::move(index[2]));
+		cylinder_indices.push_back(std::move(index[3]));
+		cylinder_indices.push_back(std::move(index[4]));
+		cylinder_indices.push_back(std::move(index[5]));
 	}
 
 	// ¾Æ·§¸é
 	for (auto i = 0; i < _slice_count - 2; ++i)
 	{
-		uint16_t indices[3]{};
-		indices[0] = 1 + _slice_count * 2;
-		indices[1] = 1 + _slice_count * 2 + (i + 1) * 2;
-		indices[2] = 1 + _slice_count * 2 + (i + 2) * 2;
+		uint16_t index[3]{};
+		index[0] = 1 + _slice_count * 2;
+		index[1] = 1 + _slice_count * 2 + (i + 1) * 2;
+		index[2] = 1 + _slice_count * 2 + (i + 2) * 2;
 
-		cylinder_indices.push_back(std::move(indices[0]));
-		cylinder_indices.push_back(std::move(indices[1]));
-		cylinder_indices.push_back(std::move(indices[2]));
+		cylinder_indices.push_back(std::move(index[0]));
+		cylinder_indices.push_back(std::move(index[1]));
+		cylinder_indices.push_back(std::move(index[2]));
 	}
 
 	_CreateMesh(_tag, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
 		cylinder_vertices.data(), sizeof(VertexNormalColor), static_cast<int>(cylinder_vertices.size()), D3D11_USAGE_DEFAULT,
 		cylinder_indices.data(), sizeof(uint16_t), static_cast<int>(cylinder_indices.size()), D3D11_USAGE_DEFAULT, DXGI_FORMAT_R16_UINT
+	);
+}
+
+void K::ResourceManager::_CreateCapsuleMesh(std::string const& _tag, float _height, float _radius, int _slice_count, int _stack_count)
+{
+	std::vector<VertexNormalColor> capsule_vertices{};
+
+	auto stack_count = _stack_count;
+
+	if (stack_count % 2 == 0)
+		stack_count -= 1;
+
+	float phi = DirectX::XM_PI / stack_count;
+	float theta = DirectX::XM_2PI / _slice_count;
+
+	for (auto i = 0; i <= stack_count; ++i)
+	{
+		for (auto j = 0; j < _slice_count; ++j)
+		{
+			VertexNormalColor vertex{};
+
+			auto y = _radius * cos(phi * i);
+
+			if (i <= stack_count / 2)
+				y += _height * 0.5f;
+			else
+				y += -_height * 0.5f;
+
+			if (j < _slice_count / 2)
+				vertex.position = Vector3{ _radius * sin(phi * i) * cos(theta * j), y, _radius * sin(phi * i) * sin(theta * j) };
+			else
+				vertex.position = Vector3{ _radius * sin(phi * i) * -cos(theta * j - DirectX::XM_PI), y, _radius * sin(phi * i) * -sin(theta * j - DirectX::XM_PI) };
+
+			vertex.normal = vertex.position;
+
+			if (i == stack_count / 2)
+				vertex.normal.y = 0.f;
+			else if (i == stack_count / 2 + 1)
+				vertex.normal.y = 0.f;
+
+			vertex.normal.Normalize();
+			vertex.color = Vector4{ (rand() % 100) * 0.01f, (rand() % 100) * 0.01f, (rand() % 100) * 0.01f, (rand() % 100) * 0.01f };
+
+			capsule_vertices.push_back(std::move(vertex));
+		}
+	}
+
+	std::vector<uint16_t> capsule_indices{};
+
+	for (auto i = 0; i <= stack_count; ++i)
+	{
+		for (auto j = 0; j < _slice_count; ++j)
+		{
+			uint16_t index[6]{};
+			index[0] = _slice_count * i + j;
+			index[1] = _slice_count * (i + 1) + j + 1;
+			index[2] = _slice_count * (i + 1) + j;
+			index[3] = _slice_count * i + j;
+			index[4] = _slice_count * i + j + 1;
+			index[5] = _slice_count * (i + 1) + j + 1;
+
+			if (j == _slice_count - 1)
+			{
+				index[1] = _slice_count * i + j + 1;
+				index[4] = _slice_count * (i - 1) + j + 1;
+				index[5] = _slice_count * i + j + 1;
+			}
+
+			capsule_indices.push_back(std::move(index[0]));
+			capsule_indices.push_back(std::move(index[1]));
+			capsule_indices.push_back(std::move(index[2]));
+			capsule_indices.push_back(std::move(index[3]));
+			capsule_indices.push_back(std::move(index[4]));
+			capsule_indices.push_back(std::move(index[5]));
+		}
+	}
+
+	_CreateMesh(_tag, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+		capsule_vertices.data(), sizeof(VertexNormalColor), static_cast<int>(capsule_vertices.size()), D3D11_USAGE_DEFAULT,
+		capsule_indices.data(), sizeof(uint16_t), static_cast<int>(capsule_indices.size()), D3D11_USAGE_DEFAULT, DXGI_FORMAT_R16_UINT
 	);
 }

@@ -54,6 +54,7 @@ namespace K
 
 		void _CreateSphereMesh(std::string const& _tag, float _radius, int _slice_count, int _stack_count);
 		void _CreateCylinderMesh(std::string const& _tag, float _height, float _radius, int _slice_count);
+		void _CreateCapsuleMesh(std::string const& _tag, float _height, float _radius, int _slice_count, int _stack_count);
 
 		std::unordered_map<std::string, std::shared_ptr<Mesh>> mesh_map_{};
 		std::unordered_map<std::string, std::shared_ptr<Texture>> texture_map_{};
