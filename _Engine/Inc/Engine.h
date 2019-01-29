@@ -73,6 +73,11 @@
 #include "Base/macro.h"
 #include "Base/term.h"
 
+// FBX
+#include <fbxsdk.h>
+
+#pragma comment(lib, "libfbxsdk-md")
+
 namespace K
 {
 	static void ThrowIfFailed(HRESULT _result)
