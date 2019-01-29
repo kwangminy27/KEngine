@@ -28,6 +28,7 @@ namespace K
 	constexpr auto SPHERE_VOLUME = "SphereVolume";
 	constexpr auto CYLINDER_VOLUME = "CylinderVolume";
 	constexpr auto CAPSULE_VOLUME = "CapsuleVolume";
+	constexpr auto SPOTLIGHT_VOLUME = "SpotlightVolume";
 
 	//////////////////// Sampler Key ////////////////////
 	constexpr auto LINEAR_SAMPLER = "LinearSampler";
@@ -200,14 +201,10 @@ namespace K
 		Vector4 diffuse;
 		Vector4 specular;
 		Vector3 position;
-		float padding1;
+		int type;
 		Vector3 direction;
-		float padding2;
+		float range;
 		Vector3 attenuation;
 		float falloff;
-		int type;
-		float range;
-		float in_angle;
-		float out_angle;
 	};
 }

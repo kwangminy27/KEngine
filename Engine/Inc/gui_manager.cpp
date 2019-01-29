@@ -91,8 +91,6 @@ void K::GUIManager::Render()
 		float falloff{};
 		int type{};
 		float range{};
-		float in_angle{};
-		float out_angle{};
 
 		//char buffer[64]{};
 		//if (ImGui::InputText("Tag", buffer, 64, ImGuiInputTextFlags_EnterReturnsTrue))
@@ -117,8 +115,6 @@ void K::GUIManager::Render()
 		falloff = light->falloff();
 		type = light->type();
 		range = light->range();
-		in_angle = light->in_angle();
-		out_angle = light->out_angle();
 
 		ImGui::BulletText("Light Modification");
 
@@ -134,8 +130,6 @@ void K::GUIManager::Render()
 			falloff = 10.f;
 			type = static_cast<int>(LIGHT_TYPE::SPOT);
 			range = 100.f;
-			in_angle = 0.f;
-			out_angle = 0.f;
 		}
 
 		ImGui::SliderFloat4("Ambient", &ambient.x, 0.f, 1.f);
@@ -148,8 +142,6 @@ void K::GUIManager::Render()
 		ImGui::SliderFloat("Falloff", &falloff, 0.1f, 10.f);
 		ImGui::SliderInt("Type", &type, 0, 2);
 		ImGui::SliderFloat("range", &range, 0.f, 100.f);
-		ImGui::SliderFloat("In-angle", &in_angle, 0.f, 90.f);
-		ImGui::SliderFloat("Out-angle", &out_angle, 0.f, 90.f);
 
 		light->set_ambient(ambient);
 		light->set_diffuse(diffuse);
@@ -160,8 +152,6 @@ void K::GUIManager::Render()
 		light->set_falloff(falloff);
 		light->set_type(type);
 		light->set_range(range);
-		light->set_in_angle(in_angle);
-		light->set_out_angle(out_angle);
 	}
 	ImGui::End();
 

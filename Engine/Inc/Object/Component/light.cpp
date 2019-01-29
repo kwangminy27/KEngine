@@ -79,13 +79,11 @@ void K::Light::UpdateConstantBuffer()
 	light_CB.diffuse = diffuse_;
 	light_CB.specular = specular_;
 	light_CB.position = position_;
+	light_CB.type = type_;
 	light_CB.direction = direction_;
+	light_CB.range = range_;
 	light_CB.attenuation = attenuation_;
 	light_CB.falloff = falloff_;
-	light_CB.type = type_;
-	light_CB.range = range_;
-	light_CB.in_angle = in_angle_;
-	light_CB.out_angle = out_angle_;
 
 	RenderingManager::singleton()->UpdateConstantBuffer(LIGHT, &light_CB);
 }

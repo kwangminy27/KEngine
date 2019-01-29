@@ -109,14 +109,12 @@ cbuffer Light : register(b4)
     float4 g_light_ambient : packoffset(c0);
     float4 g_light_diffuse : packoffset(c1);
     float4 g_light_specular : packoffset(c2);
-    float3 g_light_position : packoffset(c3.x);
-    float3 g_light_direction : packoffset(c4.x);
-    float3 g_light_attenuation : packoffset(c5.x);
+    float3 g_light_position : packoffset(c3);
+    int g_light_type : packoffset(c3.w);
+    float3 g_light_direction : packoffset(c4);
+    float g_light_range : packoffset(c4.w);
+    float3 g_light_attenuation : packoffset(c5);
     float g_light_falloff : packoffset(c5.w);
-    int g_light_type : packoffset(c6.x);
-    float g_light_range : packoffset(c6.y);
-    float g_light_in_angle : packoffset(c6.z);
-    float g_light_out_angle : packoffset(c6.w);
 }
 
 Texture2D g_texture : register(t0);
