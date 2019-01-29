@@ -312,6 +312,9 @@
     <ClInclude Include="Rendering\mrt.h">
       <Filter>08. Rendering\4. MRT</Filter>
     </ClInclude>
+    <ClInclude Include="Rendering\rasterizer_state.h">
+      <Filter>08. Rendering\2. RenderState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -460,6 +463,9 @@
     </ClCompile>
     <ClCompile Include="Rendering\mrt.cpp">
       <Filter>08. Rendering\4. MRT</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\rasterizer_state.cpp">
+      <Filter>08. Rendering\2. RenderState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

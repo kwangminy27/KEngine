@@ -206,6 +206,7 @@
     <ClInclude Include="Rendering\blend_state.h" />
     <ClInclude Include="Rendering\depth_stencil_state.h" />
     <ClInclude Include="Rendering\mrt.h" />
+    <ClInclude Include="Rendering\rasterizer_state.h" />
     <ClInclude Include="Rendering\rendering_manager.h" />
     <ClInclude Include="Rendering\render_state.h" />
     <ClInclude Include="Rendering\render_target.h" />
@@ -260,6 +261,7 @@
     <ClCompile Include="Rendering\blend_state.cpp" />
     <ClCompile Include="Rendering\depth_stencil_state.cpp" />
     <ClCompile Include="Rendering\mrt.cpp" />
+    <ClCompile Include="Rendering\rasterizer_state.cpp" />
     <ClCompile Include="Rendering\rendering_manager.cpp" />
     <ClCompile Include="Rendering\render_state.cpp" />
     <ClCompile Include="Rendering\render_target.cpp" />

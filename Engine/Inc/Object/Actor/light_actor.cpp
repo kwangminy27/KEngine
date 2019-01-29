@@ -61,7 +61,6 @@ void K::LightActor::_Render(float _time)
 
 	rendering_manager->FindShader(DEFERRED_LIGHTING_SHADER)->SetToShader();
 
-	// 라이트 블랜드를 셋 하면 안 그려지는 현상 발생.
 	auto const& light_blend = rendering_manager->FindRenderState(LIGHT_BLEND);
 	auto const& depth_disable = rendering_manager->FindRenderState(DEPTH_DISABLE);
 
