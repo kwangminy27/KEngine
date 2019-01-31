@@ -12,6 +12,7 @@ void K::PathManager::Initialize()
 		_CreatePath(VIDEO_PATH, "Video\\");
 		_CreatePath(TEXTURE_PATH, "Texture\\");
 		_CreatePath(SHADER_PATH, "Shader\\");
+		_CreatePath(FBX_PATH, "FBX\\");
 	}
 	catch (std::exception const& _e)
 	{

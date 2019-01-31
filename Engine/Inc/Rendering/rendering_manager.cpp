@@ -2,8 +2,12 @@
 #include "rendering_manager.h"
 
 #include "device_manager.h"
+#include "Resource/resource_manager.h"
+#include "Resource/mesh.h"
+#include "Resource/sampler.h"
 #include "shader.h"
 #include "render_state.h"
+#include "rasterizer_state.h"
 #include "depth_stencil_state.h"
 #include "blend_state.h"
 #include "render_target.h"
@@ -106,12 +110,50 @@ void K::RenderingManager::Initialize()
 
 		input_element_desc_vector.clear();
 		input_element_desc_vector.push_back({ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 });
-		input_element_desc_vector.push_back({ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
 
 		_CreateShader(DEFERRED_LIGHTING_SHADER, cso_desc_vector, input_element_desc_vector, SHADER_PATH);
+
+		//DeferredLightingCalculateColorPS
+
+		cso_desc_vector.clear();
+		cso_desc_vector.push_back({ SHADER_TYPE::VERTEX, L"DeferredLightingCalculateColorVS.cso" });
+		cso_desc_vector.push_back({ SHADER_TYPE::PIXEL, L"DeferredLightingCalculateColorPS.cso" });
+
+		input_element_desc_vector.clear();
+		input_element_desc_vector.push_back({ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+
+		_CreateShader(DEFERRED_LIGHTING_CALCULATE_COLOR, cso_desc_vector, input_element_desc_vector, SHADER_PATH);
 #pragma endregion
 
 #pragma region RenderState
+		_CreateRasterizerState(
+			RS_LIGHT_VOLUME,
+			D3D11_FILL_SOLID,
+			D3D11_CULL_FRONT,
+			false,
+			0,
+			0.f,
+			0.f,
+			true,
+			false,
+			false,
+			false
+		);
+
+		_CreateRasterizerState(
+			RS_WIREFRAME,
+			D3D11_FILL_WIREFRAME,
+			D3D11_CULL_BACK,
+			false,
+			0,
+			0.f,
+			0.f,
+			true,
+			false,
+			false,
+			false
+		);
+
 		D3D11_DEPTH_STENCILOP_DESC front_face{};
 		front_face.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 		front_face.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
@@ -127,6 +169,24 @@ void K::RenderingManager::Initialize()
 		_CreateDepthStencilState(
 			DEPTH_DISABLE,
 			false, D3D11_DEPTH_WRITE_MASK_ZERO, D3D11_COMPARISON_NEVER,
+			false, D3D11_DEFAULT_STENCIL_READ_MASK, D3D11_DEFAULT_STENCIL_WRITE_MASK, front_face, back_face
+		);
+
+		front_face = {};
+		front_face.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		front_face.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		front_face.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		front_face.StencilFunc = D3D11_COMPARISON_NEVER;
+
+		back_face = {};
+		back_face.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		back_face.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		back_face.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		back_face.StencilFunc = D3D11_COMPARISON_NEVER;
+
+		_CreateDepthStencilState(
+			DEPTH_LIGHT_VOLUME,
+			true, D3D11_DEPTH_WRITE_MASK_ZERO, D3D11_COMPARISON_GREATER,
 			false, D3D11_DEFAULT_STENCIL_READ_MASK, D3D11_DEFAULT_STENCIL_WRITE_MASK, front_face, back_face
 		);
 
@@ -169,6 +229,7 @@ void K::RenderingManager::Initialize()
 		_CreateConstantBuffer(ANIMATION_2D, 2, sizeof(ANIMATION_2D_FRAME_DESC), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
 		_CreateConstantBuffer(COLLIDER, 3, sizeof(Vector4), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
 		_CreateConstantBuffer(LIGHT, 4, sizeof(LightConstantBuffer), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
+		_CreateConstantBuffer(COMMON, 5, sizeof(CommonConstantBuffer), static_cast<uint8_t>(SHADER_TYPE::VERTEX) | static_cast<uint8_t>(SHADER_TYPE::PIXEL));
 #pragma endregion
 
 #pragma region RenderTarget
@@ -182,6 +243,8 @@ void K::RenderingManager::Initialize()
 		_CreateRenderTarget(LIGHT_AMBIENT_RENDER_TARGET, Vector3{ 100.f, 100.f, 1.f }, Vector3{ 650.f, -400.f, 5.f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		_CreateRenderTarget(LIGHT_DIFFUSE_RENDER_TARGET, Vector3{ 100.f, 100.f, 1.f }, Vector3{ 650.f, -300.f, 5.f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		_CreateRenderTarget(LIGHT_SPECULAR_RENDER_TARGET, Vector3{ 100.f, 100.f, 1.f }, Vector3{ 650.f, -200.f, 5.f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
+
+		_CreateRenderTarget(DEFERRED_LIGHTING_RENDER_TARGET, Vector3{ 100.f, 100.f, 1.f }, Vector3{ 550.f, -400.f, 5.f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 		_CreateMRT(GBUFFER_MRT);
 		AddRTV(GBUFFER_MRT, ALBEDO_RENDER_TARGET);
@@ -282,6 +345,8 @@ void K::RenderingManager::UpdateConstantBuffer(std::string const& _tag, void* _d
 
 void K::RenderingManager::Render(float _time)
 {
+	_UpdateCommonConstantBuffer(_time);
+
 	switch (mode_)
 	{
 	case K::GAME_MODE::_2D:
@@ -349,6 +414,19 @@ void K::RenderingManager::_Finalize()
 {
 }
 
+void K::RenderingManager::_UpdateCommonConstantBuffer(float _time)
+{
+	D3D11_VIEWPORT viewport{};
+	uint32_t viewport_count = 1;
+	DeviceManager::singleton()->context()->RSGetViewports(&viewport_count, &viewport);
+
+	CommonConstantBuffer common_CB{};
+	common_CB.viewport = Vector2{ viewport.Width, viewport.Height };
+	common_CB.time = _time;
+
+	UpdateConstantBuffer(COMMON, &common_CB);
+}
+
 void K::RenderingManager::_CreateShader(
 	std::string const& _tag,
 	std::vector<CSO_DESC> const& _cso_desc_vector,
@@ -369,6 +447,39 @@ void K::RenderingManager::_CreateShader(
 	);
 
 	shader_map_.insert(make_pair(_tag, std::move(shader)));
+}
+
+void K::RenderingManager::_CreateRasterizerState(
+	std::string const& _tag,
+	D3D11_FILL_MODE _fill_mode,
+	D3D11_CULL_MODE _cull_mode,
+	bool _front_counter_clock_wise,
+	int _depth_bias,
+	float _depth_bias_clamp,
+	float _slope_scale_depth_bias,
+	bool _depth_clip_enable,
+	bool _scissor_enable,
+	bool _multi_sample_enable,
+	bool _anti_aliased_line_enable)
+{
+	auto render_state = std::shared_ptr<RenderState>{ new RasterizerState, [](RasterizerState* _p) {
+		delete _p;
+	} };
+
+	std::static_pointer_cast<RasterizerState>(render_state)->_CreateState(
+		_fill_mode,
+		_cull_mode,
+		_front_counter_clock_wise,
+		_depth_bias,
+		_depth_bias_clamp,
+		_slope_scale_depth_bias,
+		_depth_clip_enable,
+		_scissor_enable,
+		_multi_sample_enable,
+		_anti_aliased_line_enable
+	);
+
+	render_state_map_.insert(std::make_pair(_tag, std::move(render_state)));
 }
 
 void K::RenderingManager::_CreateDepthStencilState(
@@ -513,6 +624,31 @@ void K::RenderingManager::_RenderDeferred(float _time)
 {
 	_RenderGBuffer(_time);
 	_RenderLight(_time);
+
+	auto const& deferred_lighting_render_target = FindRenderTarget(DEFERRED_LIGHTING_RENDER_TARGET);
+
+	deferred_lighting_render_target->Clear();
+	deferred_lighting_render_target->SetTarget();
+	{
+		auto const& gbuffer_mrt = FindMRT(GBUFFER_MRT);
+		auto const& light_mrt = FindMRT(LIGHT_MRT);
+
+		gbuffer_mrt->Attach(8);
+		light_mrt->Attach(12);
+		{
+			auto const& resource_manager = ResourceManager::singleton();
+
+			resource_manager->FindSampler(POINT_SAMPLER)->SetToShader(1);
+
+			FindShader(DEFERRED_LIGHTING_CALCULATE_COLOR)->SetToShader();
+			resource_manager->FindMesh(FULL_SCREEN_RECT)->Render();
+		}
+		light_mrt->Detach(12);
+		gbuffer_mrt->Detach(8);
+	}
+	deferred_lighting_render_target->ResetTarget();
+
+	deferred_lighting_render_target->RenderFullScreen(_time);
 
 	for (int i = static_cast<int>(RENDER_GROUP_TYPE::UI); i <= static_cast<int>(RENDER_GROUP_TYPE::HUD); ++i)
 	{

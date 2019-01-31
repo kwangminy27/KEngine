@@ -117,6 +117,13 @@ cbuffer Light : register(b4)
     float g_light_falloff : packoffset(c5.w);
 }
 
+cbuffer Common : register(b5)
+{
+    float2 g_viewport : packoffset(c0);
+    float g_time : packoffset(c0.z);
+    float padding : packoffset(c0.w);
+}
+
 Texture2D g_texture : register(t0);
 SamplerState g_sampler : register(s0);
 

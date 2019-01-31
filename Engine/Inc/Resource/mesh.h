@@ -59,6 +59,7 @@ namespace K
 		Mesh& operator=(Mesh const&) = delete;
 		Mesh& operator=(Mesh&&) noexcept = default;
 
+		void _LoadMesh(std::wstring const& _file_name, std::string const& _path_tag);
 		void _CreateMesh(
 			D3D11_PRIMITIVE_TOPOLOGY _topology,
 			void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage);

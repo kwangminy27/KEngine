@@ -26,6 +26,8 @@ void K::InputManager::Initialize(HINSTANCE _instance, HWND _window)
 		_CreateKeyState(std::string{ "ESC" }, DIK_ESCAPE, combination_key);
 		combination_key.clear();
 		_CreateKeyState(std::string{ "F1" }, DIK_F1, combination_key);
+		_CreateKeyState(std::string{ "A" }, DIK_A, combination_key);
+		_CreateKeyState(std::string{ "D" }, DIK_D, combination_key);
 	}
 	catch (std::exception const& _e)
 	{

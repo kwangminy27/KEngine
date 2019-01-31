@@ -11,15 +11,17 @@ Texture2D g_MRT_material : register(t11);
 
 SamplerState g_point_sampler : register(s1);
 
-PS_OUTPUT_LIGHT DeferredLightingPS(VS_OUTPUT_POSITION_TEX _input)
+PS_OUTPUT_LIGHT DeferredLightingPS(VS_OUTPUT_POSITION _input)
 {
     PS_OUTPUT_LIGHT output = (PS_OUTPUT_LIGHT)0;
 
-    float4 depth = g_MRT_depth.Sample(g_point_sampler, _input.uv);
-    float4 normal = g_MRT_normal.Sample(g_point_sampler, _input.uv);
-    float4 material = g_MRT_material.Sample(g_point_sampler, _input.uv);
+    float2 uv = float2(_input.position.x / g_viewport.x, _input.position.y / g_viewport.y);
 
-    float3 NDC = float3(_input.uv.x * 2.f - 1.f, _input.uv.y * -2.f + 1.f, depth.r);
+    float4 depth = g_MRT_depth.Sample(g_point_sampler, uv);
+    float4 normal = g_MRT_normal.Sample(g_point_sampler, uv);
+    float4 material = g_MRT_material.Sample(g_point_sampler, uv);
+
+    float3 NDC = float3(uv.x * 2.f - 1.f, uv.y * -2.f + 1.f, depth.r);
     float4 HCS = float4(NDC * depth.a, depth.a);
 
     float3 positionV = mul(HCS, g_projection_Inv).xyz;

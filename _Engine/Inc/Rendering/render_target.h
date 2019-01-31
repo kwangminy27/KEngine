@@ -8,6 +8,7 @@ namespace K
 		friend class MRT;
 	public:
 		void Render(float _time);
+		void RenderFullScreen(float _time);
 
 		void Clear();
 

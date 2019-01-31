@@ -9,30 +9,6 @@ void K::Light::Initialize()
 	{
 		using namespace DirectX::Colors;
 
-		//set_type(static_cast<int>(LIGHT_TYPE::DIRECTIONAL));
-		//set_ambient(Vector4{ 0.2f, 0.2f, 0.2f, 1.f });
-		//set_diffuse(White.v);
-		//set_specular(White.v);
-		//set_position(Vector3::Zero);
-		//set_direction(Vector3::UnitZ);
-		//set_range(0.f);
-		//set_falloff(0.f);
-		//set_in_angle(0.f);
-		//set_out_angle(0.f);
-		//set_attenuation(Vector3::Zero);
-
-		//set_type(static_cast<int>(LIGHT_TYPE::POINT));
-		//set_ambient(Vector4{ 0.2f, 0.2f, 0.2f, 1.f });
-		//set_diffuse(Pink.v);
-		//set_specular(Pink.v);
-		//set_position(Vector3{ 2.f, 2.f, -1.f });
-		//set_direction(Vector3::Zero);
-		//set_range(10.f);
-		//set_falloff(0.f);
-		//set_in_angle(0.f);
-		//set_out_angle(0.f);
-		//set_attenuation(Vector3{ 0.1f, 0.1f, 0.1f });
-
 		set_type(static_cast<int>(LIGHT_TYPE::SPOT));
 		set_ambient(Vector4{ 0.2f, 0.2f, 0.2f, 1.f });
 		set_diffuse(White.v);
@@ -42,8 +18,6 @@ void K::Light::Initialize()
 		set_attenuation(Vector3::One);
 		set_falloff(10.f);
 		set_range(100.f);
-		set_in_angle(0.f);
-		set_out_angle(0.f);
 	}
 	catch (std::exception const& _e)
 	{
@@ -128,16 +102,6 @@ void K::Light::set_falloff(float _falloff)
 	falloff_ = _falloff;
 }
 
-void K::Light::set_in_angle(float _in_angle)
-{
-	in_angle_ = _in_angle;
-}
-
-void K::Light::set_out_angle(float _out_angle)
-{
-	out_angle_ = _out_angle;
-}
-
 void K::Light::set_attenuation(Vector3 const& _attenuation)
 {
 	attenuation_ = _attenuation;
@@ -153,8 +117,6 @@ K::Light::Light(Light const& _other) : Component(_other)
 	direction_ = _other.direction_;
 	range_ = _other.range_;
 	falloff_ = _other.falloff_;
-	in_angle_ = _other.in_angle_;
-	out_angle_ = _other.out_angle_;
 	attenuation_ = _other.attenuation_;
 }
 
@@ -168,8 +130,6 @@ K::Light::Light(Light&& _other) noexcept : Component(std::move(_other))
 	direction_ = std::move(_other.direction_);
 	range_ = std::move(_other.range_);
 	falloff_ = std::move(_other.falloff_);
-	in_angle_ = std::move(_other.in_angle_);
-	out_angle_ = std::move(_other.out_angle_);
 	attenuation_ = std::move(_other.attenuation_);
 }
 
@@ -220,14 +180,4 @@ int K::Light::type() const
 float K::Light::range() const
 {
 	return range_;
-}
-
-float K::Light::in_angle() const
-{
-	return in_angle_;
-}
-
-float K::Light::out_angle() const
-{
-	return out_angle_;
 }

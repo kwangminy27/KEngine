@@ -55,11 +55,25 @@ namespace K
 
 		virtual void _Finalize() override;
 
+		void _UpdateCommonConstantBuffer(float _time);
+
 		void _CreateShader(
 			std::string const& _tag,
 			std::vector<CSO_DESC> const& _cso_desc_vector,
 			std::vector<D3D11_INPUT_ELEMENT_DESC> const& _input_element_desc_vector,
 			std::string const& _path_tag);
+		void _CreateRasterizerState(
+			std::string const& _tag,
+			D3D11_FILL_MODE _fill_mode,
+			D3D11_CULL_MODE _cull_mode,
+			bool _front_counter_clock_wise,
+			int _depth_bias,
+			float _depth_bias_clamp,
+			float _slope_scale_depth_bias,
+			bool _depth_clip_enable,
+			bool _scissor_enable,
+			bool _multi_sample_enable,
+			bool _anti_aliased_line_enable);
 		void _CreateDepthStencilState(
 			std::string const& _tag,
 			BOOL _depth_enable,

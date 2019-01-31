@@ -14,7 +14,7 @@ void K::Player::Initialize()
 		AddComponent(transform);
 
 		auto renderer = object_manager->CreateComponent<Renderer>(TAG{ RENDERER, 0 });
-		CPTR_CAST<Renderer>(renderer)->set_mesh(resource_manager->FindMesh(SPOTLIGHT_VOLUME));
+		CPTR_CAST<Renderer>(renderer)->set_mesh(resource_manager->FindMesh(NORMAL_PYRAMID));
 		CPTR_CAST<Renderer>(renderer)->set_shader(rendering_manager->FindShader(GBUFFER_SHADER));
 		AddComponent(renderer);
 

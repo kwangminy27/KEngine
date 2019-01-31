@@ -26,8 +26,6 @@ namespace K
 		float falloff() const;
 		int type() const;
 		float range() const;
-		float in_angle() const;
-		float out_angle() const;
 
 		void set_ambient(Vector4 const& _ambient);
 		void set_diffuse(Vector4 const& _diffuse);
@@ -38,8 +36,6 @@ namespace K
 		void set_falloff(float _falloff);
 		void set_type(int _type);
 		void set_range(float _range);
-		void set_in_angle(float _in_angle);
-		void set_out_angle(float _out_angle);
 
 	private:
 		Light() = default;
@@ -59,7 +55,5 @@ namespace K
 		float falloff_{};
 		int type_{};
 		float range_{};
-		float in_angle_{};
-		float out_angle_{};
 	};
 }

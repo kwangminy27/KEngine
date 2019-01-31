@@ -50,6 +50,45 @@ void K::RenderTarget::Render(float _time)
 	depth_disable->ResetState();
 }
 
+void K::RenderTarget::RenderFullScreen(float _time)
+{
+	auto const& resource_manager = ResourceManager::singleton();
+	auto const& rendering_manager = RenderingManager::singleton();
+
+	auto const& camera = WorldManager::singleton()->FindCamera(TAG{ UI_CAMERA, 0 });
+
+	TransformConstantBuffer transform_CB{};
+	transform_CB.world = Matrix::CreateScaling(Vector3{ static_cast<float>(RESOLUTION::WIDTH), static_cast<float>(RESOLUTION::HEIGHT), 1.f });
+	transform_CB.view = camera->view();
+	transform_CB.projection = camera->projection();
+	transform_CB.WV = transform_CB.world * transform_CB.view;
+	transform_CB.WVP = transform_CB.world * transform_CB.view * transform_CB.projection;
+	transform_CB.projection_Inv = transform_CB.projection.Inverse();
+
+	transform_CB.world = transform_CB.world.Transpose();
+	transform_CB.view = transform_CB.view.Transpose();
+	transform_CB.projection = transform_CB.projection.Transpose();
+	transform_CB.WV = transform_CB.WV.Transpose();
+	transform_CB.WVP = transform_CB.WVP.Transpose();
+	transform_CB.projection_Inv = transform_CB.projection_Inv.Transpose();
+
+	rendering_manager->UpdateConstantBuffer(TRANSFORM, &transform_CB);
+	rendering_manager->FindShader(shader_tag_)->SetToShader();
+
+	auto const& depth_disable = rendering_manager->FindRenderState(DEPTH_DISABLE);
+
+	depth_disable->SetState();
+	{
+		Attach(0);
+		{
+			resource_manager->FindSampler(sampler_tag_)->SetToShader(0);
+			resource_manager->FindMesh(mesh_tag_)->Render();
+		}
+		Detach(0);
+	}
+	depth_disable->ResetState();
+}
+
 void K::RenderTarget::Clear()
 {
 	auto const& context = DeviceManager::singleton()->context();

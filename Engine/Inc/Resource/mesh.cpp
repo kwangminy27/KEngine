@@ -2,6 +2,8 @@
 #include "mesh.h"
 
 #include "device_manager.h"
+#include "path_manager.h"
+#include "fbx_loader.h"
 
 void K::Mesh::Render()
 {
@@ -119,6 +121,17 @@ K::Vector3 K::Mesh::extent() const
 K::Mesh::Mesh(Mesh&& _other) noexcept
 {
 	mesh_container_vector_ = std::move(_other.mesh_container_vector_);
+}
+
+void K::Mesh::_LoadMesh(std::wstring const& _file_name, std::string const& _path_tag)
+{
+	auto const& fbx_loader = FBXLoader::singleton();
+
+	fbx_loader->Begin(_file_name, _path_tag);
+
+	// 메쉬 생성
+
+	fbx_loader->End();
 }
 
 void K::Mesh::_CreateMesh(

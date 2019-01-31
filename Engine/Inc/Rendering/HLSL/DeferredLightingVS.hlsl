@@ -1,11 +1,24 @@
 #include "type.hlsl"
 
-VS_OUTPUT_POSITION_TEX DeferredLightingVS(VS_INPUT_POSITION_TEX _input)
-{
-    VS_OUTPUT_POSITION_TEX output = (VS_OUTPUT_POSITION_TEX)0;
+#define DIRECTIONAL 0
+#define POINT 1
+#define SPOT 2
 
-    output.position = float4(_input.position, 1.f);
-    output.uv = _input.uv;
+VS_OUTPUT_POSITION DeferredLightingVS(VS_INPUT_POSITION _input)
+{
+    VS_OUTPUT_POSITION output = (VS_OUTPUT_POSITION)0;
+
+    switch(g_light_type)
+    {
+        case DIRECTIONAL:
+            output.position = float4(_input.position, 1.f);
+            break;
+
+        case POINT:
+        case SPOT:
+            output.position = mul(float4(_input.position, 1.f), g_WVP);
+            break;
+    }
 
     return output;
 }

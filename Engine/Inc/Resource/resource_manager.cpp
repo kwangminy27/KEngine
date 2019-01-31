@@ -16,6 +16,22 @@ void K::ResourceManager::Initialize()
 	try
 	{
 #pragma region Mesh
+		Vector3 rect_vertices[4]
+		{
+			{ -1.f, -1.f, 0.f },
+			{ -1.f, 1.f, 0.f },
+			{ 1.f, 1.f, 0.f },
+			{ 1.f, -1.f, 0.f }
+		};
+
+		uint32_t rect_indices[6]{ 0, 1, 2, 0, 2, 3 };
+
+		_CreateMesh(
+			FULL_SCREEN_RECT, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+			rect_vertices, sizeof(Vector3), 4, D3D11_USAGE_DEFAULT,
+			rect_indices, sizeof(uint32_t), 6, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_UINT
+		);
+
 		VertexTex tex_rect_vertices[4]{
 			{ { -0.5f, -0.5f, 0.f }, { 0.f, 1.f } },
 			{ { -0.5f, 0.5f, 0.f }, { 0.f, 0.f } },
@@ -23,12 +39,12 @@ void K::ResourceManager::Initialize()
 			{ { 0.5f, -0.5f, 0.f }, { 1.f, 1.f } }
 		};
 
-		uint16_t tex_rect_indices[6]{ 0, 1, 2, 0, 2, 3 };
+		uint32_t tex_rect_indices[6]{ 0, 1, 2, 0, 2, 3 };
 
 		_CreateMesh(
 			TEX_RECT, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
 			tex_rect_vertices, sizeof(VertexTex), 4, D3D11_USAGE_DEFAULT,
-			tex_rect_indices, sizeof(uint16_t), 6, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R16_UINT
+			tex_rect_indices, sizeof(uint32_t), 6, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_UINT
 		);
 
 		Vector3 collider_rect_vertices[5]{
@@ -60,14 +76,14 @@ void K::ResourceManager::Initialize()
 			{ { 0.5f, -0.5f, 0.f }, { 1.f, 1.f } }
 		};
 
-		uint16_t instance_tex_rect_indices[6]{ 0, 1, 2, 1, 3, 2 };
+		uint32_t instance_tex_rect_indices[6]{ 0, 1, 2, 1, 3, 2 };
 
 		MatrixTex instance_tex_rect_instances[10000]{};
 
 		_CreateMesh(
 			INSTANCE_TEX_RECT, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
 			instance_tex_rect_vertices, sizeof(VertexTex), 4, D3D11_USAGE_DEFAULT,
-			instance_tex_rect_indices, sizeof(uint16_t), 6, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R16_UINT,
+			instance_tex_rect_indices, sizeof(uint32_t), 6, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_UINT,
 			instance_tex_rect_instances, sizeof(MatrixTex), 10000, D3D11_USAGE_DYNAMIC
 		);
 
@@ -137,33 +153,16 @@ void K::ResourceManager::Initialize()
 			VertexNormalColor{ pyramid_position[4], -Vector3::UnitY, DirectX::Colors::White.v }
 		};
 
-		uint16_t pyramid_indices[18]{ 1, 0, 4, 2, 0, 1, 3, 0, 2, 4, 0, 3, 5, 8, 6, 6, 8, 7 };
+		uint32_t pyramid_indices[18]{ 1, 0, 4, 2, 0, 1, 3, 0, 2, 4, 0, 3, 5, 8, 6, 6, 8, 7 };
 
 		_CreateMesh(
 			NORMAL_PYRAMID, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
 			pyramid_vertices, sizeof(VertexNormalColor), 9, D3D11_USAGE_DEFAULT,
-			pyramid_indices, sizeof(uint16_t), 18, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R16_UINT
+			pyramid_indices, sizeof(uint32_t), 18, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_UINT
 		);
 
-		VertexTex full_screen_vertices[4]{
-			{ Vector3{ -1.f, -1.f, 0.f }, Vector2{ 0.f, 1.f } },
-			{ Vector3{ -1.f, 1.f, 0.f }, Vector2{ 0.f, 0.f } },
-			{ Vector3{ 1.f, 1.f, 0.f }, Vector2{ 1.f, 0.f } },
-			{ Vector3{ 1.f, -1.f, 0.f }, Vector2{ 1.f, 1.f } }
-		};
-
-		uint16_t full_screen_indices[6]{ 0, 1, 2, 0, 2, 3 };
-
-		_CreateMesh(
-			FULL_SCREEN_RECT, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-			full_screen_vertices, sizeof(VertexTex), 4, D3D11_USAGE_DEFAULT,
-			full_screen_indices, sizeof(uint16_t), 6, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R16_UINT
-		);
-
-		_CreateSphereMesh(SPHERE_VOLUME, 0.5f, 32, 16);
-		_CreateCylinderMesh(CYLINDER_VOLUME, 1.f, 0.5f, 32);
-		_CreateCapsuleMesh(CAPSULE_VOLUME, 1.f, 0.5f, 32, 16);
-		_CreateSpotlightMesh(SPOTLIGHT_VOLUME, 0.5f, 0.5f, 32, 16);
+		_CreateSphereVolume(SPHERE_VOLUME, 2.f, 32, 16);
+		_CreateSpotlightVolume(SPOTLIGHT_VOLUME, 0.5f, 0.5f, 32, 16);
 #pragma endregion
 
 #pragma region Texture
@@ -435,13 +434,13 @@ void K::ResourceManager::_CreateSphereMesh(std::string const& _tag, float _radiu
 		}
 	}
 
-	std::vector<uint16_t> sphere_indices{};
+	std::vector<uint32_t> sphere_indices{};
 
 	for (auto i = 0; i < _stack_count; ++i)
 	{
 		for (auto j = 0; j < _slice_count; ++j)
 		{
-			uint16_t index[6]{};
+			uint32_t index[6]{};
 			index[0] = _slice_count * i + j;
 			index[1] = _slice_count * (i + 1) + j + 1;
 			index[2] = _slice_count * (i + 1) + j;
@@ -467,7 +466,7 @@ void K::ResourceManager::_CreateSphereMesh(std::string const& _tag, float _radiu
 
 	_CreateMesh(_tag, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
 		sphere_vertices.data(), sizeof(VertexNormalColor), static_cast<int>(sphere_vertices.size()), D3D11_USAGE_DEFAULT,
-		sphere_indices.data(), sizeof(uint16_t), static_cast<int>(sphere_indices.size()), D3D11_USAGE_DEFAULT, DXGI_FORMAT_R16_UINT
+		sphere_indices.data(), sizeof(uint32_t), static_cast<int>(sphere_indices.size()), D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_UINT
 	);
 }
 
@@ -505,12 +504,12 @@ void K::ResourceManager::_CreateCylinderMesh(std::string const& _tag, float _hei
 		}
 	}
 
-	std::vector<uint16_t> cylinder_indices{};
+	std::vector<uint32_t> cylinder_indices{};
 
 	// À­¸é
 	for (auto i = 0; i < _slice_count - 2; ++i)
 	{
-		uint16_t index[3]{};
+		uint32_t index[3]{};
 		index[0] = 1;
 		index[1] = 1 + (i + 2) * 2;
 		index[2] = 1 + (i + 1) * 2;
@@ -523,7 +522,7 @@ void K::ResourceManager::_CreateCylinderMesh(std::string const& _tag, float _hei
 	// ¿·¸é
 	for (auto i = 0; i < _slice_count; ++i)
 	{
-		uint16_t index[6]{};
+		uint32_t index[6]{};
 		index[0] = i * 2;
 		index[1] = (i + _slice_count + 1) * 2;
 		index[2] = (i + _slice_count) * 2;
@@ -549,7 +548,7 @@ void K::ResourceManager::_CreateCylinderMesh(std::string const& _tag, float _hei
 	// ¾Æ·§¸é
 	for (auto i = 0; i < _slice_count - 2; ++i)
 	{
-		uint16_t index[3]{};
+		uint32_t index[3]{};
 		index[0] = 1 + _slice_count * 2;
 		index[1] = 1 + _slice_count * 2 + (i + 1) * 2;
 		index[2] = 1 + _slice_count * 2 + (i + 2) * 2;
@@ -561,7 +560,7 @@ void K::ResourceManager::_CreateCylinderMesh(std::string const& _tag, float _hei
 
 	_CreateMesh(_tag, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
 		cylinder_vertices.data(), sizeof(VertexNormalColor), static_cast<int>(cylinder_vertices.size()), D3D11_USAGE_DEFAULT,
-		cylinder_indices.data(), sizeof(uint16_t), static_cast<int>(cylinder_indices.size()), D3D11_USAGE_DEFAULT, DXGI_FORMAT_R16_UINT
+		cylinder_indices.data(), sizeof(uint32_t), static_cast<int>(cylinder_indices.size()), D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_UINT
 	);
 }
 
@@ -604,13 +603,13 @@ void K::ResourceManager::_CreateCapsuleMesh(std::string const& _tag, float _heig
 		}
 	}
 
-	std::vector<uint16_t> capsule_indices{};
+	std::vector<uint32_t> capsule_indices{};
 
 	for (auto i = 0; i < stack_count; ++i)
 	{
 		for (auto j = 0; j < _slice_count; ++j)
 		{
-			uint16_t index[6]{};
+			uint32_t index[6]{};
 			index[0] = _slice_count * i + j;
 			index[1] = _slice_count * (i + 1) + j + 1;
 			index[2] = _slice_count * (i + 1) + j;
@@ -636,7 +635,7 @@ void K::ResourceManager::_CreateCapsuleMesh(std::string const& _tag, float _heig
 
 	_CreateMesh(_tag, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
 		capsule_vertices.data(), sizeof(VertexNormalColor), static_cast<int>(capsule_vertices.size()), D3D11_USAGE_DEFAULT,
-		capsule_indices.data(), sizeof(uint16_t), static_cast<int>(capsule_indices.size()), D3D11_USAGE_DEFAULT, DXGI_FORMAT_R16_UINT
+		capsule_indices.data(), sizeof(uint32_t), static_cast<int>(capsule_indices.size()), D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_UINT
 	);
 }
 
@@ -670,13 +669,13 @@ void K::ResourceManager::_CreateSpotlightMesh(std::string const& _tag, float _he
 
 	spotlight_vertices.push_back(VertexNormalColor{ Vector3::Zero, -Vector3::UnitY, DirectX::Colors::White.v });
 
-	std::vector<uint16_t> spotlight_indices{};
+	std::vector<uint32_t> spotlight_indices{};
 
 	for (auto i = 0; i < _stack_count; ++i)
 	{
 		for (auto j = 0; j < _slice_count; ++j)
 		{
-			uint16_t index[6]{};
+			uint32_t index[6]{};
 			index[0] = _slice_count * i + j;
 			index[1] = _slice_count * (i + 1) + j + 1;
 			index[2] = _slice_count * (i + 1) + j;
@@ -702,10 +701,10 @@ void K::ResourceManager::_CreateSpotlightMesh(std::string const& _tag, float _he
 
 	for (auto i = 0; i < _slice_count; ++i)
 	{
-		uint16_t index[3]{};
+		uint32_t index[3]{};
 		index[0] = _slice_count * _stack_count + i;
 		index[1] = _slice_count * _stack_count + i + 1;
-		index[2] = static_cast<uint16_t>(spotlight_vertices.size() - 1);
+		index[2] = static_cast<uint32_t>(spotlight_vertices.size() - 1);
 
 		if(i == _slice_count - 1)
 			index[1] = _slice_count * (_stack_count - 1) + i + 1;
@@ -717,6 +716,139 @@ void K::ResourceManager::_CreateSpotlightMesh(std::string const& _tag, float _he
 
 	_CreateMesh(_tag, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
 		spotlight_vertices.data(), sizeof(VertexNormalColor), static_cast<int>(spotlight_vertices.size()), D3D11_USAGE_DEFAULT,
-		spotlight_indices.data(), sizeof(uint16_t), static_cast<int>(spotlight_indices.size()), D3D11_USAGE_DEFAULT, DXGI_FORMAT_R16_UINT
+		spotlight_indices.data(), sizeof(uint32_t), static_cast<int>(spotlight_indices.size()), D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_UINT
+	);
+}
+
+void K::ResourceManager::_CreateSphereVolume(std::string const& _tag, float _radius, int _slice_count, int _stack_count)
+{
+	std::vector<Vector3> sphere_vertices{};
+
+	float phi = DirectX::XM_PI / _stack_count;
+	float theta = DirectX::XM_2PI / _slice_count;
+
+	for (auto i = 0; i <= _stack_count; ++i)
+	{
+		for (auto j = 0; j < _slice_count; ++j)
+		{
+			Vector3 vertex{};
+
+			if (j < _slice_count / 2)
+				vertex = Vector3{ _radius * sin(phi * i) * cos(theta * j), _radius * cos(phi * i), _radius * sin(phi * i) * sin(theta * j) };
+			else
+				vertex = Vector3{ _radius * sin(phi * i) * -cos(theta * j - DirectX::XM_PI), _radius * cos(phi * i), _radius * sin(phi * i) * -sin(theta * j - DirectX::XM_PI) };
+
+			sphere_vertices.push_back(std::move(vertex));
+		}
+	}
+
+	std::vector<uint32_t> sphere_indices{};
+
+	for (auto i = 0; i < _stack_count; ++i)
+	{
+		for (auto j = 0; j < _slice_count; ++j)
+		{
+			uint32_t index[6]{};
+			index[0] = _slice_count * i + j;
+			index[1] = _slice_count * (i + 1) + j + 1;
+			index[2] = _slice_count * (i + 1) + j;
+			index[3] = _slice_count * i + j;
+			index[4] = _slice_count * i + j + 1;
+			index[5] = _slice_count * (i + 1) + j + 1;
+
+			if (j == _slice_count - 1)
+			{
+				index[1] = _slice_count * i + j + 1;
+				index[4] = _slice_count * (i - 1) + j + 1;
+				index[5] = _slice_count * i + j + 1;
+			}
+
+			sphere_indices.push_back(std::move(index[0]));
+			sphere_indices.push_back(std::move(index[1]));
+			sphere_indices.push_back(std::move(index[2]));
+			sphere_indices.push_back(std::move(index[3]));
+			sphere_indices.push_back(std::move(index[4]));
+			sphere_indices.push_back(std::move(index[5]));
+		}
+	}
+
+	_CreateMesh(_tag, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+		sphere_vertices.data(), sizeof(Vector3), static_cast<int>(sphere_vertices.size()), D3D11_USAGE_DEFAULT,
+		sphere_indices.data(), sizeof(uint32_t), static_cast<int>(sphere_indices.size()), D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_UINT
+	);
+}
+
+void K::ResourceManager::_CreateSpotlightVolume(std::string const& _tag, float _height, float _radius, int _slice_count, int _stack_count)
+{
+	std::vector<Vector3> spotlight_vertices{};
+
+	float phi = DirectX::XM_PIDIV4 / _stack_count;
+	float theta = DirectX::XM_2PI / _slice_count;
+
+	for (auto i = 0; i <= _stack_count; ++i)
+	{
+		for (auto j = 0; j < _slice_count; ++j)
+		{
+			Vector3 vertex{};
+
+			if (j < _slice_count / 2)
+				vertex = Vector3{ _radius * sin(phi * i) * cos(theta * j), _radius * cos(phi * i) + _height, _radius * sin(phi * i) * sin(theta * j) };
+			else
+				vertex = Vector3{ _radius * sin(phi * i) * -cos(theta * j - DirectX::XM_PI), _radius * cos(phi * i) + _height, _radius * sin(phi * i) * -sin(theta * j - DirectX::XM_PI) };
+
+			spotlight_vertices.push_back(std::move(vertex));
+		}
+	}
+
+	spotlight_vertices.push_back(Vector3::Zero);
+
+	std::vector<uint32_t> spotlight_indices{};
+
+	for (auto i = 0; i < _stack_count; ++i)
+	{
+		for (auto j = 0; j < _slice_count; ++j)
+		{
+			uint32_t index[6]{};
+			index[0] = _slice_count * i + j;
+			index[1] = _slice_count * (i + 1) + j + 1;
+			index[2] = _slice_count * (i + 1) + j;
+			index[3] = _slice_count * i + j;
+			index[4] = _slice_count * i + j + 1;
+			index[5] = _slice_count * (i + 1) + j + 1;
+
+			if (j == _slice_count - 1)
+			{
+				index[1] = _slice_count * i + j + 1;
+				index[4] = _slice_count * (i - 1) + j + 1;
+				index[5] = _slice_count * i + j + 1;
+			}
+
+			spotlight_indices.push_back(std::move(index[0]));
+			spotlight_indices.push_back(std::move(index[1]));
+			spotlight_indices.push_back(std::move(index[2]));
+			spotlight_indices.push_back(std::move(index[3]));
+			spotlight_indices.push_back(std::move(index[4]));
+			spotlight_indices.push_back(std::move(index[5]));
+		}
+	}
+
+	for (auto i = 0; i < _slice_count; ++i)
+	{
+		uint32_t index[3]{};
+		index[0] = _slice_count * _stack_count + i;
+		index[1] = _slice_count * _stack_count + i + 1;
+		index[2] = static_cast<uint32_t>(spotlight_vertices.size() - 1);
+
+		if (i == _slice_count - 1)
+			index[1] = _slice_count * (_stack_count - 1) + i + 1;
+
+		spotlight_indices.push_back(std::move(index[0]));
+		spotlight_indices.push_back(std::move(index[1]));
+		spotlight_indices.push_back(std::move(index[2]));
+	}
+
+	_CreateMesh(_tag, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+		spotlight_vertices.data(), sizeof(Vector3), static_cast<int>(spotlight_vertices.size()), D3D11_USAGE_DEFAULT,
+		spotlight_indices.data(), sizeof(uint32_t), static_cast<int>(spotlight_indices.size()), D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_UINT
 	);
 }

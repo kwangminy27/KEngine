@@ -17,6 +17,7 @@ namespace K
 	constexpr auto AUDIO_PATH = "AudioPath";
 	constexpr auto TEXTURE_PATH = "TexturePath";
 	constexpr auto SHADER_PATH = "ShaderPath";
+	constexpr auto FBX_PATH = "FBXPath";
 
 	//////////////////// Mesh Key ////////////////////
 	constexpr auto TEX_RECT = "TexRect";
@@ -43,11 +44,15 @@ namespace K
 	constexpr auto INSTANCE_TEX_SHADER = "InstanceTexShader";
 	constexpr auto GBUFFER_SHADER = "GBufferShader";
 	constexpr auto DEFERRED_LIGHTING_SHADER = "DeferredLightingShader";
+	constexpr auto DEFERRED_LIGHTING_CALCULATE_COLOR = "DeferredLightingCalculateColor";
 
 	//////////////////// RenderState Key ////////////////////
+	constexpr auto RS_LIGHT_VOLUME = "RSLightVolume";
+	constexpr auto RS_WIREFRAME = "RSWireFrame";
 	constexpr auto ALPHA_BLEND = "AlphaBlend";
 	constexpr auto LIGHT_BLEND = "LightBlend";
 	constexpr auto DEPTH_DISABLE = "DepthDisable";
+	constexpr auto DEPTH_LIGHT_VOLUME = "DepthLightVolume";
 
 	//////////////////// RenderTarget Key ////////////////////
 	constexpr auto BASIC_RENDER_TARGET = "BasicRenderTarget";
@@ -58,10 +63,12 @@ namespace K
 	constexpr auto LIGHT_AMBIENT_RENDER_TARGET = "LightAmbientRenderTarget";
 	constexpr auto LIGHT_DIFFUSE_RENDER_TARGET = "LightDiffuseRenderTarget";
 	constexpr auto LIGHT_SPECULAR_RENDER_TARGET = "LightSpecularRenderTarget";
+	constexpr auto DEFERRED_LIGHTING_RENDER_TARGET = "DeferredLightingRenderTarget";
 	constexpr auto GBUFFER_MRT = "GBufferMRT";
 	constexpr auto LIGHT_MRT = "LightMRT";
 
 	//////////////////// Common Key ////////////////////
+	constexpr auto COMMON = "Common";
 	constexpr auto BACKGROUND = "Background";
 	constexpr auto DEFAULT = "Default";
 	constexpr auto UI = "UI";
@@ -72,6 +79,7 @@ namespace K
 	constexpr auto TILE = "Tile";
 	constexpr auto TILE_MAP = "TileMap";
 	constexpr auto DEFAULT_LIGHT = "DefaultLight";
+	constexpr auto GLOBAL_AMBIENT_LIGHT = "GlobalAmbientLight";
 
 	//////////////////// Component Key ////////////////////
 	constexpr auto TRANSFORM = "Transform";
@@ -206,5 +214,12 @@ namespace K
 		float range;
 		Vector3 attenuation;
 		float falloff;
+	};
+
+	struct CommonConstantBuffer
+	{
+		Vector2 viewport;
+		float time;
+		float padding;
 	};
 }

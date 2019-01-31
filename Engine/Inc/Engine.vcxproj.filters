@@ -154,6 +154,9 @@
     <Filter Include="08. Rendering\1. Shader\1. HLSL\4. Deferred Rendering\2. Deferred Lighting">
       <UniqueIdentifier>{6b170c4c-df3c-4739-b642-a23c3c62b5de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="19. FBX">
+      <UniqueIdentifier>{7f7f73f7-61ad-4e8f-a535-989db041f4f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -315,6 +318,9 @@
     <ClInclude Include="Rendering\rasterizer_state.h">
       <Filter>08. Rendering\2. RenderState</Filter>
     </ClInclude>
+    <ClInclude Include="fbx_loader.h">
+      <Filter>19. FBX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -467,6 +473,9 @@
     <ClCompile Include="Rendering\rasterizer_state.cpp">
       <Filter>08. Rendering\2. RenderState</Filter>
     </ClCompile>
+    <ClCompile Include="fbx_loader.cpp">
+      <Filter>19. FBX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\HLSL\BasicAnimation2DVS.hlsl">
@@ -512,6 +521,12 @@
       <Filter>08. Rendering\1. Shader\1. HLSL\4. Deferred Rendering\2. Deferred Lighting</Filter>
     </FxCompile>
     <FxCompile Include="Rendering\HLSL\DeferredLightingPS.hlsl">
+      <Filter>08. Rendering\1. Shader\1. HLSL\4. Deferred Rendering\2. Deferred Lighting</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\HLSL\DeferredLightingCalculateColorPS.hlsl">
+      <Filter>08. Rendering\1. Shader\1. HLSL\4. Deferred Rendering\2. Deferred Lighting</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\HLSL\DeferredLightingCalculateColorVS.hlsl">
       <Filter>08. Rendering\1. Shader\1. HLSL\4. Deferred Rendering\2. Deferred Lighting</Filter>
     </FxCompile>
   </ItemGroup>
