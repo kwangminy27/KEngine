@@ -10,7 +10,7 @@ void K::Light::Initialize()
 		using namespace DirectX::Colors;
 
 		set_type(static_cast<int>(LIGHT_TYPE::SPOT));
-		set_ambient(Vector4{ 0.2f, 0.2f, 0.2f, 1.f });
+		set_ambient(Vector4{ 0.f, 0.f, 0.f, 1.f });
 		set_diffuse(White.v);
 		set_specular(White.v);
 		set_position(-Vector3::UnitZ);

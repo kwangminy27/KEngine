@@ -15,7 +15,8 @@ namespace K
 		virtual void Serialize(InputMemoryStream& _imstream) override;
 		virtual void Serialize(OutputMemoryStream& _omstream) override;
 
-		void CreateView(Vector3 const& _eye, Vector3 const& _focus, Vector3 const& _up);
+		void CreateLookAt(Vector3 const& _eye, Vector3 const& _focus, Vector3 const& _up);
+		void CreateLookTo(Vector3 const& _position, Vector3 const& _direction, Vector3 const& _up);
 		void CreateProjection(float _width, float _height, float _near, float _far);
 		void CreateProjection(float _fov_angle, float _width, float _height, float _near, float _far);
 

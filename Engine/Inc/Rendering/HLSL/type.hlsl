@@ -142,8 +142,8 @@ Lighting ComputeDirectionalLight(float3 _normal, float3 _to_camera, float4 _mate
     float3 halfway = normalize(_to_camera + to_light);
 
     output.ambient = _material_ambient * g_light_ambient;
-    output.diffuse = _material_diffuse * g_light_diffuse * max(dot(_normal, to_light), 0.f);
-    output.specular = _material_specular * g_light_specular * pow(max(dot(_normal, halfway), 0.f), g_light_specular.w);
+    output.diffuse = _material_diffuse * g_light_diffuse * saturate(dot(_normal, to_light));
+    output.specular = _material_specular * g_light_specular * pow(saturate(dot(_normal, halfway)), g_light_specular.w);
 
     return output;
 }
@@ -162,11 +162,16 @@ Lighting ComputePointLight(float3 _position, float3 _normal, float3 _to_camera, 
     float3 to_light = normalize(light_position - _position);
     float3 halfway = normalize(_to_camera + to_light);
 
+    float diffuse_factor = saturate(dot(_normal, to_light));
+
+    if(diffuse_factor < 0.01f)
+        return output;
+
     float attenuation = 1.f / dot(g_light_attenuation, float3(1, distance, distance * distance));
 
     output.ambient = _material_ambient * g_light_ambient;
-    output.diffuse = _material_diffuse * g_light_diffuse * max(dot(_normal, to_light), 0.f) * attenuation;
-    output.specular = _material_specular * g_light_specular * pow(max(dot(_normal, halfway), 0.f), g_light_specular.w) * attenuation;
+    output.diffuse = _material_diffuse * g_light_diffuse * diffuse_factor * attenuation;
+    output.specular = _material_specular * g_light_specular * pow(saturate(dot(_normal, halfway)), g_light_specular.w) * attenuation;
 
     return output;
 }
@@ -186,12 +191,17 @@ Lighting ComputeSpotLight(float3 _position, float3 _normal, float3 _to_camera, f
     float3 to_light = normalize(light_position - _position);
     float3 halfway = normalize(_to_camera + to_light);
 
-    float attenuation = 1.f / dot(g_light_attenuation, float3(1, distance, distance * distance));
+    float diffuse_factor = max(0.f, dot(_normal, to_light));
+
+    if(diffuse_factor < 0.01f)
+        return output;
+
+    float attenuation = dot(g_light_attenuation, float3(1, distance, distance * distance));
     float falloff = pow(max(dot(-to_light, light_direction), 0.f), g_light_falloff);
 
     output.ambient = _material_ambient * g_light_ambient;
-    output.diffuse = _material_diffuse * g_light_diffuse * max(dot(_normal, to_light), 0.f) * attenuation * falloff;
-    output.specular = _material_specular * g_light_specular * pow(max(dot(_normal, halfway), 0.f), g_light_specular.w) * falloff;
+    output.diffuse = _material_diffuse * g_light_diffuse * diffuse_factor * attenuation * falloff;
+    output.specular = _material_specular * g_light_specular * pow(saturate(dot(_normal, halfway)), g_light_specular.w) * falloff;
 
     return output;
 }

@@ -47,12 +47,16 @@ namespace K
 	constexpr auto DEFERRED_LIGHTING_CALCULATE_COLOR = "DeferredLightingCalculateColor";
 
 	//////////////////// RenderState Key ////////////////////
-	constexpr auto RS_LIGHT_VOLUME = "RSLightVolume";
-	constexpr auto RS_WIREFRAME = "RSWireFrame";
+	constexpr auto RS_LIGHT_VOLUME_PASS_1 = "RSLightVolumePass1";
+	constexpr auto RS_LIGHT_VOLUME_PASS_2 = "RSLightVolumePass2";
+	constexpr auto RS_WIREFRAME_CULL_FRONT = "RSWireFrameCullFront";
+	constexpr auto RS_WIREFRAME_CULL_BACK = "RSWireFrameCullBack";
+	constexpr auto RS_WIREFRAME_CULL_NONE = "RSWireFrameCullNone";
 	constexpr auto ALPHA_BLEND = "AlphaBlend";
 	constexpr auto LIGHT_BLEND = "LightBlend";
 	constexpr auto DEPTH_DISABLE = "DepthDisable";
-	constexpr auto DEPTH_LIGHT_VOLUME = "DepthLightVolume";
+	constexpr auto DSS_LIGHT_VOLUME_PASS_1 = "DSSLightVolumePass1";
+	constexpr auto DSS_LIGHT_VOLUME_PASS_2 = "DSSLightVolumePass2";
 
 	//////////////////// RenderTarget Key ////////////////////
 	constexpr auto BASIC_RENDER_TARGET = "BasicRenderTarget";

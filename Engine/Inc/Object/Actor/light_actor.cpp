@@ -8,6 +8,7 @@
 #include "Rendering/rendering_manager.h"
 #include "Rendering/shader.h"
 #include "Rendering/render_state.h"
+#include "Rendering/depth_stencil_state.h"
 #include "World/world_manager.h"
 #include "Object/object_manager.h"
 #include "Object/Actor/camera_actor.h"
@@ -21,8 +22,8 @@ void K::LightActor::Initialize()
 		auto const& object_manager = ObjectManager::singleton();
 
 		auto transform = object_manager->CreateComponent<Transform>(TAG{ TRANSFORM, 0 });
-		CPTR_CAST<Transform>(transform)->set_local_scaling(Vector3::One);
-		CPTR_CAST<Transform>(transform)->set_local_rotation(Quaternion::CreateFromAxisAngle(Vector3::UnitX, 90));
+		CPTR_CAST<Transform>(transform)->set_model_scaling(Vector3::One);
+		CPTR_CAST<Transform>(transform)->set_model_rotation(Quaternion::CreateFromYawPitchRoll(0.f, 90.f, 0.f));
 		CPTR_CAST<Transform>(transform)->set_local_translation(-Vector3::UnitZ);
 		AddComponent(transform);
 
@@ -70,7 +71,6 @@ void K::LightActor::_Render(float _time)
 
 	transform->set_local_translation(light->position());
 
-	// TODO: º¸·ù
 	auto direction = light->direction();
 	direction.Normalize();
 
@@ -81,8 +81,9 @@ void K::LightActor::_Render(float _time)
 
 		auto angle = DirectX::XMConvertToDegrees(acos(Vector3::UnitZ.Dot(direction)));
 
-		transform->set_local_rotation(transform->local_rotation() * Quaternion::CreateFromAxisAngle(axis, angle * _time));
+		transform->set_local_rotation(Quaternion::CreateFromAxisAngle(axis, angle));
 	}
+
 	transform->UpdateConstantBuffer();
 
 	auto const& resource_manager = ResourceManager::singleton();
@@ -108,19 +109,54 @@ void K::LightActor::_Render(float _time)
 		}
 		else
 		{
-			auto const& rs_light_volume = rendering_manager->FindRenderState(RS_LIGHT_VOLUME);
-			auto const& depth_light_volume = rendering_manager->FindRenderState(DEPTH_LIGHT_VOLUME);
+			// Light Volume Pass 1
+			auto const& test = rendering_manager->FindRenderState("Test");
+			auto const& rs_light_volume_pass_1 = rendering_manager->FindRenderState(RS_LIGHT_VOLUME_PASS_1);
+			auto const& depth_light_volume_pass_1 = rendering_manager->FindRenderState(DSS_LIGHT_VOLUME_PASS_1);
 
-			rs_light_volume->SetState();
-			depth_light_volume->SetState();
+			test->SetState();
+			rs_light_volume_pass_1->SetState();
+			std::static_pointer_cast<DepthStencilState>(depth_light_volume_pass_1)->set_stencil_ref(1);
+			depth_light_volume_pass_1->SetState();
 			{
 				if (LIGHT_TYPE::POINT == static_cast<LIGHT_TYPE>(light->type()))
 					resource_manager->FindMesh(SPHERE_VOLUME)->Render();
 				else if (LIGHT_TYPE::SPOT == static_cast<LIGHT_TYPE>(light->type()))
 					resource_manager->FindMesh(SPOTLIGHT_VOLUME)->Render();
 			}
-			depth_light_volume->ResetState();
-			rs_light_volume->ResetState();
+			depth_light_volume_pass_1->ResetState();
+			rs_light_volume_pass_1->ResetState();
+			test->ResetState();
+
+			// Light Volume Pass 2
+			auto const& rs_light_volume_pass_2 = rendering_manager->FindRenderState(RS_LIGHT_VOLUME_PASS_2);
+			auto const& depth_light_volume_pass_2 = rendering_manager->FindRenderState(DSS_LIGHT_VOLUME_PASS_2);
+
+			rs_light_volume_pass_2->SetState();
+			std::static_pointer_cast<DepthStencilState>(depth_light_volume_pass_2)->set_stencil_ref(1);
+			depth_light_volume_pass_2->SetState();
+			{
+				if (LIGHT_TYPE::POINT == static_cast<LIGHT_TYPE>(light->type()))
+					resource_manager->FindMesh(SPHERE_VOLUME)->Render();
+				else if (LIGHT_TYPE::SPOT == static_cast<LIGHT_TYPE>(light->type()))
+					resource_manager->FindMesh(SPOTLIGHT_VOLUME)->Render();
+
+				auto const& test = rendering_manager->FindRenderState(RS_WIREFRAME_CULL_BACK);
+				auto const& depth_disable = rendering_manager->FindRenderState(DEPTH_DISABLE);
+
+				test->SetState();
+				depth_disable->SetState();
+				{
+					if (LIGHT_TYPE::POINT == static_cast<LIGHT_TYPE>(light->type()))
+						resource_manager->FindMesh(SPHERE_VOLUME)->Render();
+					else if (LIGHT_TYPE::SPOT == static_cast<LIGHT_TYPE>(light->type()))
+						resource_manager->FindMesh(SPOTLIGHT_VOLUME)->Render();
+				}
+				depth_disable->ResetState();
+				test->ResetState();
+			}
+			depth_light_volume_pass_2->ResetState();
+			rs_light_volume_pass_2->ResetState();
 		}
 	}
 	light_blend->ResetState();

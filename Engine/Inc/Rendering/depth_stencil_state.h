@@ -11,6 +11,8 @@ namespace K
 		virtual void SetState() override;
 		virtual void ResetState() override;
 
+		void set_stencil_ref(uint32_t _value);
+
 	private:
 		DepthStencilState() = default;
 		DepthStencilState(DepthStencilState const& _other);

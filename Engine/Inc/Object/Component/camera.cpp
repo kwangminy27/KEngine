@@ -36,9 +36,14 @@ void K::Camera::Serialize(OutputMemoryStream& _omstream)
 {
 }
 
-void K::Camera::CreateView(Vector3 const& _eye, Vector3 const& _focus, Vector3 const& _up)
+void K::Camera::CreateLookAt(Vector3 const& _eye, Vector3 const& _focus, Vector3 const& _up)
 {
 	view_ = Matrix::CreateLookAt(_eye, _focus, _up);
+}
+
+void K::Camera::CreateLookTo(Vector3 const& _position, Vector3 const& _direction, Vector3 const& _up)
+{
+	view_ = Matrix::CreateLookTo(_position, _direction, _up);
 }
 
 void K::Camera::CreateProjection(float _width, float _height, float _near, float _far)

@@ -136,7 +136,8 @@ void K::Mesh::_LoadMesh(std::wstring const& _file_name, std::string const& _path
 
 void K::Mesh::_CreateMesh(
 	D3D11_PRIMITIVE_TOPOLOGY _topology,
-	void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage)
+	void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage,
+	Vector3 _scale, Quaternion _rotation)
 {
 	auto mesh_container_buffer = std::unique_ptr<MeshContainer, std::function<void(MeshContainer*)>>{ new MeshContainer, [](MeshContainer* _p) {
 		for (auto& VB : _p->VB_vector)
@@ -150,13 +151,14 @@ void K::Mesh::_CreateMesh(
 
 	mesh_container_vector_.push_back(std::move(mesh_container_buffer));
 
-	_CreateVertexBuffer(_vtx_data, _vtx_stride, _vtx_count, _vtx_usage, VERTEX_BUFFER_TYPE::VERTEX);
+	_CreateVertexBuffer(_vtx_data, _vtx_stride, _vtx_count, _vtx_usage, VERTEX_BUFFER_TYPE::VERTEX, _scale, _rotation);
 }
 
 void K::Mesh::_CreateMesh(
 	D3D11_PRIMITIVE_TOPOLOGY _topology,
 	void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage,
-	void* _idx_data, int _idx_stride, int _idx_count, D3D11_USAGE _idx_usage, DXGI_FORMAT _idx_format)
+	void* _idx_data, int _idx_stride, int _idx_count, D3D11_USAGE _idx_usage, DXGI_FORMAT _idx_format,
+	Vector3 _scale, Quaternion _rotation)
 {
 	auto mesh_container_buffer = std::unique_ptr<MeshContainer, std::function<void(MeshContainer*)>>{ new MeshContainer, [](MeshContainer* _p) {
 		for (auto& VB : _p->VB_vector)
@@ -170,7 +172,7 @@ void K::Mesh::_CreateMesh(
 
 	mesh_container_vector_.push_back(std::move(mesh_container_buffer));
 
-	_CreateVertexBuffer(_vtx_data, _vtx_stride, _vtx_count, _vtx_usage, VERTEX_BUFFER_TYPE::VERTEX);
+	_CreateVertexBuffer(_vtx_data, _vtx_stride, _vtx_count, _vtx_usage, VERTEX_BUFFER_TYPE::VERTEX, _scale, _rotation);
 	_CreateIndexBuffer(_idx_data, _idx_stride, _idx_count, _idx_usage, _idx_format);
 }
 
@@ -178,7 +180,8 @@ void K::Mesh::_CreateMesh(
 	D3D11_PRIMITIVE_TOPOLOGY _topology,
 	void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage,
 	void* _idx_data, int _idx_stride, int _idx_count, D3D11_USAGE _idx_usage, DXGI_FORMAT _idx_format,
-	void* _inst_data, int _inst_stride, int _inst_count, D3D11_USAGE _inst_usage)
+	void* _inst_data, int _inst_stride, int _inst_count, D3D11_USAGE _inst_usage,
+	Vector3 _scale, Quaternion _rotation)
 {
 	auto mesh_container_buffer = std::unique_ptr<MeshContainer, std::function<void(MeshContainer*)>>{ new MeshContainer, [](MeshContainer* _p) {
 		for (auto& VB : _p->VB_vector)
@@ -192,12 +195,12 @@ void K::Mesh::_CreateMesh(
 
 	mesh_container_vector_.push_back(std::move(mesh_container_buffer));
 
-	_CreateVertexBuffer(_vtx_data, _vtx_stride, _vtx_count, _vtx_usage, VERTEX_BUFFER_TYPE::VERTEX);
-	_CreateVertexBuffer(_inst_data, _inst_stride, _inst_count, _inst_usage, VERTEX_BUFFER_TYPE::INSTANCE);
+	_CreateVertexBuffer(_vtx_data, _vtx_stride, _vtx_count, _vtx_usage, VERTEX_BUFFER_TYPE::VERTEX, _scale, _rotation);
+	_CreateVertexBuffer(_inst_data, _inst_stride, _inst_count, _inst_usage, VERTEX_BUFFER_TYPE::INSTANCE, _scale, _rotation);
 	_CreateIndexBuffer(_idx_data, _idx_stride, _idx_count, _idx_usage, _idx_format);
 }
 
-void K::Mesh::_CreateVertexBuffer(void* _data, int _stride, int _count, D3D11_USAGE _usage, VERTEX_BUFFER_TYPE _type)
+void K::Mesh::_CreateVertexBuffer(void* _data, int _stride, int _count, D3D11_USAGE _usage, VERTEX_BUFFER_TYPE _type, Vector3 _scale, Quaternion _rotation)
 {
 	auto const& device = DeviceManager::singleton()->device();
 
@@ -235,6 +238,8 @@ void K::Mesh::_CreateVertexBuffer(void* _data, int _stride, int _count, D3D11_US
 		for (int i = 0; i < _count; ++i)
 		{
 			memcpy_s(&position, sizeof(Vector3), vertices + _stride * i, sizeof(Vector3));
+
+			position = Vector3::Transform(position, Matrix::CreateScaling(_scale) * Matrix::CreateFromQuaternion(_rotation));
 
 			min_ = Vector3::Min(min_, position);
 			max_ = Vector3::Max(max_, position);

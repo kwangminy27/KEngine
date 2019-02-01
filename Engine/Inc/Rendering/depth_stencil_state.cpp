@@ -16,6 +16,11 @@ void K::DepthStencilState::ResetState()
 	DeviceManager::singleton()->context()->OMSetDepthStencilState(static_cast<ID3D11DepthStencilState*>(old_render_state_.Get()), old_stencil_ref_);
 }
 
+void K::DepthStencilState::set_stencil_ref(uint32_t _value)
+{
+	stencil_ref_ = _value;
+}
+
 K::DepthStencilState::DepthStencilState(DepthStencilState const& _other) : RenderState(_other)
 {
 }

@@ -299,6 +299,7 @@ namespace K
 		static Matrix CreateFromQuaternion(Quaternion const& _q);
 		static Matrix CreateTranslation(Vector3 const& _v);
 		static Matrix CreateLookAt(Vector3 const& _eye, Vector3 const& _focus, Vector3 const& _up);
+		static Matrix CreateLookTo(Vector3 const& _position, Vector3 const& _direction, Vector3 const& _up);
 		static Matrix CreatePerspectiveFieldOfView(float _fov_angle, float _aspect_ratio, float _near, float _far);
 		static Matrix CreatePerspective(float _width, float _height, float _near, float _far);
 		static Matrix CreatePerspectiveOffCenter(float _left, float _right, float _bottom, float _top, float _near, float _far);

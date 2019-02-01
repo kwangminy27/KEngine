@@ -130,15 +130,19 @@ void K::ResourceManager::Initialize()
 		Vector3 pyramid_normal[4]{};
 
 		pyramid_normal[0] = side_face_normal[0] + side_face_normal[1];
+		pyramid_normal[0].y = 0.f;
 		pyramid_normal[0].Normalize();
 
 		pyramid_normal[1] = side_face_normal[1] + side_face_normal[2];
+		pyramid_normal[1].y = 0.f;
 		pyramid_normal[1].Normalize();
 
 		pyramid_normal[2] = side_face_normal[2] + side_face_normal[3];
+		pyramid_normal[2].y = 0.f;
 		pyramid_normal[2].Normalize();
 
 		pyramid_normal[3] = side_face_normal[3] + side_face_normal[0];
+		pyramid_normal[3].y = 0.f;
 		pyramid_normal[3].Normalize();
 
 		VertexNormalColor pyramid_vertices[9]{
@@ -161,7 +165,7 @@ void K::ResourceManager::Initialize()
 			pyramid_indices, sizeof(uint32_t), 18, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_UINT
 		);
 
-		_CreateSphereVolume(SPHERE_VOLUME, 2.f, 32, 16);
+		_CreateSphereVolume(SPHERE_VOLUME, 0.5f, 32, 16);
 		_CreateSpotlightVolume(SPOTLIGHT_VOLUME, 0.5f, 0.5f, 32, 16);
 #pragma endregion
 
@@ -245,24 +249,8 @@ void K::ResourceManager::_Finalize()
 
 void K::ResourceManager::_CreateMesh(
 	std::string const& _tag, D3D11_PRIMITIVE_TOPOLOGY _topology,
-	void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage)
-{
-	if (FindMesh(_tag))
-		throw std::exception{ "ResourceManager::_CreateMesh" };
-
-	auto mesh = std::shared_ptr<Mesh>{ new Mesh, [](Mesh* _p) {
-		delete _p;
-	} };
-
-	mesh->_CreateMesh(_topology, _vtx_data, _vtx_stride, _vtx_count, _vtx_usage);
-
-	mesh_map_.insert(std::make_pair(_tag, std::move(mesh)));
-}
-
-void K::ResourceManager::_CreateMesh(
-	std::string const& _tag, D3D11_PRIMITIVE_TOPOLOGY _topology,
 	void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage,
-	void* _idx_data, int _idx_stride, int _idx_count, D3D11_USAGE _idx_usage, DXGI_FORMAT _idx_format)
+	Vector3 _scale, Quaternion _rotation)
 {
 	if (FindMesh(_tag))
 		throw std::exception{ "ResourceManager::_CreateMesh" };
@@ -271,7 +259,7 @@ void K::ResourceManager::_CreateMesh(
 		delete _p;
 	} };
 
-	mesh->_CreateMesh(_topology, _vtx_data, _vtx_stride, _vtx_count, _vtx_usage, _idx_data, _idx_stride, _idx_count, _idx_usage, _idx_format);
+	mesh->_CreateMesh(_topology, _vtx_data, _vtx_stride, _vtx_count, _vtx_usage, _scale, _rotation);
 
 	mesh_map_.insert(std::make_pair(_tag, std::move(mesh)));
 }
@@ -280,7 +268,26 @@ void K::ResourceManager::_CreateMesh(
 	std::string const& _tag, D3D11_PRIMITIVE_TOPOLOGY _topology,
 	void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage,
 	void* _idx_data, int _idx_stride, int _idx_count, D3D11_USAGE _idx_usage, DXGI_FORMAT _idx_format,
-	void* _inst_data, int _inst_stride, int _inst_count, D3D11_USAGE _inst_usage)
+	Vector3 _scale, Quaternion _rotation)
+{
+	if (FindMesh(_tag))
+		throw std::exception{ "ResourceManager::_CreateMesh" };
+
+	auto mesh = std::shared_ptr<Mesh>{ new Mesh, [](Mesh* _p) {
+		delete _p;
+	} };
+
+	mesh->_CreateMesh(_topology, _vtx_data, _vtx_stride, _vtx_count, _vtx_usage, _idx_data, _idx_stride, _idx_count, _idx_usage, _idx_format, _scale, _rotation);
+
+	mesh_map_.insert(std::make_pair(_tag, std::move(mesh)));
+}
+
+void K::ResourceManager::_CreateMesh(
+	std::string const& _tag, D3D11_PRIMITIVE_TOPOLOGY _topology,
+	void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage,
+	void* _idx_data, int _idx_stride, int _idx_count, D3D11_USAGE _idx_usage, DXGI_FORMAT _idx_format,
+	void* _inst_data, int _inst_stride, int _inst_count, D3D11_USAGE _inst_usage,
+	Vector3 _scale, Quaternion _rotation)
 {
 	if(FindMesh(_tag))
 		throw std::exception{ "ResourceManager::_CreateMesh" };
@@ -289,7 +296,7 @@ void K::ResourceManager::_CreateMesh(
 		delete _p;
 	} };
 
-	mesh->_CreateMesh(_topology, _vtx_data, _vtx_stride, _vtx_count, _vtx_usage, _idx_data, _idx_stride, _idx_count, _idx_usage, _idx_format, _inst_data, _inst_stride, _inst_count, _inst_usage);
+	mesh->_CreateMesh(_topology, _vtx_data, _vtx_stride, _vtx_count, _vtx_usage, _idx_data, _idx_stride, _idx_count, _idx_usage, _idx_format, _inst_data, _inst_stride, _inst_count, _inst_usage, _scale, _rotation);
 
 	mesh_map_.insert(std::make_pair(_tag, std::move(mesh)));
 }
@@ -849,6 +856,7 @@ void K::ResourceManager::_CreateSpotlightVolume(std::string const& _tag, float _
 
 	_CreateMesh(_tag, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
 		spotlight_vertices.data(), sizeof(Vector3), static_cast<int>(spotlight_vertices.size()), D3D11_USAGE_DEFAULT,
-		spotlight_indices.data(), sizeof(uint32_t), static_cast<int>(spotlight_indices.size()), D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_UINT
+		spotlight_indices.data(), sizeof(uint32_t), static_cast<int>(spotlight_indices.size()), D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_UINT,
+		Vector3::One, Quaternion::CreateFromYawPitchRoll(0.f, 90.f, 0.f)
 	);
 }

@@ -45,9 +45,14 @@ void K::CameraActor::Serialize(OutputMemoryStream& _omstream)
 {
 }
 
-void K::CameraActor::CreateView(Vector3 const& _eye, Vector3 const& _focus, Vector3 const& _up)
+void K::CameraActor::CreateLookAt(Vector3 const& _eye, Vector3 const& _focus, Vector3 const& _up)
 {
-	CPTR_CAST<Camera>(FindComponent(TAG{ CAMERA, 0 }))->CreateView(_eye, _focus, _up);
+	CPTR_CAST<Camera>(FindComponent(TAG{ CAMERA, 0 }))->CreateLookAt(_eye, _focus, _up);
+}
+
+void K::CameraActor::CreateLookTo(Vector3 const& _position, Vector3 const& _direction, Vector3 const& _up)
+{
+	CPTR_CAST<Camera>(FindComponent(TAG{ CAMERA, 0 }))->CreateLookTo(_position, _direction, _up);
 }
 
 void K::CameraActor::CreateProjection(float _width, float _height, float _near, float _far)

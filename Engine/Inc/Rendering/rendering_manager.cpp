@@ -127,7 +127,7 @@ void K::RenderingManager::Initialize()
 
 #pragma region RenderState
 		_CreateRasterizerState(
-			RS_LIGHT_VOLUME,
+			RS_LIGHT_VOLUME_PASS_1,
 			D3D11_FILL_SOLID,
 			D3D11_CULL_FRONT,
 			false,
@@ -141,9 +141,51 @@ void K::RenderingManager::Initialize()
 		);
 
 		_CreateRasterizerState(
-			RS_WIREFRAME,
+			RS_LIGHT_VOLUME_PASS_2,
+			D3D11_FILL_SOLID,
+			D3D11_CULL_BACK,
+			false,
+			0,
+			0.f,
+			0.f,
+			true,
+			false,
+			false,
+			false
+		);
+
+		_CreateRasterizerState(
+			RS_WIREFRAME_CULL_BACK,
 			D3D11_FILL_WIREFRAME,
 			D3D11_CULL_BACK,
+			false,
+			0,
+			0.f,
+			0.f,
+			true,
+			false,
+			false,
+			false
+		);
+
+		_CreateRasterizerState(
+			RS_WIREFRAME_CULL_FRONT,
+			D3D11_FILL_WIREFRAME,
+			D3D11_CULL_FRONT,
+			false,
+			0,
+			0.f,
+			0.f,
+			true,
+			false,
+			false,
+			false
+		);
+
+		_CreateRasterizerState(
+			RS_WIREFRAME_CULL_NONE,
+			D3D11_FILL_WIREFRAME,
+			D3D11_CULL_NONE,
 			false,
 			0,
 			0.f,
@@ -181,13 +223,31 @@ void K::RenderingManager::Initialize()
 		back_face = {};
 		back_face.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 		back_face.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		back_face.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+		back_face.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+		_CreateDepthStencilState(
+			DSS_LIGHT_VOLUME_PASS_1,
+			true, D3D11_DEPTH_WRITE_MASK_ZERO, D3D11_COMPARISON_GREATER,
+			false, D3D11_DEFAULT_STENCIL_READ_MASK, D3D11_DEFAULT_STENCIL_WRITE_MASK, front_face, back_face
+		);
+
+		front_face = {};
+		front_face.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		front_face.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		front_face.StencilPassOp = D3D11_STENCIL_OP_ZERO;
+		front_face.StencilFunc = D3D11_COMPARISON_EQUAL;
+
+		back_face = {};
+		back_face.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		back_face.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
 		back_face.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 		back_face.StencilFunc = D3D11_COMPARISON_NEVER;
 
 		_CreateDepthStencilState(
-			DEPTH_LIGHT_VOLUME,
-			true, D3D11_DEPTH_WRITE_MASK_ZERO, D3D11_COMPARISON_GREATER,
-			false, D3D11_DEFAULT_STENCIL_READ_MASK, D3D11_DEFAULT_STENCIL_WRITE_MASK, front_face, back_face
+			DSS_LIGHT_VOLUME_PASS_2,
+			true, D3D11_DEPTH_WRITE_MASK_ZERO, D3D11_COMPARISON_LESS,
+			true, D3D11_DEFAULT_STENCIL_READ_MASK, D3D11_DEFAULT_STENCIL_WRITE_MASK, front_face, back_face
 		);
 
 		std::vector<D3D11_RENDER_TARGET_BLEND_DESC> render_target_blend_desc_vector{};
@@ -221,6 +281,20 @@ void K::RenderingManager::Initialize()
 		render_target_blend_desc_vector.push_back(rtbd);
 
 		_CreateBlendState(LIGHT_BLEND, false, false, render_target_blend_desc_vector);
+
+		rtbd = {};
+		rtbd.BlendEnable = true;
+		rtbd.SrcBlend = D3D11_BLEND_ONE;
+		rtbd.DestBlend = D3D11_BLEND_ONE;
+		rtbd.BlendOp = D3D11_BLEND_OP_ADD;
+		rtbd.SrcBlendAlpha = D3D11_BLEND_ONE;
+		rtbd.DestBlendAlpha = D3D11_BLEND_ZERO;
+		rtbd.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		rtbd.RenderTargetWriteMask = 0;
+
+		render_target_blend_desc_vector.push_back(rtbd);
+
+		_CreateBlendState("Test", false, false, render_target_blend_desc_vector);
 #pragma endregion
 
 #pragma region ConstantBuffer

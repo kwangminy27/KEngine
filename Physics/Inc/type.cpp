@@ -1535,6 +1535,20 @@ inline K::Matrix K::Matrix::CreateLookAt(Vector3 const& _eye, Vector3 const& _fo
 	return R;
 }
 
+inline K::Matrix K::Matrix::CreateLookTo(Vector3 const& _position, Vector3 const& _direction, Vector3 const& _up)
+{
+	using namespace DirectX;
+
+	XMVECTOR position = XMLoadFloat3(reinterpret_cast<XMFLOAT3 const*>(&_position));
+	XMVECTOR direction = XMLoadFloat3(reinterpret_cast<XMFLOAT3 const*>(&_direction));
+	XMVECTOR up = XMLoadFloat3(reinterpret_cast<XMFLOAT3 const*>(&_up));
+
+	Matrix R{};
+	XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&R), XMMatrixLookToLH(position, direction, up));
+
+	return R;
+}
+
 inline K::Matrix K::Matrix::CreatePerspectiveFieldOfView(float _fov_angle, float _aspect_ratio, float _near, float _far)
 {
 	using namespace DirectX;

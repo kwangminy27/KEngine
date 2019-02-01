@@ -25,6 +25,7 @@ void K::Transform::Update(float _time)
 	if (!dirty_flag_)
 		return;
 
+	model_ = Matrix::CreateScaling(model_scaling_) * Matrix::CreateFromQuaternion(model_rotation_) * Matrix::CreateTranslation(model_translation_);
 	local_ = Matrix::CreateScaling(local_scaling_) * Matrix::CreateFromQuaternion(local_rotation_) * Matrix::CreateTranslation(local_translation_);
 
 	parent_ = Matrix::Identity;
@@ -54,7 +55,7 @@ void K::Transform::Update(float _time)
 		world_translation_ += parent_translation_;
 	}
 
-	world_ = local_ * parent_;
+	world_ = model_ * local_ * parent_;
 
 	for (auto const& child : owner()->child_list())
 	{
@@ -82,6 +83,9 @@ void K::Transform::Serialize(InputMemoryStream& _imstream)
 {
 	_imstream.Serialize(parent_flag_);
 
+	_imstream.Serialize(model_scaling_.x);
+	_imstream.Serialize(model_scaling_.y);
+	_imstream.Serialize(model_scaling_.z);
 	_imstream.Serialize(local_scaling_.x);
 	_imstream.Serialize(local_scaling_.y);
 	_imstream.Serialize(local_scaling_.z);
@@ -89,6 +93,10 @@ void K::Transform::Serialize(InputMemoryStream& _imstream)
 	_imstream.Serialize(parent_scaling_.y);
 	_imstream.Serialize(parent_scaling_.z);
 
+	_imstream.Serialize(model_rotation_.x);
+	_imstream.Serialize(model_rotation_.y);
+	_imstream.Serialize(model_rotation_.z);
+	_imstream.Serialize(model_rotation_.w);
 	_imstream.Serialize(local_rotation_.x);
 	_imstream.Serialize(local_rotation_.y);
 	_imstream.Serialize(local_rotation_.z);
@@ -98,6 +106,9 @@ void K::Transform::Serialize(InputMemoryStream& _imstream)
 	_imstream.Serialize(parent_rotation_.z);
 	_imstream.Serialize(parent_rotation_.w);
 
+	_imstream.Serialize(model_translation_.x);
+	_imstream.Serialize(model_translation_.y);
+	_imstream.Serialize(model_translation_.z);
 	_imstream.Serialize(local_translation_.x);
 	_imstream.Serialize(local_translation_.y);
 	_imstream.Serialize(local_translation_.z);
@@ -110,6 +121,9 @@ void K::Transform::Serialize(OutputMemoryStream& _omstream)
 {
 	_omstream.Serialize(parent_flag_);
 
+	_omstream.Serialize(model_scaling_.x);
+	_omstream.Serialize(model_scaling_.y);
+	_omstream.Serialize(model_scaling_.z);
 	_omstream.Serialize(local_scaling_.x);
 	_omstream.Serialize(local_scaling_.y);
 	_omstream.Serialize(local_scaling_.z);
@@ -117,6 +131,10 @@ void K::Transform::Serialize(OutputMemoryStream& _omstream)
 	_omstream.Serialize(parent_scaling_.y);
 	_omstream.Serialize(parent_scaling_.z);
 
+	_omstream.Serialize(model_rotation_.x);
+	_omstream.Serialize(model_rotation_.y);
+	_omstream.Serialize(model_rotation_.z);
+	_omstream.Serialize(model_rotation_.w);
 	_omstream.Serialize(local_rotation_.x);
 	_omstream.Serialize(local_rotation_.y);
 	_omstream.Serialize(local_rotation_.z);
@@ -126,6 +144,9 @@ void K::Transform::Serialize(OutputMemoryStream& _omstream)
 	_omstream.Serialize(parent_rotation_.z);
 	_omstream.Serialize(parent_rotation_.w);
 
+	_omstream.Serialize(model_translation_.x);
+	_omstream.Serialize(model_translation_.y);
+	_omstream.Serialize(model_translation_.z);
 	_omstream.Serialize(local_translation_.x);
 	_omstream.Serialize(local_translation_.y);
 	_omstream.Serialize(local_translation_.z);
@@ -171,6 +192,11 @@ uint8_t K::Transform::parent_flag() const
 	return parent_flag_;
 }
 
+K::Vector3 const& K::Transform::model_scaling() const
+{
+	return model_scaling_;
+}
+
 K::Vector3 const& K::Transform::local_scaling() const
 {
 	return local_scaling_;
@@ -184,6 +210,11 @@ K::Vector3 const& K::Transform::parent_scaling() const
 K::Vector3 const& K::Transform::world_scaling() const
 {
 	return world_scaling_;
+}
+
+K::Quaternion const& K::Transform::model_rotation() const
+{
+	return model_rotation_;
 }
 
 K::Quaternion const& K::Transform::local_rotation() const
@@ -201,6 +232,11 @@ K::Quaternion const& K::Transform::world_rotation() const
 	return world_rotation_;
 }
 
+K::Vector3 const& K::Transform::model_translation() const
+{
+	return model_translation_;
+}
+
 K::Vector3 const& K::Transform::local_translation() const
 {
 	return local_translation_;
@@ -214,6 +250,11 @@ K::Vector3 const& K::Transform::parent_translation() const
 K::Vector3 const& K::Transform::world_translation() const
 {
 	return world_translation_;
+}
+
+K::Matrix const& K::Transform::model() const
+{
+	return model_;
 }
 
 K::Matrix const& K::Transform::local() const
@@ -241,6 +282,13 @@ void K::Transform::set_parent_flag(uint8_t _flag)
 	parent_flag_ = _flag;
 }
 
+void K::Transform::set_model_scaling(Vector3 const& _v)
+{
+	model_scaling_ = _v;
+
+	dirty_flag_ = true;
+}
+
 void K::Transform::set_local_scaling(Vector3 const& _v)
 {
 	local_scaling_ = _v;
@@ -251,6 +299,13 @@ void K::Transform::set_local_scaling(Vector3 const& _v)
 void K::Transform::set_parent_scaling(Vector3 const& _v)
 {
 	parent_scaling_ = _v;
+
+	dirty_flag_ = true;
+}
+
+void K::Transform::set_model_rotation(Quaternion const& _q)
+{
+	model_rotation_ = _q;
 
 	dirty_flag_ = true;
 }
@@ -269,14 +324,21 @@ void K::Transform::set_parent_rotation(Quaternion const& _q)
 	dirty_flag_ = true;
 }
 
-void K::Transform::set_local_translation(Vector3 const & _v)
+void K::Transform::set_model_translation(Vector3 const& _v)
+{
+	model_translation_ = _v;
+
+	dirty_flag_ = true;
+}
+
+void K::Transform::set_local_translation(Vector3 const& _v)
 {
 	local_translation_ = _v;
 
 	dirty_flag_ = true;
 }
 
-void K::Transform::set_parent_translation(Vector3 const & _v)
+void K::Transform::set_parent_translation(Vector3 const& _v)
 {
 	parent_translation_ = _v;
 
@@ -288,18 +350,22 @@ K::Transform::Transform(Transform const& _other) : Component(_other)
 	dirty_flag_ = _other.dirty_flag_;
 	parent_flag_ = _other.parent_flag_;
 
+	model_scaling_ = _other.model_scaling_;
 	local_scaling_ = _other.local_scaling_;
 	parent_scaling_ = _other.parent_scaling_;
 	world_scaling_ = _other.world_scaling_;
 
+	model_rotation_ = _other.model_rotation_;
 	local_rotation_ = _other.local_rotation_;
 	parent_rotation_ = _other.parent_rotation_;
 	world_rotation_ = _other.world_rotation_;
 
+	model_translation_ = _other.model_translation_;
 	local_translation_ = _other.local_translation_;
 	parent_translation_ = _other.parent_translation_;
 	world_translation_ = _other.world_translation_;
 
+	model_ = _other.model_;
 	local_ = _other.local_;
 	parent_ = _other.parent_;
 	world_ = _other.world_;
@@ -310,18 +376,22 @@ K::Transform::Transform(Transform&& _other) noexcept : Component(std::move(_othe
 	dirty_flag_ = std::move(_other.dirty_flag_);
 	parent_flag_ = std::move(_other.parent_flag_);
 
+	model_scaling_ = std::move(_other.model_scaling_);
 	local_scaling_ = std::move(_other.local_scaling_);
 	parent_scaling_ = std::move(_other.parent_scaling_);
 	world_scaling_ = std::move(_other.world_scaling_);
 
+	model_rotation_ = std::move(_other.model_rotation_);
 	local_rotation_ = std::move(_other.local_rotation_);
 	parent_rotation_ = std::move(_other.parent_rotation_);
 	world_rotation_ = std::move(_other.world_rotation_);
 
+	model_translation_ = std::move(_other.model_translation_);
 	local_translation_ = std::move(_other.local_translation_);
 	parent_translation_ = std::move(_other.parent_translation_);
 	world_translation_ = std::move(_other.world_translation_);
 
+	model_ = std::move(_other.model_);
 	local_ = std::move(_other.local_);
 	parent_ = std::move(_other.parent_);
 	world_ = std::move(_other.world_);

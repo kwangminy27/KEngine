@@ -243,7 +243,7 @@ void K::TileMapActor::_Render(float _time)
 	auto const& camera_transform = CPTR_CAST<Transform>(camera->FindComponent(TAG{ TRANSFORM, 0 }));
 	auto camera_position = camera_transform->world().Translation();
 
-	camera->CreateView(camera_position - Vector3::UnitZ, camera_position, Vector3::UnitY);
+	camera->CreateLookAt(camera_position - Vector3::UnitZ, camera_position, Vector3::UnitY);
 
 	auto resolution = Vector3{ static_cast<float>(RESOLUTION::WIDTH), static_cast<float>(RESOLUTION::HEIGHT), 0.f };
 

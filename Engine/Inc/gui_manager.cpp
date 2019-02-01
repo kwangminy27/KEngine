@@ -35,25 +35,25 @@ void K::GUIManager::Render()
 
 	ImGui::Begin("KEngine");
 	{
-		static Vector3 eye = Vector3{ 0.f, 0.f, -3.f };
-		static Vector3 focus{};
+		static Vector3 camera_position = Vector3{ 0.f, 0.f, -3.f };
+		static Vector3 camera_direction = Vector3::UnitZ;
 
 		ImGui::BulletText("Camera Modification");
 
 		ImGui::SameLine();
 		if (ImGui::Button("Camera Reset"))
 		{
-			eye = Vector3{ 0.f, 0.f, -3.f };
-			focus = {};
+			camera_position = Vector3{ 0.f, 0.f, -3.f };
+			camera_direction = Vector3::UnitZ;
 		}
 
-		ImGui::SliderFloat3("Eye", &eye.x, -3.f, 3.f);
-		ImGui::SliderFloat3("Focus", &focus.x, -5.f, 5.f);
+		ImGui::SliderFloat3("Camera Position", &camera_position.x, -3.f, 3.f);
+		ImGui::SliderFloat3("Camera Direction", &camera_direction.x, -1.f, 1.f);
 
 		auto const& camera = APTR_CAST<CameraActor>(WorldManager::singleton()->FindCamera(TAG{ DEFAULT_CAMERA, 0 }));
 
-		if (eye != focus)
-			camera->CreateView(eye, focus, Vector3::UnitY);
+		camera_direction.Normalize();
+		camera->CreateLookTo(camera_position, camera_direction, Vector3::UnitY);
 
 		ImGui::NewLine();
 
@@ -121,7 +121,7 @@ void K::GUIManager::Render()
 		ImGui::SameLine();
 		if (ImGui::Button("Light Reset"))
 		{
-			ambient = Vector4{ 0.2f, 0.2f, 0.2f, 1.f };
+			ambient = Vector4{ 0.f, 0.f, 0.f, 1.f };
 			diffuse = DirectX::Colors::White.v;
 			specular = DirectX::Colors::White.v;
 			position = -Vector3::UnitZ;
@@ -136,12 +136,12 @@ void K::GUIManager::Render()
 		ImGui::SliderFloat4("Diffuse", &diffuse.x, 0.f, 1.f);
 		ImGui::SliderFloat3("Specular", &specular.x, 0.f, 1.f);
 		ImGui::SliderFloat("Specular Power", &specular.w, 0.1f, 100.f);
-		ImGui::SliderFloat3("Position", &position.x, -1.f, 1.f);
+		ImGui::SliderFloat3("Position", &position.x, -2.f, 2.f);
 		ImGui::SliderFloat3("Direction", &direction.x, -1.f, 1.f);
 		ImGui::SliderFloat3("Attenuation", &attenuation.x, 0.1f, 1.f);
 		ImGui::SliderFloat("Falloff", &falloff, 0.1f, 10.f);
 		ImGui::SliderInt("Type", &type, 0, 2);
-		ImGui::SliderFloat("range", &range, 0.f, 100.f);
+		ImGui::SliderFloat("range", &range, 0.f, 10.f);
 
 		light->set_ambient(ambient);
 		light->set_diffuse(diffuse);
