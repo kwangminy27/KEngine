@@ -43,19 +43,18 @@ void K::FBXLoader::Begin(std::wstring const& _file_name, std::string const& _pat
 
 	fbx_importer_->Initialize(path_buffer.string().c_str(), -1, fbx_io_settings_.get());
 
-	// 이 친구는 Rotation과 Animation에만 영향을 줌.
-	FbxAxisSystem::DirectX.ConvertScene(fbx_scene.get());
-	// 이 친구는 Scaling에 영향을 줌.
-	FbxSystemUnit::cm.ConvertScene(fbx_scene.get());
-
 	fbx_importer_->Import(fbx_scene.get());
 
+	FbxAxisSystem::DirectX.ConvertScene(fbx_scene.get());
+	FbxSystemUnit::m.ConvertScene(fbx_scene.get());
+	
 	FbxGeometryConverter fbx_geometry_converter{ fbx_manager_.get() };
 	fbx_geometry_converter.Triangulate(fbx_scene.get(), true);
 
 	auto root_node = fbx_scene->GetRootNode();
 
 	_LoadMesh(root_node);
+	_LoadMaterial(root_node);
 }
 
 void K::FBXLoader::End()
@@ -82,167 +81,231 @@ void K::FBXLoader::_Finalize()
 {
 }
 
-void K::FBXLoader::_LoadMesh(FbxNode* _node)
+void K::FBXLoader::_LoadMesh(FbxNode* _fbx_node)
 {
-	auto attribute = _node->GetNodeAttribute();
+	if (auto fbx_node_attribute = _fbx_node->GetNodeAttribute())
+	{
+		if (FbxNodeAttribute::eMesh == fbx_node_attribute->GetAttributeType())
+			_LoadMesh(_fbx_node->GetMesh());
+	}
 
-	if (false == attribute)
-		return;
-	
-	if (FbxNodeAttribute::eMesh == attribute->GetAttributeType())
-		_LoadMesh(_node->GetMesh());
-
-	auto child_count = _node->GetChildCount();
+	auto child_count = _fbx_node->GetChildCount();
 
 	for (auto i = 0; i < child_count; ++i)
-		_LoadMesh(_node->GetChild(i));
+		_LoadMesh(_fbx_node->GetChild(i));
 }
 
-void K::FBXLoader::_LoadMesh(FbxMesh* _mesh)
+void K::FBXLoader::_LoadMesh(FbxMesh* _fbx_mesh)
 {
 	auto fbx_mesh_container = std::unique_ptr<FBXMeshContainer, std::function<void(FBXMeshContainer*)>>{ new FBXMeshContainer, [](FBXMeshContainer* _p) {
 		delete _p;
 	} };
 
-	fbx_mesh_container->bump_flag = false;
-	fbx_mesh_container->animation_flag = false;
+	auto triangle_count = _fbx_mesh->GetPolygonCount();
 
-	auto polygon_count = _mesh->GetPolygonCount();
-
-	for (auto i = 0; i < polygon_count; ++i)
+	for (auto i = 0; i < triangle_count; ++i)
 	{
 		for (auto j = 0; j < 3; ++j)
 		{
-			FBXIndex index{};
+			auto control_point_idx = _fbx_mesh->GetPolygonVertex(i, j);
+			auto polygon_vertex_idx = 3 * i + j;
 
-			index.idx_for_vtx = _mesh->GetPolygonVertex(i, j);
-			index.idx_for_idx = 3 * i + j;
+			FBXVertex vertex{};
 
-			auto& vertex = fbx_mesh_container->vertices.at(index.idx_for_vtx);
+			_LoadPosition(vertex, _fbx_mesh, control_point_idx);
+			_LoadUV(vertex, _fbx_mesh, control_point_idx, _fbx_mesh->GetTextureUVIndex(i, j));
+			_LoadNormal(vertex, _fbx_mesh, control_point_idx, polygon_vertex_idx);
+			_LoadBinormal(vertex, _fbx_mesh, control_point_idx, polygon_vertex_idx);
+			_LoadTangent(vertex, _fbx_mesh, control_point_idx, polygon_vertex_idx);
 
-			_LoadPosition(vertex, _mesh, index.idx_for_vtx);
-
-			_LoadNormal(vertex, _mesh, index);
-			_LoadBinormal(vertex, _mesh, index);
-			_LoadTangent(vertex, _mesh, index);
-
-			index.idx_for_idx = _mesh->GetTextureUVIndex(i, j);
-			_LoadUV(vertex, _mesh, index);
+			fbx_mesh_container->vertices.push_back(std::move(vertex));
 		}
 	}
 
 	fbx_mesh_container_vector_.push_back(std::move(fbx_mesh_container));
 }
 
-void K::FBXLoader::_LoadPosition(FBXVertex& _vtx, FbxMesh* _mesh, uint32_t _idx)
+void K::FBXLoader::_LoadPosition(FBXVertex& _vertex, FbxMesh* _fbx_mesh, uint32_t _control_point_idx)
 {
-	auto control_points = _mesh->GetControlPoints();
-
-	_vtx.position.x = -static_cast<float>(control_points[_idx].mData[0]);
-	_vtx.position.y = static_cast<float>(control_points[_idx].mData[1]);
-	_vtx.position.z = static_cast<float>(control_points[_idx].mData[2]);
+	_vertex.position.x = static_cast<float>(_fbx_mesh->GetControlPointAt(_control_point_idx).mData[0]);
+	_vertex.position.y = -static_cast<float>(_fbx_mesh->GetControlPointAt(_control_point_idx).mData[2]);
+	_vertex.position.z = -static_cast<float>(_fbx_mesh->GetControlPointAt(_control_point_idx).mData[1]);
 }
 
-void K::FBXLoader::_LoadNormal(FBXVertex& _vtx, FbxMesh* _mesh, FBXIndex const& _idx)
+void K::FBXLoader::_LoadUV(FBXVertex& _vertex, FbxMesh* _fbx_mesh, uint32_t _control_point_idx, uint32_t _polygon_vertex_idx)
 {
-	if (auto normal = _mesh->GetElementNormal())
+	auto uv = _fbx_mesh->GetElementUV();
+
+	uint32_t index{};
+
+	switch (uv->GetMappingMode())
 	{
-		uint32_t idx{};
+	case FbxGeometryElement::eByControlPoint:
+		index = _control_point_idx;
+		break;
 
-		switch (normal->GetMappingMode())
-		{
-		case FbxGeometryElementNormal::eByControlPoint:
-			idx = _idx.idx_for_vtx;
-			break;
-
-		case FbxGeometryElementNormal::eByPolygonVertex:
-			idx = _idx.idx_for_idx;
-			break;
-		}
-
-		if(FbxGeometryElementNormal::eIndexToDirect == normal->GetReferenceMode())
-			idx = normal->GetIndexArray().GetAt(idx);
-
-		_vtx.normal.x = -static_cast<float>(normal->GetDirectArray().GetAt(idx).mData[0]);
-		_vtx.normal.y = static_cast<float>(normal->GetDirectArray().GetAt(idx).mData[1]);
-		_vtx.normal.z = static_cast<float>(normal->GetDirectArray().GetAt(idx).mData[2]);
+	case FbxGeometryElement::eByPolygonVertex:
+		index = _polygon_vertex_idx;
+		break;
 	}
+
+	if (FbxGeometryElement::eIndexToDirect == uv->GetReferenceMode())
+		index = uv->GetIndexArray().GetAt(index);
+
+	auto fbx_uv = uv->GetDirectArray().GetAt(index);
+
+	_vertex.uv.x = static_cast<float>(fbx_uv.mData[0] - static_cast<int>(fbx_uv.mData[0]));
+	_vertex.uv.y = static_cast<float>(fbx_uv.mData[1] - static_cast<int>(fbx_uv.mData[1]));
 }
 
-void K::FBXLoader::_LoadBinormal(FBXVertex& _vtx, FbxMesh* _mesh, FBXIndex const& _idx)
+void K::FBXLoader::_LoadNormal(FBXVertex& _vertex, FbxMesh* _fbx_mesh, uint32_t _control_point_idx, uint32_t _polygon_vertex_idx)
 {
-	if (auto binormal = _mesh->GetElementNormal())
+	auto normal = _fbx_mesh->GetElementNormal();
+
+	uint32_t index{};
+
+	switch (normal->GetMappingMode())
 	{
-		uint32_t idx{};
+	case FbxGeometryElement::eByControlPoint:
+		index = _control_point_idx;
+		break;
 
-		switch (binormal->GetMappingMode())
-		{
-		case FbxGeometryElementNormal::eByControlPoint:
-			idx = _idx.idx_for_vtx;
-			break;
-
-		case FbxGeometryElementNormal::eByPolygonVertex:
-			idx = _idx.idx_for_idx;
-			break;
-		}
-
-		if (FbxGeometryElementNormal::eIndexToDirect == binormal->GetReferenceMode())
-			idx = binormal->GetIndexArray().GetAt(idx);
-
-		_vtx.binormal.x = -static_cast<float>(binormal->GetDirectArray().GetAt(idx).mData[0]);
-		_vtx.binormal.y = static_cast<float>(binormal->GetDirectArray().GetAt(idx).mData[1]);
-		_vtx.binormal.z = static_cast<float>(binormal->GetDirectArray().GetAt(idx).mData[2]);
+	case FbxGeometryElement::eByPolygonVertex:
+		index = _polygon_vertex_idx;
+		break;
 	}
+
+	if (FbxGeometryElement::eIndexToDirect == normal->GetReferenceMode())
+		index = normal->GetIndexArray().GetAt(index);
+
+	auto fbx_normal = normal->GetDirectArray().GetAt(index);
+
+	_vertex.normal.x = static_cast<float>(fbx_normal.mData[0]);
+	_vertex.normal.y = -static_cast<float>(fbx_normal.mData[2]);
+	_vertex.normal.z = -static_cast<float>(fbx_normal.mData[1]);
 }
 
-void K::FBXLoader::_LoadTangent(FBXVertex& _vtx, FbxMesh* _mesh, FBXIndex const& _idx)
+void K::FBXLoader::_LoadBinormal(FBXVertex& _vertex, FbxMesh* _fbx_mesh, uint32_t _control_point_idx, uint32_t _polygon_vertex_idx)
 {
-	if (auto tangent = _mesh->GetElementNormal())
+	auto binormal = _fbx_mesh->GetElementBinormal();
+
+	uint32_t index{};
+
+	switch (binormal->GetMappingMode())
 	{
-		uint32_t idx{};
+	case FbxGeometryElement::eByControlPoint:
+		index = _control_point_idx;
+		break;
 
-		switch (tangent->GetMappingMode())
-		{
-		case FbxGeometryElementNormal::eByControlPoint:
-			idx = _idx.idx_for_vtx;
-			break;
-
-		case FbxGeometryElementNormal::eByPolygonVertex:
-			idx = _idx.idx_for_idx;
-			break;
-		}
-
-		if (FbxGeometryElementNormal::eIndexToDirect == tangent->GetReferenceMode())
-			idx = tangent->GetIndexArray().GetAt(idx);
-
-		_vtx.tangent.x = -static_cast<float>(tangent->GetDirectArray().GetAt(idx).mData[0]);
-		_vtx.tangent.y = static_cast<float>(tangent->GetDirectArray().GetAt(idx).mData[1]);
-		_vtx.tangent.z = static_cast<float>(tangent->GetDirectArray().GetAt(idx).mData[2]);
+	case FbxGeometryElement::eByPolygonVertex:
+		index = _polygon_vertex_idx;
+		break;
 	}
+
+	if (FbxGeometryElement::eIndexToDirect == binormal->GetReferenceMode())
+		index = binormal->GetIndexArray().GetAt(index);
+
+	auto fbx_binormal = binormal->GetDirectArray().GetAt(index);
+
+	_vertex.binormal.x = static_cast<float>(fbx_binormal.mData[0]);
+	_vertex.binormal.y = -static_cast<float>(fbx_binormal.mData[2]);
+	_vertex.binormal.z = -static_cast<float>(fbx_binormal.mData[1]);
 }
 
-void K::FBXLoader::_LoadUV(FBXVertex& _vtx, FbxMesh* _mesh, FBXIndex const& _idx)
+void K::FBXLoader::_LoadTangent(FBXVertex& _vertex, FbxMesh* _fbx_mesh, uint32_t _control_point_idx, uint32_t _polygon_vertex_idx)
 {
-	if (auto uv = _mesh->GetElementNormal())
+	auto tangent = _fbx_mesh->GetElementTangent();
+
+	uint32_t index{};
+
+	switch (tangent->GetMappingMode())
 	{
-		uint32_t idx{};
+	case FbxGeometryElement::eByControlPoint:
+		index = _control_point_idx;
+		break;
 
-		switch (uv->GetMappingMode())
-		{
-		case FbxGeometryElementNormal::eByControlPoint:
-			idx = _idx.idx_for_vtx;
-			break;
-
-		case FbxGeometryElementNormal::eByPolygonVertex:
-			idx = _idx.idx_for_idx;
-			break;
-		}
-
-		if (FbxGeometryElementNormal::eIndexToDirect == uv->GetReferenceMode())
-			idx = uv->GetIndexArray().GetAt(idx);
-
-		// TODO: 소수점 잘라내야 하는지 여부 체크해야 함, 주소지정모드 Wrap 모드를 사용한다고 함, 그리고 y도 뒤집어야 하는지 체크해야 함
-		_vtx.uv.x = -static_cast<float>(uv->GetDirectArray().GetAt(idx).mData[0]);
-		_vtx.uv.y = static_cast<float>(uv->GetDirectArray().GetAt(idx).mData[1]);
+	case FbxGeometryElement::eByPolygonVertex:
+		index = _polygon_vertex_idx;
+		break;
 	}
+
+	if (FbxGeometryElement::eIndexToDirect == tangent->GetReferenceMode())
+		index = tangent->GetIndexArray().GetAt(index);
+
+	auto fbx_tangent = tangent->GetDirectArray().GetAt(index);
+
+	_vertex.tangent.x = static_cast<float>(fbx_tangent.mData[0]);
+	_vertex.tangent.y = -static_cast<float>(fbx_tangent.mData[2]);
+	_vertex.tangent.z = -static_cast<float>(fbx_tangent.mData[1]);
+}
+
+void K::FBXLoader::_LoadMaterial(FbxNode* _fbx_node)
+{
+	for (auto i = 0; i < _fbx_node->GetMaterialCount(); ++i)
+		_LoadMaterial(_fbx_node->GetMaterial(i));
+
+	for (auto i = 0; i < _fbx_node->GetChildCount(); ++i)
+		_LoadMaterial(_fbx_node->GetChild(i));
+}
+
+void K::FBXLoader::_LoadMaterial(FbxSurfaceMaterial* _fbx_surface_material)
+{
+	auto fbx_material = std::unique_ptr<FBXMaterial, std::function<void(FBXMaterial*)>>{ new FBXMaterial, [](FBXMaterial* _p) {
+		delete _p;
+	} };
+
+	fbx_material->ambient = _LoadColor(_fbx_surface_material, FbxSurfaceMaterial::sAmbient, FbxSurfaceMaterial::sAmbientFactor);
+	fbx_material->diffuse = _LoadColor(_fbx_surface_material, FbxSurfaceMaterial::sDiffuse, FbxSurfaceMaterial::sDiffuseFactor);
+	fbx_material->specular = _LoadColor(_fbx_surface_material, FbxSurfaceMaterial::sSpecular, FbxSurfaceMaterial::sSpecularFactor);
+	fbx_material->emissive = _LoadColor(_fbx_surface_material, FbxSurfaceMaterial::sEmissive, FbxSurfaceMaterial::sEmissiveFactor);
+
+	fbx_material->diffuse_texture_name = _LoadTexture(_fbx_surface_material, FbxSurfaceMaterial::sDiffuse);
+	fbx_material->specular_texture_name = _LoadTexture(_fbx_surface_material, FbxSurfaceMaterial::sSpecular);
+	fbx_material->bump_texture_name = _LoadTexture(_fbx_surface_material, FbxSurfaceMaterial::sBump);
+
+	if(fbx_material->bump_texture_name.empty())
+		fbx_material->bump_texture_name = _LoadTexture(_fbx_surface_material, FbxSurfaceMaterial::sNormalMap);
+}
+
+K::Vector4 K::FBXLoader::_LoadColor(FbxSurfaceMaterial* _fbx_surface_material, std::string const& _color_property_name, std::string const& _color_factor_property_name)
+{
+	auto color_property = _fbx_surface_material->FindProperty(_color_property_name.c_str());
+
+	FbxDouble3 color{};
+	if (color_property.IsValid())
+	{
+		color = color_property.Get<FbxDouble3>();
+		auto color_factor = _LoadFactor(_fbx_surface_material, _color_factor_property_name.c_str());
+
+		color[0] *= color_factor;
+		color[1] *= color_factor;
+		color[2] *= color_factor;
+	}
+
+	return Vector4{ static_cast<float>(color[0]), static_cast<float>(color[1]), static_cast<float>(color[2]), 1.f };
+}
+
+float K::FBXLoader::_LoadFactor(FbxSurfaceMaterial* _fbx_surface_material, std::string const& _factor_property_name)
+{
+	auto factor_property = _fbx_surface_material->FindProperty(_factor_property_name.c_str());
+
+	float factor{};
+	if (factor_property.IsValid())
+		factor = static_cast<float>(factor_property.Get<FbxDouble>());
+
+	return factor;
+}
+
+std::string K::FBXLoader::_LoadTexture(FbxSurfaceMaterial* _fbx_surface_material, std::string const& _texture_property_name)
+{
+	auto texture_property = _fbx_surface_material->FindProperty(_texture_property_name.c_str());
+
+	std::string texture_name{};
+	if (texture_property.IsValid())
+	{
+		if (texture_property.GetSrcObjectCount<FbxFileTexture>())
+			texture_name = texture_property.GetSrcObject<FbxFileTexture>()->GetFileName();
+	}
+
+	return texture_name;
 }

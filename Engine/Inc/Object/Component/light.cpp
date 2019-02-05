@@ -17,7 +17,7 @@ void K::Light::Initialize()
 		set_direction(Vector3::UnitZ);
 		set_attenuation(Vector3::One);
 		set_falloff(10.f);
-		set_range(100.f);
+		set_range(10.f);
 	}
 	catch (std::exception const& _e)
 	{

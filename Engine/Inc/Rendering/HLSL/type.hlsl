@@ -134,74 +134,90 @@ struct Lighting
     float4 specular;
 };
 
-Lighting ComputeDirectionalLight(float3 _normal, float3 _to_camera, float4 _material_ambient, float4 _material_diffuse, float4 _material_specular)
+Lighting ComputeDirectionalLight(float3 _normalV, float3 _to_cameraV, float4 _material_ambient, float4 _material_diffuse, float4 _material_specular)
 {
     Lighting output = (Lighting)0;
 
-    float3 to_light = normalize(mul(float4(-g_light_direction, 0.f), g_view)).xyz;
-    float3 halfway = normalize(_to_camera + to_light);
-
     output.ambient = _material_ambient * g_light_ambient;
-    output.diffuse = _material_diffuse * g_light_diffuse * saturate(dot(_normal, to_light));
-    output.specular = _material_specular * g_light_specular * pow(saturate(dot(_normal, halfway)), g_light_specular.w);
+
+    float3 light_direction = normalize(g_light_direction);
+
+    float3 to_lightV = mul(float4(-light_direction, 0.f), g_view).xyz;
+    float diffuse_factor = saturate(dot(_normalV, to_lightV));
+
+    output.diffuse = _material_diffuse * g_light_diffuse * diffuse_factor;
+
+    if(0.f == diffuse_factor)
+        return output;
+
+    float3 halfwayV = normalize(_to_cameraV + to_lightV);
+    float specular_factor = pow(saturate(dot(_normalV, halfwayV)), g_light_specular.w);
+
+    output.specular = _material_specular * g_light_specular * specular_factor;
 
     return output;
 }
 
-Lighting ComputePointLight(float3 _position, float3 _normal, float3 _to_camera, float4 _material_ambient, float4 _material_diffuse, float4 _material_specular)
+Lighting ComputePointLight(float3 _positionV, float3 _normalV, float3 _to_cameraV, float4 _material_ambient, float4 _material_diffuse, float4 _material_specular)
 {
     Lighting output = (Lighting)0;
 
-    float3 light_position = mul(float4(g_light_position, 1.f), g_view).xyz;
+    float3 light_positionV = mul(float4(g_light_position, 1.f), g_view).xyz;
+    float distance = length(light_positionV - _positionV);
 
-    float distance = length(light_position - _position);
-    
     if(g_light_range < distance)
-        return output;
-
-    float3 to_light = normalize(light_position - _position);
-    float3 halfway = normalize(_to_camera + to_light);
-
-    float diffuse_factor = saturate(dot(_normal, to_light));
-
-    if(diffuse_factor < 0.01f)
         return output;
 
     float attenuation = 1.f / dot(g_light_attenuation, float3(1, distance, distance * distance));
 
     output.ambient = _material_ambient * g_light_ambient;
+        
+    float3 to_lightV = normalize(light_positionV - _positionV);
+    float diffuse_factor = saturate(dot(_normalV, to_lightV));
+
     output.diffuse = _material_diffuse * g_light_diffuse * diffuse_factor * attenuation;
-    output.specular = _material_specular * g_light_specular * pow(saturate(dot(_normal, halfway)), g_light_specular.w) * attenuation;
+
+    if(0.f == diffuse_factor)
+        return output;
+
+    float3 halfwayV = normalize(_to_cameraV + to_lightV);
+    float specular_factor = pow(saturate(dot(_normalV, halfwayV)), g_light_specular.w);
+
+    output.specular = _material_specular * g_light_specular * specular_factor * attenuation;
 
     return output;
 }
 
-Lighting ComputeSpotLight(float3 _position, float3 _normal, float3 _to_camera, float4 _material_ambient, float4 _material_diffuse, float4 _material_specular)
+Lighting ComputeSpotLight(float3 _positionV, float3 _normalV, float3 _to_cameraV, float4 _material_ambient, float4 _material_diffuse, float4 _material_specular)
 {
     Lighting output = (Lighting)0;
 
-    float3 light_position = mul(float4(g_light_position, 1.f), g_view).xyz;
-    float3 light_direction = normalize(mul(float4(g_light_direction, 0.f), g_view)).xyz;
+    float3 light_positionV = mul(float4(g_light_position, 1.f), g_view).xyz;
+    float3 light_directionV = mul(float4(normalize(g_light_direction), 0.f), g_view).xyz;
 
-    float distance = length(light_position - _position);
+    float distance = length(light_positionV - _positionV);
     
     if (g_light_range < distance)
         return output;
 
-    float3 to_light = normalize(light_position - _position);
-    float3 halfway = normalize(_to_camera + to_light);
-
-    float diffuse_factor = max(0.f, dot(_normal, to_light));
-
-    if(diffuse_factor < 0.01f)
-        return output;
-
-    float attenuation = dot(g_light_attenuation, float3(1, distance, distance * distance));
-    float falloff = pow(max(dot(-to_light, light_direction), 0.f), g_light_falloff);
+    float attenuation = 1.f / dot(g_light_attenuation, float3(1, distance, distance * distance));
 
     output.ambient = _material_ambient * g_light_ambient;
+
+    float3 to_lightV = normalize(light_positionV - _positionV);
+    float diffuse_factor = saturate(dot(_normalV, to_lightV));
+
+    float falloff = pow(saturate(dot(-to_lightV, light_directionV)), g_light_falloff);
+
     output.diffuse = _material_diffuse * g_light_diffuse * diffuse_factor * attenuation * falloff;
-    output.specular = _material_specular * g_light_specular * pow(saturate(dot(_normal, halfway)), g_light_specular.w) * falloff;
+
+    if(0.f == diffuse_factor)
+        return output;
+
+    float3 halfwayV = normalize(_to_cameraV + to_lightV);
+    float specular_factor = pow(saturate(dot(_normalV, halfwayV)), g_light_specular.w);
+
+    output.specular = _material_specular * g_light_specular * specular_factor * falloff;
 
     return output;
 }

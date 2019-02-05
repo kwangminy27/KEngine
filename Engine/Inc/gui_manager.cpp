@@ -129,7 +129,7 @@ void K::GUIManager::Render()
 			attenuation = Vector3::One;
 			falloff = 10.f;
 			type = static_cast<int>(LIGHT_TYPE::SPOT);
-			range = 100.f;
+			range = 10.f;
 		}
 
 		ImGui::SliderFloat4("Ambient", &ambient.x, 0.f, 1.f);

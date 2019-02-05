@@ -96,77 +96,67 @@ void K::ResourceManager::Initialize()
 			Vector3{ -0.5f, -0.5f, -0.5f }
 		};
 
-		Vector3 side_face_normal[4]{};
+		Vector3 face_normal[4]{};
 		Vector3 edge1{}, edge2{};
 		
 		edge1 = pyramid_position[4] - pyramid_position[0];
 		edge2 = pyramid_position[1] - pyramid_position[0];
 		edge1.Normalize();
 		edge2.Normalize();
-		side_face_normal[0] = edge1.Cross(edge2);
-		side_face_normal[0].Normalize();
+		face_normal[0] = edge1.Cross(edge2);
+		face_normal[0].Normalize();
 
 		edge1 = pyramid_position[1] - pyramid_position[0];
 		edge2 = pyramid_position[2] - pyramid_position[0];
 		edge1.Normalize();
 		edge2.Normalize();
-		side_face_normal[1] = edge1.Cross(edge2);
-		side_face_normal[1].Normalize();
+		face_normal[1] = edge1.Cross(edge2);
+		face_normal[1].Normalize();
 
 		edge1 = pyramid_position[2] - pyramid_position[0];
 		edge2 = pyramid_position[3] - pyramid_position[0];
 		edge1.Normalize();
 		edge2.Normalize();
-		side_face_normal[2] = edge1.Cross(edge2);
-		side_face_normal[2].Normalize();
+		face_normal[2] = edge1.Cross(edge2);
+		face_normal[2].Normalize();
 
 		edge1 = pyramid_position[3] - pyramid_position[0];
 		edge2 = pyramid_position[4] - pyramid_position[0];
 		edge1.Normalize();
 		edge2.Normalize();
-		side_face_normal[3] = edge1.Cross(edge2);
-		side_face_normal[3].Normalize();
+		face_normal[3] = edge1.Cross(edge2);
+		face_normal[3].Normalize();
 
-		Vector3 pyramid_normal[4]{};
-
-		pyramid_normal[0] = side_face_normal[0] + side_face_normal[1];
-		pyramid_normal[0].y = 0.f;
-		pyramid_normal[0].Normalize();
-
-		pyramid_normal[1] = side_face_normal[1] + side_face_normal[2];
-		pyramid_normal[1].y = 0.f;
-		pyramid_normal[1].Normalize();
-
-		pyramid_normal[2] = side_face_normal[2] + side_face_normal[3];
-		pyramid_normal[2].y = 0.f;
-		pyramid_normal[2].Normalize();
-
-		pyramid_normal[3] = side_face_normal[3] + side_face_normal[0];
-		pyramid_normal[3].y = 0.f;
-		pyramid_normal[3].Normalize();
-
-		VertexNormalColor pyramid_vertices[9]{
-			VertexNormalColor{ pyramid_position[0], Vector3::UnitY, DirectX::Colors::Black.v },
-			VertexNormalColor{ pyramid_position[1], pyramid_normal[0], DirectX::Colors::White.v },
-			VertexNormalColor{ pyramid_position[2], pyramid_normal[1], DirectX::Colors::Red.v },
-			VertexNormalColor{ pyramid_position[3], pyramid_normal[2], DirectX::Colors::Green.v },
-			VertexNormalColor{ pyramid_position[4], pyramid_normal[3], DirectX::Colors::Blue.v },
+		VertexNormalColor pyramid_vertices[16]
+		{
+			VertexNormalColor{ pyramid_position[0], face_normal[0], DirectX::Colors::White.v },
+			VertexNormalColor{ pyramid_position[4], face_normal[0], DirectX::Colors::White.v },
+			VertexNormalColor{ pyramid_position[1], face_normal[0], DirectX::Colors::White.v },
+			VertexNormalColor{ pyramid_position[0], face_normal[1], DirectX::Colors::White.v },
+			VertexNormalColor{ pyramid_position[1], face_normal[1], DirectX::Colors::White.v },
+			VertexNormalColor{ pyramid_position[2], face_normal[1], DirectX::Colors::White.v },
+			VertexNormalColor{ pyramid_position[0], face_normal[2], DirectX::Colors::White.v },
+			VertexNormalColor{ pyramid_position[2], face_normal[2], DirectX::Colors::White.v },
+			VertexNormalColor{ pyramid_position[3], face_normal[2], DirectX::Colors::White.v },
+			VertexNormalColor{ pyramid_position[0], face_normal[3], DirectX::Colors::White.v },
+			VertexNormalColor{ pyramid_position[3], face_normal[3], DirectX::Colors::White.v },
+			VertexNormalColor{ pyramid_position[4], face_normal[3], DirectX::Colors::White.v },
 			VertexNormalColor{ pyramid_position[1], -Vector3::UnitY, DirectX::Colors::White.v },
 			VertexNormalColor{ pyramid_position[2], -Vector3::UnitY, DirectX::Colors::White.v },
 			VertexNormalColor{ pyramid_position[3], -Vector3::UnitY, DirectX::Colors::White.v },
-			VertexNormalColor{ pyramid_position[4], -Vector3::UnitY, DirectX::Colors::White.v }
+			VertexNormalColor{ pyramid_position[4], -Vector3::UnitY, DirectX::Colors::White.v },
 		};
 
-		uint32_t pyramid_indices[18]{ 1, 0, 4, 2, 0, 1, 3, 0, 2, 4, 0, 3, 5, 8, 6, 6, 8, 7 };
+		uint32_t pyramid_indices[18]{ 0, 1, 2/**/, 3, 4, 5/**/, 6, 7, 8/**/, 9, 10, 11/**/, 12, 14, 13, 12, 15, 14 };
 
 		_CreateMesh(
 			NORMAL_PYRAMID, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-			pyramid_vertices, sizeof(VertexNormalColor), 9, D3D11_USAGE_DEFAULT,
+			pyramid_vertices, sizeof(VertexNormalColor), 16, D3D11_USAGE_DEFAULT,
 			pyramid_indices, sizeof(uint32_t), 18, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_UINT
 		);
 
-		_CreateSphereVolume(SPHERE_VOLUME, 0.5f, 32, 16);
-		_CreateSpotlightVolume(SPOTLIGHT_VOLUME, 0.5f, 0.5f, 32, 16);
+		_CreateSphereVolume(SPHERE_VOLUME, 10.f, 32, 16);
+		_CreateSpotlightVolume(SPOTLIGHT_VOLUME, 10.f, 10.f, 32, 16);
 #pragma endregion
 
 #pragma region Texture

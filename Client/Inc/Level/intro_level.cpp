@@ -21,8 +21,8 @@ void K::IntroLevel::Initialize()
 		global_ambient_light_component->set_type(static_cast<int>(LIGHT_TYPE::DIRECTIONAL));
 		global_ambient_light_component->set_direction(Vector3{ 1.f, -1.f, -1.f });
 		global_ambient_light_component->set_ambient(Vector4{ 0.2f, 0.2f, 0.2f, 1.f });
-		global_ambient_light_component->set_diffuse(Vector4{ 0.2f, 0.2f, 0.2f, 1.f });
-		global_ambient_light_component->set_specular(Vector4{ 0.2f, 0.2f, 0.2f, 1.f });
+		global_ambient_light_component->set_diffuse(DirectX::Colors::Black.v);
+		global_ambient_light_component->set_specular(DirectX::Colors::Black.v);
 		default_layer->AddActor(global_ambient_light);
 
 		auto light = object_manager->CreateActor<LightActor>(TAG{ DEFAULT_LIGHT, 0 });

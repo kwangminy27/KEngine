@@ -22,7 +22,7 @@ PS_OUTPUT_LIGHT DeferredLightingPS(VS_OUTPUT_POSITION _input)
     float4 material = g_MRT_material.Sample(g_point_sampler, uv);
 
     float3 NDC = float3(uv.x * 2.f - 1.f, uv.y * -2.f + 1.f, depth.r);
-    float4 HCS = float4(NDC * depth.a, depth.a);
+    float4 HCS = float4(NDC, 1.f) * depth.a;
 
     float3 positionV = mul(HCS, g_projection_Inv).xyz;
     float3 normalV = normal.xyz * 2.f - 1.f;

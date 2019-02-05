@@ -74,7 +74,7 @@ void K::LightActor::_Render(float _time)
 	auto direction = light->direction();
 	direction.Normalize();
 
-	if (1.f != Vector3::UnitZ.Dot(direction))
+	if (Vector3::UnitZ != direction && -Vector3::UnitZ != direction)
 	{
 		auto axis = Vector3::UnitZ.Cross(direction);
 		axis.Normalize();
@@ -110,11 +110,9 @@ void K::LightActor::_Render(float _time)
 		else
 		{
 			// Light Volume Pass 1
-			auto const& test = rendering_manager->FindRenderState("Test");
 			auto const& rs_light_volume_pass_1 = rendering_manager->FindRenderState(RS_LIGHT_VOLUME_PASS_1);
 			auto const& depth_light_volume_pass_1 = rendering_manager->FindRenderState(DSS_LIGHT_VOLUME_PASS_1);
 
-			test->SetState();
 			rs_light_volume_pass_1->SetState();
 			std::static_pointer_cast<DepthStencilState>(depth_light_volume_pass_1)->set_stencil_ref(1);
 			depth_light_volume_pass_1->SetState();
@@ -126,7 +124,6 @@ void K::LightActor::_Render(float _time)
 			}
 			depth_light_volume_pass_1->ResetState();
 			rs_light_volume_pass_1->ResetState();
-			test->ResetState();
 
 			// Light Volume Pass 2
 			auto const& rs_light_volume_pass_2 = rendering_manager->FindRenderState(RS_LIGHT_VOLUME_PASS_2);
@@ -140,20 +137,6 @@ void K::LightActor::_Render(float _time)
 					resource_manager->FindMesh(SPHERE_VOLUME)->Render();
 				else if (LIGHT_TYPE::SPOT == static_cast<LIGHT_TYPE>(light->type()))
 					resource_manager->FindMesh(SPOTLIGHT_VOLUME)->Render();
-
-				auto const& test = rendering_manager->FindRenderState(RS_WIREFRAME_CULL_BACK);
-				auto const& depth_disable = rendering_manager->FindRenderState(DEPTH_DISABLE);
-
-				test->SetState();
-				depth_disable->SetState();
-				{
-					if (LIGHT_TYPE::POINT == static_cast<LIGHT_TYPE>(light->type()))
-						resource_manager->FindMesh(SPHERE_VOLUME)->Render();
-					else if (LIGHT_TYPE::SPOT == static_cast<LIGHT_TYPE>(light->type()))
-						resource_manager->FindMesh(SPOTLIGHT_VOLUME)->Render();
-				}
-				depth_disable->ResetState();
-				test->ResetState();
 			}
 			depth_light_volume_pass_2->ResetState();
 			rs_light_volume_pass_2->ResetState();
