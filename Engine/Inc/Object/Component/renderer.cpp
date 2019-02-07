@@ -77,6 +77,29 @@ void K::Renderer::UpdateConstantBuffer(float _time)
 void K::Renderer::set_mesh(std::shared_ptr<Mesh> const& _mesh)
 {
 	mesh_ = _mesh;
+
+	auto const& material = CPTR_CAST<Material>(owner()->FindComponent(TAG{ MATERIAL, 0 }));
+
+	auto const& material_info_2d_vector = mesh_->material_info_2d_vector();
+	for (auto i = 0; i < material_info_2d_vector.size(); ++i)
+	{
+		for (auto j = 0; j < material_info_2d_vector.at(i).size(); ++j)
+		{
+			auto const& material_info = material_info_2d_vector.at(i).at(j);
+
+			MaterialConstantBuffer material_CB{};
+			material_CB.ambient = material_info->ambient;
+			material_CB.diffuse = material_info->diffuse;
+			material_CB.specular = material_info->specular;
+			material_CB.emissive = material_info->emissive;
+
+			material->SetMaterialConstantBuffer(material_CB, i, j);
+			material->SetTexture(material_info->diffuse_texture, 0, i, j);
+			material->SetTexture(material_info->specular_texture, 1, i, j);
+			material->SetTexture(material_info->bump_texture, 2, i, j);
+			material->SetSampler(LINEAR_SAMPLER, 0, i, j);
+		}
+	}
 }
 
 void K::Renderer::set_shader(std::shared_ptr<Shader> const& _shader)

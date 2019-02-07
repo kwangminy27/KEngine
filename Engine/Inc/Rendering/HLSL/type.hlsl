@@ -30,6 +30,17 @@ struct VS_INPUT_POSITION_TEX_INSTANCE
 	float4x4 world : WORLD;
 };
 
+struct VS_INPUT_3D
+{
+    float3 position : POSITION;
+    float2 uv : TEXCOORD;
+    float3 normal : NORMAL;
+    float3 binormal : BINORMAL;
+    float3 tangent : TANGENT;
+    float4 joint_weights : JOINT_WEIGHTS;
+    uint4 joint_indices : JOINT_INDICES;
+};
+
 struct VS_OUTPUT_POSITION
 {
 	float4 position : SV_POSITION;
@@ -47,6 +58,19 @@ struct VS_OUTPUT_POSITION_NORMAL_COLOR
     float3 positionV : POSITION;
 	float3 normalV : NORMAL;
 	float4 color : COLOR;
+};
+
+struct VS_OUTPUT_3D
+{
+    float4 position : SV_POSITION;
+    float3 positionV : POSITION0;
+    float4 positionH : POSITION1;
+    float2 uv : TEXCOORD;
+    float3 normal : NORMAL;
+    float3 binormal : BINORMAL;
+    float3 tangent : TANGENT;
+    float4 joint_weights : JOINT_WEIGHTS;
+    uint4 joint_indices : JOINT_INDICES;
 };
 
 struct VS_OUTPUT_POSITION_TEX
@@ -127,16 +151,16 @@ cbuffer Common : register(b5)
 Texture2D g_texture : register(t0);
 SamplerState g_sampler : register(s0);
 
-struct Lighting
+struct LightingInfo
 {
     float4 ambient;
     float4 diffuse;
     float4 specular;
 };
 
-Lighting ComputeDirectionalLight(float3 _normalV, float3 _to_cameraV, float4 _material_ambient, float4 _material_diffuse, float4 _material_specular)
+LightingInfo ComputeDirectionalLight(float3 _normalV, float3 _to_cameraV, float4 _material_ambient, float4 _material_diffuse, float4 _material_specular)
 {
-    Lighting output = (Lighting)0;
+    LightingInfo output = (LightingInfo)0;
 
     output.ambient = _material_ambient * g_light_ambient;
 
@@ -147,7 +171,7 @@ Lighting ComputeDirectionalLight(float3 _normalV, float3 _to_cameraV, float4 _ma
 
     output.diffuse = _material_diffuse * g_light_diffuse * diffuse_factor;
 
-    if(0.f == diffuse_factor)
+    if(diffuse_factor < 0.01f)
         return output;
 
     float3 halfwayV = normalize(_to_cameraV + to_lightV);
@@ -158,9 +182,9 @@ Lighting ComputeDirectionalLight(float3 _normalV, float3 _to_cameraV, float4 _ma
     return output;
 }
 
-Lighting ComputePointLight(float3 _positionV, float3 _normalV, float3 _to_cameraV, float4 _material_ambient, float4 _material_diffuse, float4 _material_specular)
+LightingInfo ComputePointLight(float3 _positionV, float3 _normalV, float3 _to_cameraV, float4 _material_ambient, float4 _material_diffuse, float4 _material_specular)
 {
-    Lighting output = (Lighting)0;
+    LightingInfo output = (LightingInfo)0;
 
     float3 light_positionV = mul(float4(g_light_position, 1.f), g_view).xyz;
     float distance = length(light_positionV - _positionV);
@@ -177,7 +201,7 @@ Lighting ComputePointLight(float3 _positionV, float3 _normalV, float3 _to_camera
 
     output.diffuse = _material_diffuse * g_light_diffuse * diffuse_factor * attenuation;
 
-    if(0.f == diffuse_factor)
+    if(diffuse_factor < 0.01f)
         return output;
 
     float3 halfwayV = normalize(_to_cameraV + to_lightV);
@@ -188,9 +212,9 @@ Lighting ComputePointLight(float3 _positionV, float3 _normalV, float3 _to_camera
     return output;
 }
 
-Lighting ComputeSpotLight(float3 _positionV, float3 _normalV, float3 _to_cameraV, float4 _material_ambient, float4 _material_diffuse, float4 _material_specular)
+LightingInfo ComputeSpotLight(float3 _positionV, float3 _normalV, float3 _to_cameraV, float4 _material_ambient, float4 _material_diffuse, float4 _material_specular)
 {
-    Lighting output = (Lighting)0;
+    LightingInfo output = (LightingInfo)0;
 
     float3 light_positionV = mul(float4(g_light_position, 1.f), g_view).xyz;
     float3 light_directionV = mul(float4(normalize(g_light_direction), 0.f), g_view).xyz;
@@ -211,7 +235,7 @@ Lighting ComputeSpotLight(float3 _positionV, float3 _normalV, float3 _to_cameraV
 
     output.diffuse = _material_diffuse * g_light_diffuse * diffuse_factor * attenuation * falloff;
 
-    if(0.f == diffuse_factor)
+    if(diffuse_factor < 0.01f)
         return output;
 
     float3 halfwayV = normalize(_to_cameraV + to_lightV);
@@ -236,12 +260,12 @@ float CompressColor(float4 _color)
     result |= (color.b << 16) & 0x00FF0000;
     result |= (color.a << 24) & 0xFF000000;
 
-    return (float)result;
+    return asfloat(result);
 }
 
 float4 DecompressColor(float _color)
 {
-    uint color = (uint)_color;
+    uint color = asuint(_color);
 
     float4 result = (float4)0;
     result.r = (color & 0x000000FF) / 255.f;

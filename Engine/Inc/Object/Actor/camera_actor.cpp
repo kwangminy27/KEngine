@@ -11,11 +11,8 @@ void K::CameraActor::Initialize()
 	{
 		auto const& object_manager = ObjectManager::singleton();
 
-		auto transform = object_manager->CreateComponent<Transform>(TAG{ TRANSFORM, 0 });
-		AddComponent(transform);
-
-		auto camera = object_manager->CreateComponent<Camera>({ CAMERA, 0 });
-		AddComponent(camera);
+		AddComponent(object_manager->CreateComponent<Transform>(TAG{ TRANSFORM, 0 }));
+		AddComponent(object_manager->CreateComponent<Camera>({ CAMERA, 0 }));
 
 		set_render_group_type(RENDER_GROUP_TYPE::MAX);
 	}

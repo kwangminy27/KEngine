@@ -33,7 +33,7 @@ PS_OUTPUT_LIGHT DeferredLightingPS(VS_OUTPUT_POSITION _input)
     float4 diffuse = DecompressColor(material.g);
     float4 specular = DecompressColor(material.b);
 
-    Lighting lighting = (Lighting)0;
+    LightingInfo lighting = (LightingInfo)0;
 
     switch(g_light_type)
     {

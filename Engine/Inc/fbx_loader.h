@@ -9,6 +9,8 @@ namespace K
 		Vector3 normal;
 		Vector3 binormal;
 		Vector3 tangent;
+		Vector4 joint_weights;
+		Vector4 joint_indices;
 	};
 
 	struct FBXMaterial
@@ -17,14 +19,15 @@ namespace K
 		Vector4 diffuse;
 		Vector4 specular;
 		Vector4 emissive;
-		std::string diffuse_texture_name;
-		std::string specular_texture_name;
-		std::string bump_texture_name;
+		std::filesystem::path diffuse_texture;
+		std::filesystem::path specular_texture;
+		std::filesystem::path bump_texture;
 	};
 
 	struct FBXMeshContainer
 	{
 		std::vector<FBXVertex> vertices;
+		std::vector<uint32_t> indices;
 	};
 
 	class ENGINE_DLL FBXLoader final : public Singleton<FBXLoader>
@@ -36,9 +39,8 @@ namespace K
 		void Begin(std::wstring const& _file_name, std::string const& _path_tag);
 		void End();
 
-		std::unique_ptr<FbxManager, std::function<void(FbxManager*)>> const& fbx_manager() const;
-		std::unique_ptr<FbxIOSettings, std::function<void(FbxIOSettings*)>> const& fbx_io_settings() const;
-		std::unique_ptr<FbxImporter, std::function<void(FbxImporter*)>> const& fbx_importer() const;
+		std::vector<std::unique_ptr<FBXMeshContainer, std::function<void(FBXMeshContainer*)>>> const& fbx_mesh_container_vector();
+		std::vector<std::vector<std::unique_ptr<FBXMaterial, std::function<void(FBXMaterial*)>>>> const& fbx_material_2d_vector();
 
 	private:
 		FBXLoader() = default;
@@ -63,7 +65,7 @@ namespace K
 
 		Vector4 _LoadColor(FbxSurfaceMaterial* _fbx_surface_material, std::string const& _color_property_name, std::string const& _color_factor_property_name);
 		float _LoadFactor(FbxSurfaceMaterial* _fbx_surface_material, std::string const& _factor_property_name);
-		std::string _LoadTexture(FbxSurfaceMaterial* _fbx_surface_material, std::string const& _texture_property_name);
+		std::filesystem::path _LoadTexture(FbxSurfaceMaterial* _fbx_surface_material, std::string const& _texture_property_name);
 
 		std::unique_ptr<FbxManager, std::function<void(FbxManager*)>> fbx_manager_{};
 		std::unique_ptr<FbxIOSettings, std::function<void(FbxIOSettings*)>> fbx_io_settings_{};

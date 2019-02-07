@@ -113,8 +113,6 @@ void K::RenderingManager::Initialize()
 
 		_CreateShader(DEFERRED_LIGHTING_SHADER, cso_desc_vector, input_element_desc_vector, SHADER_PATH);
 
-		//DeferredLightingCalculateColorPS
-
 		cso_desc_vector.clear();
 		cso_desc_vector.push_back({ SHADER_TYPE::VERTEX, L"DeferredLightingCalculateColorVS.cso" });
 		cso_desc_vector.push_back({ SHADER_TYPE::PIXEL, L"DeferredLightingCalculateColorPS.cso" });
@@ -123,6 +121,21 @@ void K::RenderingManager::Initialize()
 		input_element_desc_vector.push_back({ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 });
 
 		_CreateShader(DEFERRED_LIGHTING_CALCULATE_COLOR, cso_desc_vector, input_element_desc_vector, SHADER_PATH);
+
+		cso_desc_vector.clear();
+		cso_desc_vector.push_back({ SHADER_TYPE::VERTEX, L"BumpMappingVS.cso" });
+		cso_desc_vector.push_back({ SHADER_TYPE::PIXEL, L"BumpMappingPS.cso" });
+
+		input_element_desc_vector.clear();
+		input_element_desc_vector.push_back({ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+		input_element_desc_vector.push_back({ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+		input_element_desc_vector.push_back({ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+		input_element_desc_vector.push_back({ "BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+		input_element_desc_vector.push_back({ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+		input_element_desc_vector.push_back({ "JOINT_WEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+		input_element_desc_vector.push_back({ "JOINT_INDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+
+		_CreateShader(BUMP_MAPPING_SHADER, cso_desc_vector, input_element_desc_vector, SHADER_PATH);
 #pragma endregion
 
 #pragma region RenderState

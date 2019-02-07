@@ -64,10 +64,10 @@ void K::GUIManager::Render()
 		Quaternion local_rotation = transform->local_rotation();
 		Vector3 local_translation = transform->local_translation();
 
-		ImGui::BulletText("Pyramid Modification");
+		ImGui::BulletText("Player Modification");
 
 		ImGui::SameLine();
-		if (ImGui::Button("Pyramid Reset"))
+		if (ImGui::Button("Player Reset"))
 		{
 			rotation = Vector3::Zero;
 			local_rotation = Quaternion::Identity;
@@ -75,7 +75,7 @@ void K::GUIManager::Render()
 		}
 
 		ImGui::SliderFloat3("Rotation", &rotation.x, 0.f, 360.f);
-		ImGui::SliderFloat3("Translation", &local_translation.x, -1.f, 1.f);
+		ImGui::SliderFloat3("Translation", &local_translation.x, -100.f, 100.f);
 
 		transform->set_local_rotation(local_rotation * Quaternion::CreateFromYawPitchRoll(DirectX::XMConvertToRadians(rotation.y), DirectX::XMConvertToRadians(rotation.x), DirectX::XMConvertToRadians(rotation.z)));
 		transform->set_local_translation(local_translation);

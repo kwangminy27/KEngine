@@ -22,7 +22,7 @@ namespace K
 		std::list<Component*> const& FindComponent(std::string const& _tag) const;
 		APTR const& FindChild(TAG const& _tag) const;
 
-		void AddComponent(CPTR& _component);
+		void AddComponent(CPTR&& _component);
 		void AddChild(APTR& _child);
 
 		void RemoveComponent(CPTR const& _component);

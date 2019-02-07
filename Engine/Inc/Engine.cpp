@@ -11,4 +11,5 @@
 // TODO: direction은 잠정 보류
 // TODO: Light Volume 처리 조명의 뒷부분은 체크했음 이제 앞부분 해야 함
 // TODO: mesh.h
-
+// TODO: 3D 통합 버텍스 포맷 하나 만듬. // Exchange 메모리 <-> 편의성
+// TODO: FBXMeshContainer index 와인딩 오더 고려해야 할 수도 있음

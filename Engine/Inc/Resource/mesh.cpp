@@ -118,6 +118,11 @@ K::Vector3 K::Mesh::extent() const
 	return extent_;
 }
 
+std::vector<std::vector<std::unique_ptr<K::MaterialInfo, std::function<void(K::MaterialInfo*)>>>> const& K::Mesh::material_info_2d_vector() const
+{
+	return material_info_2d_vector_;
+}
+
 K::Mesh::Mesh(Mesh&& _other) noexcept
 {
 	mesh_container_vector_ = std::move(_other.mesh_container_vector_);
@@ -125,19 +130,31 @@ K::Mesh::Mesh(Mesh&& _other) noexcept
 
 void K::Mesh::_LoadMesh(std::wstring const& _file_name, std::string const& _path_tag)
 {
-	auto const& fbx_loader = FBXLoader::singleton();
+	auto path_buffer = PathManager::singleton()->FindPath(_path_tag);
 
-	fbx_loader->Begin(_file_name, _path_tag);
+	path_buffer /= _file_name;
 
-	// 메쉬 생성
+	auto extension = path_buffer.extension().string();
 
-	fbx_loader->End();
+	std::for_each(extension.begin(), extension.end(), [](char& c) {
+		c = toupper(c);
+	});
+
+	if (".FBX" == extension)
+	{
+		auto const& fbx_loader = FBXLoader::singleton();
+
+		fbx_loader->Begin(_file_name, _path_tag);
+
+		_ConvertFromFBX();
+
+		fbx_loader->End();
+	}
 }
 
 void K::Mesh::_CreateMesh(
 	D3D11_PRIMITIVE_TOPOLOGY _topology,
-	void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage,
-	Vector3 _scale, Quaternion _rotation)
+	void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage)
 {
 	auto mesh_container_buffer = std::unique_ptr<MeshContainer, std::function<void(MeshContainer*)>>{ new MeshContainer, [](MeshContainer* _p) {
 		for (auto& VB : _p->VB_vector)
@@ -151,14 +168,13 @@ void K::Mesh::_CreateMesh(
 
 	mesh_container_vector_.push_back(std::move(mesh_container_buffer));
 
-	_CreateVertexBuffer(_vtx_data, _vtx_stride, _vtx_count, _vtx_usage, VERTEX_BUFFER_TYPE::VERTEX, _scale, _rotation);
+	_CreateVertexBuffer(_vtx_data, _vtx_stride, _vtx_count, _vtx_usage, VERTEX_BUFFER_TYPE::VERTEX);
 }
 
 void K::Mesh::_CreateMesh(
 	D3D11_PRIMITIVE_TOPOLOGY _topology,
 	void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage,
-	void* _idx_data, int _idx_stride, int _idx_count, D3D11_USAGE _idx_usage, DXGI_FORMAT _idx_format,
-	Vector3 _scale, Quaternion _rotation)
+	void* _idx_data, int _idx_stride, int _idx_count, D3D11_USAGE _idx_usage, DXGI_FORMAT _idx_format)
 {
 	auto mesh_container_buffer = std::unique_ptr<MeshContainer, std::function<void(MeshContainer*)>>{ new MeshContainer, [](MeshContainer* _p) {
 		for (auto& VB : _p->VB_vector)
@@ -172,7 +188,7 @@ void K::Mesh::_CreateMesh(
 
 	mesh_container_vector_.push_back(std::move(mesh_container_buffer));
 
-	_CreateVertexBuffer(_vtx_data, _vtx_stride, _vtx_count, _vtx_usage, VERTEX_BUFFER_TYPE::VERTEX, _scale, _rotation);
+	_CreateVertexBuffer(_vtx_data, _vtx_stride, _vtx_count, _vtx_usage, VERTEX_BUFFER_TYPE::VERTEX);
 	_CreateIndexBuffer(_idx_data, _idx_stride, _idx_count, _idx_usage, _idx_format);
 }
 
@@ -180,8 +196,7 @@ void K::Mesh::_CreateMesh(
 	D3D11_PRIMITIVE_TOPOLOGY _topology,
 	void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage,
 	void* _idx_data, int _idx_stride, int _idx_count, D3D11_USAGE _idx_usage, DXGI_FORMAT _idx_format,
-	void* _inst_data, int _inst_stride, int _inst_count, D3D11_USAGE _inst_usage,
-	Vector3 _scale, Quaternion _rotation)
+	void* _inst_data, int _inst_stride, int _inst_count, D3D11_USAGE _inst_usage)
 {
 	auto mesh_container_buffer = std::unique_ptr<MeshContainer, std::function<void(MeshContainer*)>>{ new MeshContainer, [](MeshContainer* _p) {
 		for (auto& VB : _p->VB_vector)
@@ -195,12 +210,12 @@ void K::Mesh::_CreateMesh(
 
 	mesh_container_vector_.push_back(std::move(mesh_container_buffer));
 
-	_CreateVertexBuffer(_vtx_data, _vtx_stride, _vtx_count, _vtx_usage, VERTEX_BUFFER_TYPE::VERTEX, _scale, _rotation);
-	_CreateVertexBuffer(_inst_data, _inst_stride, _inst_count, _inst_usage, VERTEX_BUFFER_TYPE::INSTANCE, _scale, _rotation);
+	_CreateVertexBuffer(_vtx_data, _vtx_stride, _vtx_count, _vtx_usage, VERTEX_BUFFER_TYPE::VERTEX);
+	_CreateVertexBuffer(_inst_data, _inst_stride, _inst_count, _inst_usage, VERTEX_BUFFER_TYPE::INSTANCE);
 	_CreateIndexBuffer(_idx_data, _idx_stride, _idx_count, _idx_usage, _idx_format);
 }
 
-void K::Mesh::_CreateVertexBuffer(void* _data, int _stride, int _count, D3D11_USAGE _usage, VERTEX_BUFFER_TYPE _type, Vector3 _scale, Quaternion _rotation)
+void K::Mesh::_CreateVertexBuffer(void* _data, int _stride, int _count, D3D11_USAGE _usage, VERTEX_BUFFER_TYPE _type)
 {
 	auto const& device = DeviceManager::singleton()->device();
 
@@ -239,14 +254,12 @@ void K::Mesh::_CreateVertexBuffer(void* _data, int _stride, int _count, D3D11_US
 		{
 			memcpy_s(&position, sizeof(Vector3), vertices + _stride * i, sizeof(Vector3));
 
-			position = Vector3::Transform(position, Matrix::CreateScaling(_scale) * Matrix::CreateFromQuaternion(_rotation));
-
 			min_ = Vector3::Min(min_, position);
 			max_ = Vector3::Max(max_, position);
-		}
 
-		center_ = (max_ + min_) / 2.f;
-		extent_ = (max_ - min_) / 2.f;
+			center_ = (max_ + min_) / 2.f;
+			extent_ = (max_ - min_) / 2.f;
+		}
 	}
 }
 
@@ -280,4 +293,67 @@ void K::Mesh::_CreateIndexBuffer(void* _data, int _stride, int _count, D3D11_USA
 	ThrowIfFailed(device->CreateBuffer(&dbd, &dsd, &IB.buffer));
 
 	mesh_container->IB_vector.push_back(std::move(IB));
+}
+
+void K::Mesh::_ConvertFromFBX()
+{
+	auto const& fbx_loader = FBXLoader::singleton();
+
+	auto const& fbx_mesh_container_vector = fbx_loader->fbx_mesh_container_vector();
+	auto const& fbx_material_2d_vector = fbx_loader->fbx_material_2d_vector();
+
+	// Process Mesh
+	for (auto iter = fbx_mesh_container_vector.begin(); iter != fbx_mesh_container_vector.end(); ++iter)
+	{
+		std::vector<Vertex3D> vertices{};
+		for (auto i = 0; i < (*iter)->vertices.size(); ++i)
+		{
+			auto const& fbx_vertex = (*iter)->vertices.at(i);
+			
+			Vertex3D vertex{};
+
+			vertex.position = fbx_vertex.position;
+			vertex.uv = fbx_vertex.uv;
+			vertex.normal = fbx_vertex.normal;
+			vertex.binormal = fbx_vertex.binormal;
+			vertex.tangent = fbx_vertex.tangent;
+			vertex.joint_weights = fbx_vertex.joint_weights;
+			vertex.joint_indices = fbx_vertex.joint_indices;
+
+			vertices.push_back(std::move(vertex));
+		}
+
+		std::vector<uint32_t> indices = std::move((*iter)->indices);
+
+		_CreateMesh(
+			D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+			vertices.data(), sizeof(Vertex3D), static_cast<int>(vertices.size()), D3D11_USAGE_DEFAULT,
+			indices.data(), sizeof(uint32_t), static_cast<int>(indices.size()), D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_UINT
+		);
+	}
+
+	// Process Material
+	for (auto i = 0; i < fbx_material_2d_vector.size(); ++i)
+	{
+		std::vector<std::unique_ptr<MaterialInfo, std::function<void(MaterialInfo*)>>> material_info_vector{};
+		for (auto j = 0; j < fbx_material_2d_vector.at(i).size(); ++j)
+		{
+			auto const& fbx_material = fbx_material_2d_vector.at(i).at(j);
+
+			auto material_info = std::unique_ptr<MaterialInfo, std::function<void(MaterialInfo*)>>{ new MaterialInfo, [](MaterialInfo* _p) {
+				delete _p;
+			} };
+
+			material_info->ambient = fbx_material->ambient;
+			material_info->diffuse = fbx_material->diffuse;
+			material_info->specular = fbx_material->specular;
+			material_info->emissive = fbx_material->emissive;
+			material_info->diffuse_texture = fbx_material->diffuse_texture.string();
+			material_info->specular_texture = fbx_material->specular_texture.string();
+			material_info->bump_texture = fbx_material->bump_texture.string();
+
+			material_info_vector.push_back(std::move(material_info));
+		}
+		material_info_2d_vector_.push_back(std::move(material_info_vector));
+	}
 }

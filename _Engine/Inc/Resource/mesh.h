@@ -34,6 +34,17 @@ namespace K
 		std::vector<IndexBuffer> IB_vector;
 	};
 
+	struct MaterialInfo
+	{
+		Vector4 ambient;
+		Vector4 diffuse;
+		Vector4 specular;
+		Vector4 emissive;
+		std::string diffuse_texture;
+		std::string specular_texture;
+		std::string bump_texture;
+	};
+
 	class ENGINE_DLL Mesh
 	{
 		friend class ResourceManager;
@@ -52,6 +63,8 @@ namespace K
 		Vector3 center() const;
 		Vector3 extent() const;
 
+		std::vector<std::vector<std::unique_ptr<MaterialInfo, std::function<void(MaterialInfo*)>>>> const& material_info_2d_vector() const;
+
 	private:
 		Mesh() = default;
 		Mesh(Mesh const&) = delete;
@@ -62,26 +75,26 @@ namespace K
 		void _LoadMesh(std::wstring const& _file_name, std::string const& _path_tag);
 		void _CreateMesh(
 			D3D11_PRIMITIVE_TOPOLOGY _topology,
+			void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage);
+		void _CreateMesh(
+			D3D11_PRIMITIVE_TOPOLOGY _topology,
 			void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage,
-			Vector3 _scale, Quaternion _rotation);
+			void* _idx_data, int _idx_stride, int _idx_count, D3D11_USAGE _idx_usage, DXGI_FORMAT _idx_format);
 		void _CreateMesh(
 			D3D11_PRIMITIVE_TOPOLOGY _topology,
 			void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage,
 			void* _idx_data, int _idx_stride, int _idx_count, D3D11_USAGE _idx_usage, DXGI_FORMAT _idx_format,
-			Vector3 _scale, Quaternion _rotation);
-		void _CreateMesh(
-			D3D11_PRIMITIVE_TOPOLOGY _topology,
-			void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage,
-			void* _idx_data, int _idx_stride, int _idx_count, D3D11_USAGE _idx_usage, DXGI_FORMAT _idx_format,
-			void* _inst_data, int _inst_stride, int _inst_count, D3D11_USAGE _inst_usage,
-			Vector3 _scale, Quaternion _rotation);
-		void _CreateVertexBuffer(void* _data, int _stride, int _count, D3D11_USAGE _usage, VERTEX_BUFFER_TYPE _type, Vector3 _scale, Quaternion _rotation);
+			void* _inst_data, int _inst_stride, int _inst_count, D3D11_USAGE _inst_usage);
+		void _CreateVertexBuffer(void* _data, int _stride, int _count, D3D11_USAGE _usage, VERTEX_BUFFER_TYPE _type);
 		void _CreateIndexBuffer(void* _data, int _stride, int _count, D3D11_USAGE _usage, DXGI_FORMAT _format);
+
+		void _ConvertFromFBX();
 
 		Vector3 min_{};
 		Vector3 max_{};
 		Vector3 center_{};
 		Vector3 extent_{};
 		std::vector<std::unique_ptr<MeshContainer, std::function<void(MeshContainer*)>>> mesh_container_vector_{};
+		std::vector<std::vector<std::unique_ptr<MaterialInfo, std::function<void(MaterialInfo*)>>>> material_info_2d_vector_{};
 	};
 }

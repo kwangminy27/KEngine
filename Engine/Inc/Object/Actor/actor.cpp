@@ -50,7 +50,7 @@ K::APTR const& K::Actor::FindChild(TAG const& _tag) const
 	return *iter;
 }
 
-void K::Actor::AddComponent(CPTR& _component)
+void K::Actor::AddComponent(CPTR&& _component)
 {
 	_component->set_owner(shared_from_this());
 

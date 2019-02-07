@@ -18,8 +18,7 @@ void K::TileMapActor::Initialize()
 {
 	try
 	{
-		auto transform = ObjectManager::singleton()->CreateComponent<Transform>(TAG{ TRANSFORM, 0 });
-		AddComponent(transform);
+		AddComponent(ObjectManager::singleton()->CreateComponent<Transform>(TAG{ TRANSFORM, 0 }));
 	}
 	catch (std::exception const& _e)
 	{

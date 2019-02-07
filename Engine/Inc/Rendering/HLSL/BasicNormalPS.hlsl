@@ -10,7 +10,7 @@ PS_OUTPUT_SINGLE_TARGET BasicNormalPS(VS_OUTPUT_POSITION_NORMAL_COLOR _input)
 
     float3 to_cameraV = normalize(-_input.positionV);
 
-    Lighting lighting = (Lighting)0;
+    LightingInfo lighting = (LightingInfo)0;
 
     switch (g_light_type)
     {

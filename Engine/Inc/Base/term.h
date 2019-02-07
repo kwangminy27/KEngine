@@ -26,6 +26,10 @@ namespace K
 	constexpr auto INSTANCE_TEX_RECT = "InstanceTexRect";
 	constexpr auto NORMAL_PYRAMID = "NormalPyramid";
 	constexpr auto FULL_SCREEN_RECT = "FullScreenRect";
+	constexpr auto SPHERE_MESH = "SphereMesh";
+	constexpr auto CYLINDER_MESH = "CylinderMesh";
+	constexpr auto CAPSULE_MESH = "CapsuleMesh";
+	constexpr auto SPOTLIGHT_MESH = "SpotlightMesh";
 	constexpr auto SPHERE_VOLUME = "SphereVolume";
 	constexpr auto CYLINDER_VOLUME = "CylinderVolume";
 	constexpr auto CAPSULE_VOLUME = "CapsuleVolume";
@@ -45,6 +49,7 @@ namespace K
 	constexpr auto GBUFFER_SHADER = "GBufferShader";
 	constexpr auto DEFERRED_LIGHTING_SHADER = "DeferredLightingShader";
 	constexpr auto DEFERRED_LIGHTING_CALCULATE_COLOR = "DeferredLightingCalculateColor";
+	constexpr auto BUMP_MAPPING_SHADER = "BumpMappingShader";
 
 	//////////////////// RenderState Key ////////////////////
 	constexpr auto RS_LIGHT_VOLUME_PASS_1 = "RSLightVolumePass1";
@@ -156,6 +161,17 @@ namespace K
 	{
 		Vector3 position;
 		Vector2 uv;
+	};
+
+	struct Vertex3D
+	{
+		Vector3 position;
+		Vector2 uv;
+		Vector3 normal;
+		Vector3 binormal;
+		Vector3 tangent;
+		Vector4 joint_weights;
+		Vector4 joint_indices;
 	};
 
 	struct MatrixTex

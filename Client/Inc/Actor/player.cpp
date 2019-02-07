@@ -9,23 +9,24 @@ void K::Player::Initialize()
 		auto const& resource_manager = ResourceManager::singleton();
 		auto const& rendering_manager = RenderingManager::singleton();
 
-		auto transform = object_manager->CreateComponent<Transform>(TAG{ TRANSFORM, 0 });
+		AddComponent(object_manager->CreateComponent<Transform>(TAG{ TRANSFORM, 0 }));
+		AddComponent(object_manager->CreateComponent<Material>(TAG{ MATERIAL, 0 }));
+		AddComponent(object_manager->CreateComponent<Renderer>(TAG{ RENDERER, 0 }));
+
+		auto const& transform = FindComponent(TAG{ TRANSFORM, 0 });
 		CPTR_CAST<Transform>(transform)->set_local_scaling(Vector3::One);
-		AddComponent(transform);
 
-		auto renderer = object_manager->CreateComponent<Renderer>(TAG{ RENDERER, 0 });
-		CPTR_CAST<Renderer>(renderer)->set_mesh(resource_manager->FindMesh(NORMAL_PYRAMID));
-		CPTR_CAST<Renderer>(renderer)->set_shader(rendering_manager->FindShader(GBUFFER_SHADER));
-		AddComponent(renderer);
-
-		auto material = object_manager->CreateComponent<Material>(TAG{ MATERIAL, 0 });
+		auto const& material = FindComponent(TAG{ MATERIAL, 0 });
 		MaterialConstantBuffer material_CB{};
 		material_CB.ambient = DirectX::Colors::White.v;
 		material_CB.diffuse = DirectX::Colors::White.v;
 		material_CB.specular = DirectX::Colors::White.v;
 		material_CB.emissive = DirectX::Colors::White.v;
-		CPTR_CAST<Material>(material)->SetMaterialConstantBuffer(material_CB , 0, 0);
-		AddComponent(material);
+		CPTR_CAST<Material>(material)->SetMaterialConstantBuffer(material_CB, 0, 0);
+
+		auto const& renderer = FindComponent(TAG{ RENDERER, 0 });
+		CPTR_CAST<Renderer>(renderer)->set_mesh(resource_manager->FindMesh("Cow"));
+		CPTR_CAST<Renderer>(renderer)->set_shader(rendering_manager->FindShader(BUMP_MAPPING_SHADER));
 
 		set_render_group_type(RENDER_GROUP_TYPE::NORMAL);
 	}

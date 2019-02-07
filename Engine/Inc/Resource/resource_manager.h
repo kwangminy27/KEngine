@@ -9,6 +9,7 @@ namespace K
 	class ENGINE_DLL ResourceManager final : public Singleton<ResourceManager>
 	{
 		friend class Singleton<ResourceManager>;
+		friend class FBXLoader;
 	public:
 		virtual void Initialize() override;
 
@@ -31,21 +32,19 @@ namespace K
 
 		virtual void _Finalize() override;
 
+		void _LoadMesh(std::string const& _tag, std::wstring const& _file_name, std::string const& _path_tag);
+		void _CreateMesh(
+			std::string const& _tag, D3D11_PRIMITIVE_TOPOLOGY _topology,
+			void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage);
 		void _CreateMesh(
 			std::string const& _tag, D3D11_PRIMITIVE_TOPOLOGY _topology,
 			void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage,
-			Vector3 _scale = Vector3::One, Quaternion _rotation = Quaternion::Identity);
+			void* _idx_data, int _idx_stride, int _idx_count, D3D11_USAGE _idx_usage, DXGI_FORMAT _idx_format);
 		void _CreateMesh(
 			std::string const& _tag, D3D11_PRIMITIVE_TOPOLOGY _topology,
 			void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage,
 			void* _idx_data, int _idx_stride, int _idx_count, D3D11_USAGE _idx_usage, DXGI_FORMAT _idx_format,
-			Vector3 _scale = Vector3::One, Quaternion _rotation = Quaternion::Identity);
-		void _CreateMesh(
-			std::string const& _tag, D3D11_PRIMITIVE_TOPOLOGY _topology,
-			void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage,
-			void* _idx_data, int _idx_stride, int _idx_count, D3D11_USAGE _idx_usage, DXGI_FORMAT _idx_format,
-			void* _inst_data, int _inst_stride, int _inst_count, D3D11_USAGE _inst_usage,
-			Vector3 _scale = Vector3::One, Quaternion _rotation = Quaternion::Identity);
+			void* _inst_data, int _inst_stride, int _inst_count, D3D11_USAGE _inst_usage);
 		void _CreateTexture2D(std::string const& _tag, std::wstring const& _file_name, std::string const& _path_tag);
 		void _CreateSampler(
 			std::string const& _tag,

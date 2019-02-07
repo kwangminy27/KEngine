@@ -18,7 +18,6 @@
 #include "replication_manager.h"
 #include "connection_manager.h"
 #include "gui_manager.h"
-#include "fbx_loader.h"
 
 bool K::Core::shutdown_{};
 bool K::Core::gui_show_{ true };
@@ -83,8 +82,6 @@ void K::Core::Initialize(HINSTANCE _instance, HWND _window, GAME_MODE _mode)
 		ConnectionManager::singleton()->Initialize();
 
 		GUIManager::singleton()->Initialize(window_, device_manager->device().Get(), device_manager->context().Get());
-
-		FBXLoader::singleton()->Initialize();
 	}
 	catch (std::exception const& _e)
 	{
@@ -138,7 +135,6 @@ void K::Core::_Finalize()
 {
 	AudioManager::singleton()->Suspend();
 
-	FBXLoader::singleton().reset();
 	GUIManager::singleton().reset();
 	ConnectionManager::singleton().reset();
 	ReplicationManager::singleton().reset();

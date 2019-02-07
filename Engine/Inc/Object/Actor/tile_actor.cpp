@@ -9,18 +9,20 @@ void K::TileActor::Initialize()
 {
 	try
 	{
-		auto transform = ObjectManager::singleton()->CreateComponent<Transform>(TAG{ TRANSFORM, 0 });
-		AddComponent(transform);
+		auto const& object_manager = ObjectManager::singleton();
 
-		auto material = ObjectManager::singleton()->CreateComponent<Material>(TAG{ MATERIAL, 0 });
+		AddComponent(object_manager->CreateComponent<Transform>(TAG{ TRANSFORM, 0 }));
+		AddComponent(object_manager->CreateComponent<Material>(TAG{ MATERIAL, 0 }));
 
-		CPTR_CAST<Material>(material)->SetSampler(LINEAR_SAMPLER, 0, 0, 0);
+		auto const& material = FindComponent(TAG{ MATERIAL, 0 });
 
 		MaterialConstantBuffer Material_CB{};
+		Material_CB.ambient = DirectX::Colors::White.v;
 		Material_CB.diffuse = DirectX::Colors::White.v;
+		Material_CB.specular = DirectX::Colors::White.v;
+		Material_CB.emissive = DirectX::Colors::White.v;
 		CPTR_CAST<Material>(material)->SetMaterialConstantBuffer(Material_CB, 0, 0);
-
-		AddComponent(transform);
+		CPTR_CAST<Material>(material)->SetSampler(LINEAR_SAMPLER, 0, 0, 0);
 
 		set_render_group_type(RENDER_GROUP_TYPE::LANDSCAPE);
 	}

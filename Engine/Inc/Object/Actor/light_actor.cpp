@@ -21,14 +21,13 @@ void K::LightActor::Initialize()
 	{
 		auto const& object_manager = ObjectManager::singleton();
 
-		auto transform = object_manager->CreateComponent<Transform>(TAG{ TRANSFORM, 0 });
+		AddComponent(object_manager->CreateComponent<Transform>(TAG{ TRANSFORM, 0 }));
+		AddComponent(object_manager->CreateComponent<Light>(TAG{ LIGHT, 0 }));
+
+		auto const& transform = FindComponent(TAG{ TRANSFORM, 0 });
 		CPTR_CAST<Transform>(transform)->set_model_scaling(Vector3::One);
 		CPTR_CAST<Transform>(transform)->set_model_rotation(Quaternion::CreateFromYawPitchRoll(0.f, 90.f, 0.f));
 		CPTR_CAST<Transform>(transform)->set_local_translation(-Vector3::UnitZ);
-		AddComponent(transform);
-
-		auto light = object_manager->CreateComponent<Light>(TAG{ LIGHT, 0 });
-		AddComponent(light);
 
 		set_render_group_type(RENDER_GROUP_TYPE::LIGHT);
 	}

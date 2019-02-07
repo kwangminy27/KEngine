@@ -157,6 +157,15 @@
     <Filter Include="19. FBX">
       <UniqueIdentifier>{7f7f73f7-61ad-4e8f-a535-989db041f4f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="08. Rendering\1. Shader\1. HLSL\5. Bump Mapping">
+      <UniqueIdentifier>{18493da6-d053-49c7-aaf3-b54a5e1dec5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="19. FBX\1. FBX Resource">
+      <UniqueIdentifier>{7201bd45-b58d-4ed5-8bb0-b5d20441b620}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="19. FBX\1. FBX Resource\1. Cow">
+      <UniqueIdentifier>{51b7f478-6781-4b04-86fd-4c6755bc6fab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -529,6 +538,12 @@
     <FxCompile Include="Rendering\HLSL\DeferredLightingCalculateColorVS.hlsl">
       <Filter>08. Rendering\1. Shader\1. HLSL\4. Deferred Rendering\2. Deferred Lighting</Filter>
     </FxCompile>
+    <FxCompile Include="Rendering\HLSL\BumpMappingPS.hlsl">
+      <Filter>08. Rendering\1. Shader\1. HLSL\5. Bump Mapping</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\HLSL\BumpMappingVS.hlsl">
+      <Filter>08. Rendering\1. Shader\1. HLSL\5. Bump Mapping</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="World\world_manager.inl">
@@ -537,5 +552,16 @@
     <None Include="Object\object_manager.inl">
       <Filter>12. Object</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="..\..\Resource\FBX\Cow.fbm\CH_NPC_MOB_Behemoth_A01_SP_KVN.tga">
+      <Filter>19. FBX\1. FBX Resource\1. Cow</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\FBX\Cow.fbm\CH_NPC_MOB_Behemoth_A01_D_KVN.tga">
+      <Filter>19. FBX\1. FBX Resource\1. Cow</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\FBX\Cow.fbm\CH_NPC_MOB_Behemoth_A01_N_KVN.tga">
+      <Filter>19. FBX\1. FBX Resource\1. Cow</Filter>
+    </ImageContentTask>
   </ItemGroup>
 </Project>
