@@ -9,7 +9,7 @@ namespace K
 	class ENGINE_DLL ResourceManager final : public Singleton<ResourceManager>
 	{
 		friend class Singleton<ResourceManager>;
-		friend class FBXLoader;
+		friend class Mesh;
 	public:
 		virtual void Initialize() override;
 

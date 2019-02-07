@@ -89,6 +89,8 @@ namespace K
 		void _CreateIndexBuffer(void* _data, int _stride, int _count, D3D11_USAGE _usage, DXGI_FORMAT _format);
 
 		void _ConvertFromFBX();
+		void _SaveMSH(std::wstring const& _file_name, std::string const& _path_tag);
+		void _LoadMSH(std::wstring const& _file_name, std::string const& _path_tag);
 
 		Vector3 min_{};
 		Vector3 max_{};

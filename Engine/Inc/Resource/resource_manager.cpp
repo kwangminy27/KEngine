@@ -189,7 +189,8 @@ void K::ResourceManager::Initialize()
 #pragma endregion
 
 #pragma region FBX
-		_LoadMesh("Cow", L"Cow.fbx", FBX_PATH);
+		//_LoadMesh("Cow", L"Cow.fbx", FBX_PATH);
+		_LoadMesh("Cow", L"Cow.msh", MESH_PATH);
 #pragma endregion
 	}
 	catch (std::exception const& _e)

@@ -19,6 +19,7 @@ namespace K
 		MemoryStream& operator=(MemoryStream const&) = delete;
 		MemoryStream& operator=(MemoryStream&&) noexcept = delete;
 
+		void Serialize(void* _data, uint32_t _size);
 		template <typename T> void Serialize(T& _data);
 		template <> void Serialize(std::string& _data);
 		template <> void Serialize(std::wstring& _data);

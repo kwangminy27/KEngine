@@ -7,6 +7,11 @@ K::MemoryStream::MemoryStream()
 	buffer_->resize(DEFAULT_MEMORY_STREAM_SIZE);
 }
 
+void K::MemoryStream::Serialize(void* _data, uint32_t _size)
+{
+	_Serialize(_data, _size);
+}
+
 void K::MemoryStream::Clear()
 {
 	head_ = 0;
@@ -57,10 +62,8 @@ void K::OutputMemoryStream::_Serialize(void* _data, uint32_t _size)
 
 void K::OutputMemoryStream::_Write(void const* _data, uint32_t _size)
 {
-	size_t capacity = buffer_->capacity();
-
-	if (head_ + _size >= capacity)
-		Resize(capacity * 2);
+	while (buffer_->capacity() <= head_ + _size)
+		Resize(buffer_->capacity() * 2);
 
 	memcpy_s(buffer_->data() + head_, _size, _data, _size);
 

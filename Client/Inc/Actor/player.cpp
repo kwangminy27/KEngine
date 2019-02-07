@@ -16,14 +16,6 @@ void K::Player::Initialize()
 		auto const& transform = FindComponent(TAG{ TRANSFORM, 0 });
 		CPTR_CAST<Transform>(transform)->set_local_scaling(Vector3::One);
 
-		auto const& material = FindComponent(TAG{ MATERIAL, 0 });
-		MaterialConstantBuffer material_CB{};
-		material_CB.ambient = DirectX::Colors::White.v;
-		material_CB.diffuse = DirectX::Colors::White.v;
-		material_CB.specular = DirectX::Colors::White.v;
-		material_CB.emissive = DirectX::Colors::White.v;
-		CPTR_CAST<Material>(material)->SetMaterialConstantBuffer(material_CB, 0, 0);
-
 		auto const& renderer = FindComponent(TAG{ RENDERER, 0 });
 		CPTR_CAST<Renderer>(renderer)->set_mesh(resource_manager->FindMesh("Cow"));
 		CPTR_CAST<Renderer>(renderer)->set_shader(rendering_manager->FindShader(BUMP_MAPPING_SHADER));

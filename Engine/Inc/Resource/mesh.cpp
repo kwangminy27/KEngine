@@ -3,6 +3,7 @@
 
 #include "device_manager.h"
 #include "path_manager.h"
+#include "resource_manager.h"
 #include "fbx_loader.h"
 
 void K::Mesh::Render()
@@ -130,9 +131,7 @@ K::Mesh::Mesh(Mesh&& _other) noexcept
 
 void K::Mesh::_LoadMesh(std::wstring const& _file_name, std::string const& _path_tag)
 {
-	auto path_buffer = PathManager::singleton()->FindPath(_path_tag);
-
-	path_buffer /= _file_name;
+	std::filesystem::path path_buffer = _file_name;
 
 	auto extension = path_buffer.extension().string();
 
@@ -149,6 +148,32 @@ void K::Mesh::_LoadMesh(std::wstring const& _file_name, std::string const& _path
 		_ConvertFromFBX();
 
 		fbx_loader->End();
+
+		path_buffer.replace_extension(".msh");
+
+		_SaveMSH(path_buffer, MESH_PATH);
+	}
+	else if(".MSH" == extension)
+		_LoadMSH(path_buffer, MESH_PATH);
+
+	// 텍스처 생성
+	auto const& resource_manager = ResourceManager::singleton();
+
+	for (size_t i = 0; i < material_info_2d_vector_.size(); ++i)
+	{
+		for (size_t j = 0; j < material_info_2d_vector_.at(i).size(); ++j)
+		{
+			auto const& material_info = material_info_2d_vector_.at(i).at(j);
+
+			path_buffer = material_info->diffuse_texture;
+			resource_manager->_CreateTexture2D(path_buffer.string(), path_buffer.wstring(), TEXTURE_PATH);
+
+			path_buffer = material_info->specular_texture;
+			resource_manager->_CreateTexture2D(path_buffer.string(), path_buffer.wstring(), TEXTURE_PATH);
+
+			path_buffer = material_info->bump_texture;
+			resource_manager->_CreateTexture2D(path_buffer.string(), path_buffer.wstring(), TEXTURE_PATH);
+		}
 	}
 }
 
@@ -355,5 +380,236 @@ void K::Mesh::_ConvertFromFBX()
 			material_info_vector.push_back(std::move(material_info));
 		}
 		material_info_2d_vector_.push_back(std::move(material_info_vector));
+	}
+}
+
+void K::Mesh::_SaveMSH(std::wstring const& _file_name, std::string const& _path_tag)
+{
+	auto path_buffer = PathManager::singleton()->FindPath(_path_tag);
+
+	path_buffer /= _file_name;
+
+	std::fstream file{ path_buffer, std::ios::out | std::ios::binary };
+
+	if (file.fail())
+		std::exception{ "Mesh::_SaveMSH" };
+
+	OutputMemoryStream omstream{};
+
+	auto mesh_container_size = mesh_container_vector_.size();
+	omstream.Serialize(mesh_container_size);
+
+	for (auto i = 0; i < mesh_container_size; ++i)
+	{
+		auto& mesh_container = mesh_container_vector_.at(i);
+
+		omstream.Serialize(mesh_container->topology);
+		
+		auto VB_size = mesh_container->VB_vector.size();
+		omstream.Serialize(VB_size);
+
+		for (auto j = 0; j < VB_size; ++j)
+		{
+			auto& VB = mesh_container->VB_vector.at(j);
+
+			omstream.Serialize(VB.stride);
+			omstream.Serialize(VB.count);
+			omstream.Serialize(VB.usage);
+			omstream.Serialize(VB.data, VB.stride * VB.count);
+		}
+
+		auto IB_size = mesh_container->IB_vector.size();
+		omstream.Serialize(IB_size);
+
+		for (auto j = 0; j < IB_size; ++j)
+		{
+			auto& IB = mesh_container->IB_vector.at(j);
+
+			omstream.Serialize(IB.stride);
+			omstream.Serialize(IB.count);
+			omstream.Serialize(IB.usage);
+			omstream.Serialize(IB.data, IB.stride * IB.count);
+			omstream.Serialize(IB.format);
+		}
+	}
+
+	auto material_info_2d_vector_size = material_info_2d_vector_.size();
+	omstream.Serialize(material_info_2d_vector_size);
+
+	for (auto i = 0; i < material_info_2d_vector_size; ++i)
+	{
+		auto material_info_vector_size = material_info_2d_vector_.at(i).size();
+		omstream.Serialize(material_info_vector_size);
+
+		for (auto j = 0; j < material_info_vector_size; ++j)
+		{
+			auto& material_info = material_info_2d_vector_.at(i).at(j);
+
+			omstream.Serialize(material_info->ambient.x);
+			omstream.Serialize(material_info->ambient.y);
+			omstream.Serialize(material_info->ambient.z);
+			omstream.Serialize(material_info->ambient.w);
+
+			omstream.Serialize(material_info->diffuse.x);
+			omstream.Serialize(material_info->diffuse.y);
+			omstream.Serialize(material_info->diffuse.z);
+			omstream.Serialize(material_info->diffuse.w);
+
+			omstream.Serialize(material_info->specular.x);
+			omstream.Serialize(material_info->specular.y);
+			omstream.Serialize(material_info->specular.z);
+			omstream.Serialize(material_info->specular.w);
+
+			omstream.Serialize(material_info->emissive.x);
+			omstream.Serialize(material_info->emissive.y);
+			omstream.Serialize(material_info->emissive.z);
+			omstream.Serialize(material_info->emissive.w);
+
+			omstream.Serialize(material_info->diffuse_texture);
+			omstream.Serialize(material_info->specular_texture);
+			omstream.Serialize(material_info->bump_texture);
+		}
+	}
+
+	file.write(reinterpret_cast<char const*>(omstream.buffer()->data()), omstream.head());
+}
+
+void K::Mesh::_LoadMSH(std::wstring const& _file_name, std::string const& _path_tag)
+{
+	auto path_buffer = PathManager::singleton()->FindPath(_path_tag);
+
+	path_buffer /= _file_name;
+
+	std::fstream file{ path_buffer, std::ios::in | std::ios::binary | std::ios::ate };
+
+	if (file.fail())
+		std::exception{ "Mesh::_LoadMSH" };
+
+	auto size = file.tellg();
+	file.seekg(std::ios::beg);
+
+	InputMemoryStream imstream{};
+	imstream.Resize(size);
+
+	file.read(reinterpret_cast<char*>(imstream.buffer()->data()), size);
+
+	size_t mesh_container_size{};
+	imstream.Serialize(mesh_container_size);
+	
+	for (size_t i = 0; i < mesh_container_size; ++i)
+	{
+		auto mesh_container = std::unique_ptr<MeshContainer, std::function<void(MeshContainer*)>>{ new MeshContainer, [](MeshContainer* _p) {
+			for (auto& VB : _p->VB_vector)
+				delete[] VB.data;
+			for (auto& IB : _p->IB_vector)
+				delete[] IB.data;
+			delete _p;
+		} };
+
+		imstream.Serialize(mesh_container->topology);
+
+		mesh_container_vector_.push_back(std::move(mesh_container));
+
+		size_t VB_size{};
+		imstream.Serialize(VB_size);
+
+		for (size_t j = 0; j < VB_size; ++j)
+		{
+			int stride{};
+			imstream.Serialize(stride);
+
+			int count{};
+			imstream.Serialize(count);
+
+			D3D11_USAGE usage{};
+			imstream.Serialize(usage);
+
+			auto byte_width = stride * count;
+			auto data = std::unique_ptr<char, std::function<void(char*)>>{ new char[byte_width], [](char* _p) {
+				delete[] _p;
+			} };
+			imstream.Serialize(data.get(), byte_width);
+
+			switch (j)
+			{
+			case 0:
+				_CreateVertexBuffer(data.get(), stride, count, usage, VERTEX_BUFFER_TYPE::VERTEX);
+				break;
+
+			case 1:
+				_CreateVertexBuffer(data.get(), stride, count, usage, VERTEX_BUFFER_TYPE::INSTANCE);
+				break;
+			}
+		}
+
+		size_t IB_size{};
+		imstream.Serialize(IB_size);
+
+		for (size_t j = 0; j < IB_size; ++j)
+		{
+			int stride{};
+			imstream.Serialize(stride);
+
+			int count{};
+			imstream.Serialize(count);
+
+			D3D11_USAGE usage{};
+			imstream.Serialize(usage);
+
+			auto byte_width = stride * count;
+			auto data = std::unique_ptr<char, std::function<void(char*)>>{ new char[byte_width], [](char* _p) {
+				delete[] _p;
+			} };
+			imstream.Serialize(data.get(), byte_width);
+
+			DXGI_FORMAT format{};
+			imstream.Serialize(format);
+
+			_CreateIndexBuffer(data.get(), stride, count, usage, format);
+		}
+	}
+
+	size_t material_info_vector_size{};
+	imstream.Serialize(material_info_vector_size);
+
+	for (size_t i = 0; i < material_info_vector_size; ++i)
+	{
+		material_info_2d_vector_.push_back(std::vector<std::unique_ptr<MaterialInfo, std::function<void(MaterialInfo*)>>>{});
+
+		size_t material_info_size{};
+		imstream.Serialize(material_info_size);
+
+		for (size_t j = 0; j < material_info_size; ++j)
+		{
+			material_info_2d_vector_.at(i).push_back(std::unique_ptr<MaterialInfo, std::function<void(MaterialInfo*)>>{ new MaterialInfo, [](MaterialInfo* _p) {
+				delete _p;
+			} });
+
+			auto& material_info = material_info_2d_vector_.at(i).at(j);
+
+			imstream.Serialize(material_info->ambient.x);
+			imstream.Serialize(material_info->ambient.y);
+			imstream.Serialize(material_info->ambient.z);
+			imstream.Serialize(material_info->ambient.w);
+
+			imstream.Serialize(material_info->diffuse.x);
+			imstream.Serialize(material_info->diffuse.y);
+			imstream.Serialize(material_info->diffuse.z);
+			imstream.Serialize(material_info->diffuse.w);
+
+			imstream.Serialize(material_info->specular.x);
+			imstream.Serialize(material_info->specular.y);
+			imstream.Serialize(material_info->specular.z);
+			imstream.Serialize(material_info->specular.w);
+
+			imstream.Serialize(material_info->emissive.x);
+			imstream.Serialize(material_info->emissive.y);
+			imstream.Serialize(material_info->emissive.z);
+			imstream.Serialize(material_info->emissive.w);
+
+			imstream.Serialize(material_info->diffuse_texture);
+			imstream.Serialize(material_info->specular_texture);
+			imstream.Serialize(material_info->bump_texture);
+		}
 	}
 }

@@ -19,7 +19,6 @@ void K::InputManager::Initialize(HINSTANCE _instance, HWND _window)
 		ThrowIfFailed(input_->CreateDevice(GUID_SysKeyboard, &keyboard_, nullptr));
 		ThrowIfFailed(keyboard_->SetCooperativeLevel(_window, DISCL_FOREGROUND | DISCL_EXCLUSIVE));
 		ThrowIfFailed(keyboard_->SetDataFormat(&c_dfDIKeyboard));
-		ThrowIfFailed(keyboard_->Acquire());
 
 		std::vector<uint8_t> combination_key{};
 		combination_key.push_back(DIK_LSHIFT);

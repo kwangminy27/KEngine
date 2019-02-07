@@ -18,6 +18,7 @@ namespace K
 	constexpr auto TEXTURE_PATH = "TexturePath";
 	constexpr auto SHADER_PATH = "ShaderPath";
 	constexpr auto FBX_PATH = "FBXPath";
+	constexpr auto MESH_PATH = "MeshPath";
 
 	//////////////////// Mesh Key ////////////////////
 	constexpr auto TEX_RECT = "TexRect";

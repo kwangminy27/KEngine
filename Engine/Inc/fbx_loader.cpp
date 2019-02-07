@@ -2,7 +2,6 @@
 #include "fbx_loader.h"
 
 #include "path_manager.h"
-#include "Resource/resource_manager.h"
 
 void K::FBXLoader::Initialize()
 {
@@ -273,13 +272,6 @@ void K::FBXLoader::_LoadMaterial(FbxSurfaceMaterial* _fbx_surface_material)
 	fbx_material->diffuse_texture.replace_extension(".dds");
 	fbx_material->specular_texture.replace_extension(".dds");
 	fbx_material->bump_texture.replace_extension(".dds");
-
-	// 텍스처 생성
-	auto const& resource_manager = ResourceManager::singleton();
-	
-	resource_manager->_CreateTexture2D(fbx_material->diffuse_texture.string(), fbx_material->diffuse_texture.wstring(), TEXTURE_PATH);
-	resource_manager->_CreateTexture2D(fbx_material->specular_texture.string(), fbx_material->specular_texture.wstring(), TEXTURE_PATH);
-	resource_manager->_CreateTexture2D(fbx_material->bump_texture.string(), fbx_material->bump_texture.wstring(), TEXTURE_PATH);
 
 	fbx_material_2d_vector_.at(fbx_material_2d_vector_.size() - 1).push_back(std::move(fbx_material));
 }

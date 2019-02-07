@@ -2,6 +2,7 @@
 #include "renderer.h"
 
 #include "Resource/mesh.h"
+#include "Rendering/rendering_manager.h"
 #include "Rendering/shader.h"
 #include "Rendering/render_state.h"
 #include "Object/Actor/actor.h"
