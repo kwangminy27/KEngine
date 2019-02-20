@@ -242,7 +242,7 @@ void K::RenderingManager::Initialize()
 		_CreateDepthStencilState(
 			DSS_LIGHT_VOLUME_PASS_1,
 			true, D3D11_DEPTH_WRITE_MASK_ZERO, D3D11_COMPARISON_GREATER,
-			false, D3D11_DEFAULT_STENCIL_READ_MASK, D3D11_DEFAULT_STENCIL_WRITE_MASK, front_face, back_face
+			true, D3D11_DEFAULT_STENCIL_READ_MASK, D3D11_DEFAULT_STENCIL_WRITE_MASK, front_face, back_face
 		);
 
 		front_face = {};
@@ -294,6 +294,34 @@ void K::RenderingManager::Initialize()
 		render_target_blend_desc_vector.push_back(rtbd);
 
 		_CreateBlendState(LIGHT_BLEND, false, false, render_target_blend_desc_vector);
+
+		rtbd = {};
+		rtbd.BlendEnable = true;
+		rtbd.SrcBlend = D3D11_BLEND_ONE;
+		rtbd.DestBlend = D3D11_BLEND_ONE;
+		rtbd.BlendOp = D3D11_BLEND_OP_ADD;
+		rtbd.SrcBlendAlpha = D3D11_BLEND_ONE;
+		rtbd.DestBlendAlpha = D3D11_BLEND_ZERO;
+		rtbd.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		rtbd.RenderTargetWriteMask = 0;
+
+		render_target_blend_desc_vector.push_back(rtbd);
+
+		_CreateBlendState(BS_LIGHT_VOLUME_PASS_1, false, false, render_target_blend_desc_vector);
+
+		rtbd = {};
+		rtbd.BlendEnable = true;
+		rtbd.SrcBlend = D3D11_BLEND_ONE;
+		rtbd.DestBlend = D3D11_BLEND_ONE;
+		rtbd.BlendOp = D3D11_BLEND_OP_ADD;
+		rtbd.SrcBlendAlpha = D3D11_BLEND_ONE;
+		rtbd.DestBlendAlpha = D3D11_BLEND_ZERO;
+		rtbd.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		rtbd.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+		render_target_blend_desc_vector.push_back(rtbd);
+
+		_CreateBlendState(BS_LIGHT_VOLUME_PASS_2, false, false, render_target_blend_desc_vector);
 #pragma endregion
 
 #pragma region ConstantBuffer

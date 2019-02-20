@@ -60,6 +60,8 @@ namespace K
 	constexpr auto RS_WIREFRAME_CULL_NONE = "RSWireFrameCullNone";
 	constexpr auto ALPHA_BLEND = "AlphaBlend";
 	constexpr auto LIGHT_BLEND = "LightBlend";
+	constexpr auto BS_LIGHT_VOLUME_PASS_1 = "BSLightVolumePass1";
+	constexpr auto BS_LIGHT_VOLUME_PASS_2 = "BSLightVolumePass2";
 	constexpr auto DEPTH_DISABLE = "DepthDisable";
 	constexpr auto DSS_LIGHT_VOLUME_PASS_1 = "DSSLightVolumePass1";
 	constexpr auto DSS_LIGHT_VOLUME_PASS_2 = "DSSLightVolumePass2";

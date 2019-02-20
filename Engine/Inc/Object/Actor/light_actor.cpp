@@ -90,58 +90,59 @@ void K::LightActor::_Render(float _time)
 
 	rendering_manager->FindShader(DEFERRED_LIGHTING_SHADER)->SetToShader();
 
-	auto const& light_blend = rendering_manager->FindRenderState(LIGHT_BLEND);
+	auto const& bs_light_volume_pass_1 = rendering_manager->FindRenderState(BS_LIGHT_VOLUME_PASS_1);
+	auto const& bs_light_volume_pass_2 = rendering_manager->FindRenderState(BS_LIGHT_VOLUME_PASS_2);
 
-	light_blend->SetState();
+	resource_manager->FindSampler(POINT_SAMPLER)->SetToShader(1);
+
+	if (LIGHT_TYPE::DIRECTIONAL == static_cast<LIGHT_TYPE>(light->type()))
 	{
-		resource_manager->FindSampler(POINT_SAMPLER)->SetToShader(1);
+		auto const& depth_disable = rendering_manager->FindRenderState(DEPTH_DISABLE);
 
-		if (LIGHT_TYPE::DIRECTIONAL == static_cast<LIGHT_TYPE>(light->type()))
+		depth_disable->SetState();
 		{
-			auto const& depth_disable = rendering_manager->FindRenderState(DEPTH_DISABLE);
-
-			depth_disable->SetState();
-			{
-				resource_manager->FindMesh(FULL_SCREEN_RECT)->Render();
-			}
-			depth_disable->ResetState();
+			resource_manager->FindMesh(FULL_SCREEN_RECT)->Render();
 		}
-		else
-		{
-			// Light Volume Pass 1
-			auto const& rs_light_volume_pass_1 = rendering_manager->FindRenderState(RS_LIGHT_VOLUME_PASS_1);
-			auto const& depth_light_volume_pass_1 = rendering_manager->FindRenderState(DSS_LIGHT_VOLUME_PASS_1);
-
-			rs_light_volume_pass_1->SetState();
-			std::static_pointer_cast<DepthStencilState>(depth_light_volume_pass_1)->set_stencil_ref(1);
-			depth_light_volume_pass_1->SetState();
-			{
-				if (LIGHT_TYPE::POINT == static_cast<LIGHT_TYPE>(light->type()))
-					resource_manager->FindMesh(SPHERE_VOLUME)->Render();
-				else if (LIGHT_TYPE::SPOT == static_cast<LIGHT_TYPE>(light->type()))
-					resource_manager->FindMesh(SPOTLIGHT_VOLUME)->Render();
-			}
-			depth_light_volume_pass_1->ResetState();
-			rs_light_volume_pass_1->ResetState();
-
-			// Light Volume Pass 2
-			auto const& rs_light_volume_pass_2 = rendering_manager->FindRenderState(RS_LIGHT_VOLUME_PASS_2);
-			auto const& depth_light_volume_pass_2 = rendering_manager->FindRenderState(DSS_LIGHT_VOLUME_PASS_2);
-
-			rs_light_volume_pass_2->SetState();
-			std::static_pointer_cast<DepthStencilState>(depth_light_volume_pass_2)->set_stencil_ref(1);
-			depth_light_volume_pass_2->SetState();
-			{
-				if (LIGHT_TYPE::POINT == static_cast<LIGHT_TYPE>(light->type()))
-					resource_manager->FindMesh(SPHERE_VOLUME)->Render();
-				else if (LIGHT_TYPE::SPOT == static_cast<LIGHT_TYPE>(light->type()))
-					resource_manager->FindMesh(SPOTLIGHT_VOLUME)->Render();
-			}
-			depth_light_volume_pass_2->ResetState();
-			rs_light_volume_pass_2->ResetState();
-		}
+		depth_disable->ResetState();
 	}
-	light_blend->ResetState();
+	else
+	{
+		// Light Volume Pass 1
+		auto const& rs_light_volume_pass_1 = rendering_manager->FindRenderState(RS_LIGHT_VOLUME_PASS_1);
+		auto const& depth_light_volume_pass_1 = rendering_manager->FindRenderState(DSS_LIGHT_VOLUME_PASS_1);
+
+		rs_light_volume_pass_1->SetState();
+		std::static_pointer_cast<DepthStencilState>(depth_light_volume_pass_1)->set_stencil_ref(1);
+		depth_light_volume_pass_1->SetState();
+		bs_light_volume_pass_1->SetState();
+		{
+			if (LIGHT_TYPE::POINT == static_cast<LIGHT_TYPE>(light->type()))
+				resource_manager->FindMesh(SPHERE_VOLUME)->Render();
+			else if (LIGHT_TYPE::SPOT == static_cast<LIGHT_TYPE>(light->type()))
+				resource_manager->FindMesh(SPOTLIGHT_VOLUME)->Render();
+		}
+		bs_light_volume_pass_1->ResetState();
+		depth_light_volume_pass_1->ResetState();
+		rs_light_volume_pass_1->ResetState();
+
+		// Light Volume Pass 2
+		auto const& rs_light_volume_pass_2 = rendering_manager->FindRenderState(RS_LIGHT_VOLUME_PASS_2);
+		auto const& depth_light_volume_pass_2 = rendering_manager->FindRenderState(DSS_LIGHT_VOLUME_PASS_2);
+
+		rs_light_volume_pass_2->SetState();
+		std::static_pointer_cast<DepthStencilState>(depth_light_volume_pass_2)->set_stencil_ref(1);
+		depth_light_volume_pass_2->SetState();
+		bs_light_volume_pass_1->SetState();
+		{
+			if (LIGHT_TYPE::POINT == static_cast<LIGHT_TYPE>(light->type()))
+				resource_manager->FindMesh(SPHERE_VOLUME)->Render();
+			else if (LIGHT_TYPE::SPOT == static_cast<LIGHT_TYPE>(light->type()))
+				resource_manager->FindMesh(SPOTLIGHT_VOLUME)->Render();
+		}
+		bs_light_volume_pass_1->ResetState();
+		depth_light_volume_pass_2->ResetState();
+		rs_light_volume_pass_2->ResetState();
+	}
 }
 
 K::LightActor::LightActor(LightActor const& _other) : Actor(_other)
