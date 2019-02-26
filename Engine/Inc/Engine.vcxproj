@@ -76,7 +76,7 @@
     <OutDir>../Bin/Debug/</OutDir>
     <IntDir>../Obj/Debug/</IntDir>
     <IncludePath>$(SolutionDir)_Common/Inc/;$(SolutionDir)_Network/Inc/;$(SolutionDir)_Physics/Inc/;$(SolutionDir)_Utility/Inc/;$(SolutionDir)FBX/include/;$(SolutionDir)External/include/;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)FBX/lib/vs2015/x64/debug/;$(SolutionDir)External/lib/;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)FBX/lib/vs2015/x64/debug/;$(SolutionDir)External/lib/assimp/Debug/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -89,7 +89,7 @@
     <OutDir>../Bin/Release/</OutDir>
     <IntDir>../Obj/Release/</IntDir>
     <IncludePath>$(SolutionDir)_Common/Inc/;$(SolutionDir)_Network/Inc/;$(SolutionDir)_Physics/Inc/;$(SolutionDir)_Utility/Inc/;$(SolutionDir)FBX/include/;$(SolutionDir)External/include/;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)FBX/lib/vs2015/x64/release/;$(SolutionDir)External/lib/;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)FBX/lib/vs2015/x64/release/;$(SolutionDir)External/lib/assimp/Release/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -172,6 +172,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="assimp_loader.h" />
     <ClInclude Include="audio_manager.h" />
     <ClInclude Include="Base\enum.h" />
     <ClInclude Include="Base\macro.h" />
@@ -228,6 +229,7 @@
     <ClInclude Include="World\world_manager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="assimp_loader.cpp" />
     <ClCompile Include="audio_manager.cpp" />
     <ClCompile Include="collision_manager.cpp" />
     <ClCompile Include="connection_manager.cpp" />

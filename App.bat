@@ -19,3 +19,6 @@ xcopy Utility\Bin\*.* Engine\Bin\ /d /s /y /exclude:ignore.txt
 xcopy Engine\Inc\*.h _Engine\Inc\ /d /s /y /exclude:ignore.txt
 xcopy Engine\Inc\*.inl _Engine\Inc\ /d /s /y /exclude:ignore.txt
 xcopy Engine\Bin\*.* Client\Bin\ /d /s /y /exclude:ignore.txt
+
+xcopy External\lib\assimp\Debug\*.* Client\Bin\Debug\ /d /s /y /exclude:ignore.txt
+xcopy External\lib\assimp\Release\*.* Client\Bin\Release\ /d /s /y /exclude:ignore.txt

@@ -166,6 +166,9 @@
     <Filter Include="19. FBX\1. FBX Resource\1. Cow">
       <UniqueIdentifier>{51b7f478-6781-4b04-86fd-4c6755bc6fab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="20. Assimp">
+      <UniqueIdentifier>{499ebb7e-3384-465a-948d-39fd8a81136c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -330,6 +333,9 @@
     <ClInclude Include="fbx_loader.h">
       <Filter>19. FBX</Filter>
     </ClInclude>
+    <ClInclude Include="assimp_loader.h">
+      <Filter>20. Assimp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -484,6 +490,9 @@
     </ClCompile>
     <ClCompile Include="fbx_loader.cpp">
       <Filter>19. FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp_loader.cpp">
+      <Filter>20. Assimp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

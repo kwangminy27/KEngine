@@ -1,6 +1,8 @@
 #include "Engine.h"
 #include "resource_manager.h"
+
 #include "fbx_loader.h"
+#include "assimp_loader.h"
 
 #include "path_manager.h"
 #include "mesh.h"
@@ -191,6 +193,10 @@ void K::ResourceManager::Initialize()
 #pragma region FBX
 		//_LoadMesh("Cow", L"Cow.fbx", FBX_PATH);
 		_LoadMesh("Cow", L"Cow.msh", MESH_PATH);
+
+		// Assimp Test
+		auto assimp_loader = std::make_unique<AssimpLoader>(L"Cow.fbx", FBX_PATH);
+		assimp_loader->ExportAsset(L"Cow", MESH_PATH);
 #pragma endregion
 	}
 	catch (std::exception const& _e)

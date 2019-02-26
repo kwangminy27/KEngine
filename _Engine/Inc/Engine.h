@@ -83,6 +83,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#pragma comment(lib, "assimp-vc140-mt")
+
 namespace K
 {
 	static void ThrowIfFailed(HRESULT _result)

@@ -11,6 +11,20 @@ namespace K
 	template <typename T> constexpr auto APTR_CAST(APTR const& _p) { return std::static_pointer_cast<T>(_p); }
 	template <typename T> constexpr auto CPTR_CAST(CPTR const& _p) { return static_cast<T*>(_p.get()); }
 
+	template <typename T> constexpr auto MAKE_UNIQUE()
+	{
+		return std::unique_ptr<T, std::function<void(T*)>>{ new T, [](T* _p) {
+			delete _p;
+		} };
+	}
+
+	template <typename T> constexpr auto MAKE_UNIQUE(T* _p)
+	{
+		return std::unique_ptr<T, std::function<void(T*)>>{ _p, [](T* _p_prime) {
+			delete _p_prime;
+		} };
+	}
+
 	//////////////////// Path Key ////////////////////
 	constexpr auto ROOT_PATH = "RootPath";
 	constexpr auto VIDEO_PATH = "VideoPath";
