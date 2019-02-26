@@ -75,8 +75,8 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>../Bin/Debug/</OutDir>
     <IntDir>../Obj/Debug/</IntDir>
-    <IncludePath>$(SolutionDir)_Common/Inc/;$(SolutionDir)_Network/Inc/;$(SolutionDir)_Physics/Inc/;$(SolutionDir)_Utility/Inc/;$(SolutionDir)FBX/include/;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)FBX/lib/vs2015/x64/debug/;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)_Common/Inc/;$(SolutionDir)_Network/Inc/;$(SolutionDir)_Physics/Inc/;$(SolutionDir)_Utility/Inc/;$(SolutionDir)FBX/include/;$(SolutionDir)External/include/;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)FBX/lib/vs2015/x64/debug/;$(SolutionDir)External/lib/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -88,8 +88,8 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>../Bin/Release/</OutDir>
     <IntDir>../Obj/Release/</IntDir>
-    <IncludePath>$(SolutionDir)_Common/Inc/;$(SolutionDir)_Network/Inc/;$(SolutionDir)_Physics/Inc/;$(SolutionDir)_Utility/Inc/;$(SolutionDir)FBX/include/;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)FBX/lib/vs2015/x64/release/;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)_Common/Inc/;$(SolutionDir)_Network/Inc/;$(SolutionDir)_Physics/Inc/;$(SolutionDir)_Utility/Inc/;$(SolutionDir)FBX/include/;$(SolutionDir)External/include/;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)FBX/lib/vs2015/x64/release/;$(SolutionDir)External/lib/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

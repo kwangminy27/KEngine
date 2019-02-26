@@ -78,6 +78,11 @@
 
 #pragma comment(lib, "libfbxsdk-md")
 
+// Assimp
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 namespace K
 {
 	static void ThrowIfFailed(HRESULT _result)
