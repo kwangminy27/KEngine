@@ -58,6 +58,9 @@ void K::Material::SetToShader(int _container_idx, int _subset_idx)
 
 void K::Material::SetTexture(std::string const& _tag, int _slot, int _container_idx, int _subset_idx)
 {
+	if (false == ResourceManager::singleton()->FindTexture(_tag))
+		return;
+
 	if (_container_idx >= material_container_vector_.size())
 		material_container_vector_.resize(_container_idx + 1);
 

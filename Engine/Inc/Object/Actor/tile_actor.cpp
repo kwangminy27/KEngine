@@ -21,6 +21,7 @@ void K::TileActor::Initialize()
 		Material_CB.diffuse = DirectX::Colors::White.v;
 		Material_CB.specular = DirectX::Colors::White.v;
 		Material_CB.emissive = DirectX::Colors::White.v;
+		Material_CB.specular_exp = 1.f;
 		CPTR_CAST<Material>(material)->SetMaterialConstantBuffer(Material_CB, 0, 0);
 		CPTR_CAST<Material>(material)->SetSampler(LINEAR_SAMPLER, 0, 0, 0);
 

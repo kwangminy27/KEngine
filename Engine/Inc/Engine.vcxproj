@@ -223,6 +223,7 @@
     <ClInclude Include="Resource\texture.h" />
     <ClInclude Include="text_manager.h" />
     <ClInclude Include="time_manager.h" />
+    <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="video_manager.h" />
     <ClInclude Include="World\layer.h" />
     <ClInclude Include="World\level.h" />
@@ -280,6 +281,7 @@
     <ClCompile Include="Resource\texture.cpp" />
     <ClCompile Include="text_manager.cpp" />
     <ClCompile Include="time_manager.cpp" />
+    <ClCompile Include="tinyxml2.cpp" />
     <ClCompile Include="video_manager.cpp" />
     <ClCompile Include="World\layer.cpp" />
     <ClCompile Include="World\level.cpp" />
@@ -502,14 +504,427 @@
     <ImageContentTask Include="..\..\Resource\FBX\Cow.fbm\CH_NPC_MOB_Behemoth_A01_D_KVN.tga">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/%(Filename).dds</ContentOutput>
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Resource/Texture/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ImageContentTask>
     <ImageContentTask Include="..\..\Resource\FBX\Cow.fbm\CH_NPC_MOB_Behemoth_A01_N_KVN.tga">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/%(Filename).dds</ContentOutput>
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Resource/Texture/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ImageContentTask>
     <ImageContentTask Include="..\..\Resource\FBX\Cow.fbm\CH_NPC_MOB_Behemoth_A01_SP_KVN.tga">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/%(Filename).dds</ContentOutput>
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Resource/Texture/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="..\..\Resource\Texture\cottage_diffuse.png">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\cottage_normal.png">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\a4-5_.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Balcon10.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\build2.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\c6_.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\e1_.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\g1_.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\g2_.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\g3_.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\h1_.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\h3_.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\h4_.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\h7_.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\h8_.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\h9_.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Image19.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Image8.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\M013_1.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_1.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_10.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_11.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_13.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_14.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_15.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_17.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_18.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_19.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_2.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_22.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_23.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_25.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_3.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_30.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_31.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_39.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_46.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_47.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_51.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_52.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_6.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_75.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_82.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_83.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_9.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Metal_Aluminum_Anodized.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\okna-3.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\okna-30.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\okna-4.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\okna1.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\okno05.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Pavers_Flagstone_Gray.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Photo_Texture43_2.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\pomost.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Steel_Brushed_Stainless.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\VA_Beach_Convention_Center-046.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Vegetation_Grass_Original.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\W2.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\WashingtonConventionCenter_030.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\WashingtonConventionCenter_10.JPG">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\WashingtonConventionCenter_13.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\WashingtonConventionCenter_17.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\WashingtonConventionCenter_18.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Washington_Convention_Center_01.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Washington_Convention_Center_04.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\wind10_right1_1.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Windows_balc_left_5_16_3.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Windows_balc_left_5_16_5.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_10.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_101.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_109.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_11.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_119.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_12e81_d926_5.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_14_1.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_14_2.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_16.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_16_1.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_17.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_17_3__5.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_25.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_32.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_33.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_35.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_38.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_39.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_51.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_58.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_6.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_60.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_7760_13.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_7760_18_.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_7760_1_.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_7_1.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_9_7.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\__Brown_1.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\__Gray6_.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\__Metal_Steel_Textured_White_1.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\___2.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\___3.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\________2.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\________4.jpg">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resource/Texture/Tropical islands/%(Filename).dds</ContentOutput>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ImageContentTask>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

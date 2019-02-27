@@ -15,13 +15,13 @@ PS_OUTPUT_SINGLE_TARGET BasicNormalPS(VS_OUTPUT_POSITION_NORMAL_COLOR _input)
     switch (g_light_type)
     {
         case DIRECTIONAL:
-            lighting = ComputeDirectionalLight(_input.normalV, to_cameraV, g_material_ambient, g_material_diffuse, g_material_specular);
+            lighting = ComputeDirectionalLight(_input.normalV, to_cameraV, g_material_ambient, g_material_diffuse, g_material_specular, g_material_specular_exp);
             break;
         case POINT:
-            lighting = ComputePointLight(_input.positionV, _input.normalV, to_cameraV, g_material_ambient, g_material_diffuse, g_material_specular);
+            lighting = ComputePointLight(_input.positionV, _input.normalV, to_cameraV, g_material_ambient, g_material_diffuse, g_material_specular, g_material_specular_exp);
             break;
         case SPOT:
-            lighting = ComputeSpotLight(_input.positionV, _input.normalV, to_cameraV, g_material_ambient, g_material_diffuse, g_material_specular);
+            lighting = ComputeSpotLight(_input.positionV, _input.normalV, to_cameraV, g_material_ambient, g_material_diffuse, g_material_specular, g_material_specular_exp);
             break;
     }
 

@@ -29,20 +29,11 @@ namespace K
 
 	struct MeshContainer
 	{
+		std::string name;
+		std::string material_name;
 		D3D11_PRIMITIVE_TOPOLOGY topology;
 		std::vector<VertexBuffer> VB_vector;
 		std::vector<IndexBuffer> IB_vector;
-	};
-
-	struct MaterialInfo
-	{
-		Vector4 ambient;
-		Vector4 diffuse;
-		Vector4 specular;
-		Vector4 emissive;
-		std::string diffuse_texture;
-		std::string specular_texture;
-		std::string bump_texture;
 	};
 
 	class ENGINE_DLL Mesh
@@ -58,12 +49,12 @@ namespace K
 
 		void SetInstanceCount(int _container_idx, int _count);
 
+		std::string name() const;
 		Vector3 min() const;
 		Vector3 max() const;
 		Vector3 center() const;
 		Vector3 extent() const;
-
-		std::vector<std::vector<std::unique_ptr<MaterialInfo, std::function<void(MaterialInfo*)>>>> const& material_info_2d_vector() const;
+		std::vector<std::unique_ptr<MeshContainer, std::function<void(MeshContainer*)>>> const& mesh_container_vector() const;
 
 	private:
 		Mesh() = default;
@@ -72,7 +63,7 @@ namespace K
 		Mesh& operator=(Mesh const&) = delete;
 		Mesh& operator=(Mesh&&) noexcept = default;
 
-		void _LoadMesh(std::wstring const& _file_name, std::string const& _path_tag);
+		void _LoadMesh(std::string const& _name, std::wstring const& _file_name, std::string const& _path_tag);
 		void _CreateMesh(
 			D3D11_PRIMITIVE_TOPOLOGY _topology,
 			void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage);
@@ -88,15 +79,11 @@ namespace K
 		void _CreateVertexBuffer(void* _data, int _stride, int _count, D3D11_USAGE _usage, VERTEX_BUFFER_TYPE _type);
 		void _CreateIndexBuffer(void* _data, int _stride, int _count, D3D11_USAGE _usage, DXGI_FORMAT _format);
 
-		void _ConvertFromFBX();
-		void _SaveMSH(std::wstring const& _file_name, std::string const& _path_tag);
-		void _LoadMSH(std::wstring const& _file_name, std::string const& _path_tag);
-
+		std::string name_{};
 		Vector3 min_{};
 		Vector3 max_{};
 		Vector3 center_{};
 		Vector3 extent_{};
 		std::vector<std::unique_ptr<MeshContainer, std::function<void(MeshContainer*)>>> mesh_container_vector_{};
-		std::vector<std::vector<std::unique_ptr<MaterialInfo, std::function<void(MaterialInfo*)>>>> material_info_2d_vector_{};
 	};
 }

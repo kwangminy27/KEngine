@@ -8,8 +8,8 @@ PS_OUTPUT_GBUFFER BumpMappingPS(VS_OUTPUT_3D _input)
 {
     PS_OUTPUT_GBUFFER output = (PS_OUTPUT_GBUFFER)0;
 
-    float4 specular_color = g_specular_texture.Sample(g_sampler, _input.uv);
-    float4 normal_color = g_bump_texture.Sample(g_sampler, _input.uv);
+	float4 specular_color = g_specular_texture.Sample(g_sampler, _input.uv);
+	float4 normal_color = g_bump_texture.Sample(g_sampler, _input.uv);
 
     float3 normal = normal_color.xyz * 2.f - 1.f;
 
@@ -22,8 +22,9 @@ PS_OUTPUT_GBUFFER BumpMappingPS(VS_OUTPUT_3D _input)
 
     normal = mul(normal, TBN);
 
-    output.albedo = g_diffuse_texture.Sample(g_sampler, _input.uv);
+	output.albedo = g_diffuse_texture.Sample(g_sampler, _input.uv);
     output.normal.rgb = normal * 0.5f + 0.5f;
+	output.normal.a = g_material_specular_exp;
     output.depth.r = _input.position.z / _input.position.w;
     output.depth.g = output.depth.r;
     output.depth.b = output.depth.r;

@@ -5,6 +5,9 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+// ATL
+#include <atlstr.h>
+
 // C++ Standard Library
 #include <array>
 #include <chrono>
@@ -84,6 +87,9 @@
 #include <assimp/postprocess.h>
 
 #pragma comment(lib, "assimp-vc140-mt")
+
+// tinyxml2
+#include "tinyxml2.h"
 
 namespace K
 {

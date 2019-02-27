@@ -6,6 +6,19 @@ namespace K
 	class Texture;
 	class Sampler;
 
+	struct TempMaterial
+	{
+		std::string name;
+		std::vector<std::string> diffuse_maps;
+		std::vector<std::string> specular_maps;
+		std::vector<std::string> normal_maps;
+		Vector4 ambient;
+		Vector4 diffuse;
+		Vector4 specular;
+		Vector4 emissive;
+		float specular_exp;
+	};
+
 	class ENGINE_DLL ResourceManager final : public Singleton<ResourceManager>
 	{
 		friend class Singleton<ResourceManager>;
@@ -17,11 +30,13 @@ namespace K
 		std::shared_ptr<Texture> const& FindTexture(std::string const& _tag) const;
 		std::shared_ptr<Sampler> const& FindSampler(std::string const& _tag) const;
 		std::shared_ptr<ANIMATION_2D_CLIP_DESC> const& FindAnimation2DClip(std::string const& _tag) const;
+		std::vector<std::unique_ptr<TempMaterial>> const& FindMaterials(std::string const& _tag) const;
 
 		static std::shared_ptr<Mesh> mesh_dummy_;
 		static std::shared_ptr<Texture> texture_dummy_;
 		static std::shared_ptr<Sampler> sampler_dummy_;
 		static std::shared_ptr<ANIMATION_2D_CLIP_DESC> animation_2d_clip_dummy_;
+		static std::vector<std::unique_ptr<TempMaterial>> materials_dummy_;
 
 	private:
 		ResourceManager() = default;
@@ -32,7 +47,10 @@ namespace K
 
 		virtual void _Finalize() override;
 
+		void _LoadAsset(std::string const& _tag, std::wstring const& _file_name);
 		void _LoadMesh(std::string const& _tag, std::wstring const& _file_name, std::string const& _path_tag);
+		void _LoadMaterial(std::string const& _tag, std::wstring const& _file_name, std::string const& _path_tag);
+
 		void _CreateMesh(
 			std::string const& _tag, D3D11_PRIMITIVE_TOPOLOGY _topology,
 			void* _vtx_data, int _vtx_stride, int _vtx_count, D3D11_USAGE _vtx_usage);
@@ -66,5 +84,6 @@ namespace K
 		std::unordered_map<std::string, std::shared_ptr<Texture>> texture_map_{};
 		std::unordered_map<std::string, std::shared_ptr<Sampler>> sampler_map_{};
 		std::unordered_map<std::string, std::shared_ptr<ANIMATION_2D_CLIP_DESC>> animation_2d_clip_map_{};
+		std::unordered_map<std::string, std::vector<std::unique_ptr<TempMaterial>>> materials_map_{};
 	};
 }

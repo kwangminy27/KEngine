@@ -169,6 +169,15 @@
     <Filter Include="20. Assimp">
       <UniqueIdentifier>{499ebb7e-3384-465a-948d-39fd8a81136c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="21. tinyxml2">
+      <UniqueIdentifier>{f75e2c95-7722-4b7d-a31a-1f599bd15d9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="19. FBX\1. FBX Resource\2. Building">
+      <UniqueIdentifier>{9d3cfe83-2adf-422e-9a9f-c423a3a198b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="19. FBX\1. FBX Resource\3. Tropical islands">
+      <UniqueIdentifier>{b9bcad99-2fb4-44b7-984f-cf1f6d335f11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -336,6 +345,9 @@
     <ClInclude Include="assimp_loader.h">
       <Filter>20. Assimp</Filter>
     </ClInclude>
+    <ClInclude Include="tinyxml2.h">
+      <Filter>21. tinyxml2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -494,6 +506,9 @@
     <ClCompile Include="assimp_loader.cpp">
       <Filter>20. Assimp</Filter>
     </ClCompile>
+    <ClCompile Include="tinyxml2.cpp">
+      <Filter>21. tinyxml2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\HLSL\BasicAnimation2DVS.hlsl">
@@ -571,6 +586,312 @@
     </ImageContentTask>
     <ImageContentTask Include="..\..\Resource\FBX\Cow.fbm\CH_NPC_MOB_Behemoth_A01_N_KVN.tga">
       <Filter>19. FBX\1. FBX Resource\1. Cow</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\cottage_normal.png">
+      <Filter>19. FBX\1. FBX Resource\2. Building</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\cottage_diffuse.png">
+      <Filter>19. FBX\1. FBX Resource\2. Building</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\________2.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\________4.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\___2.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\___3.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\__Brown_1.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\__Gray6_.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\__Metal_Steel_Textured_White_1.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_6.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_7_1.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_9_7.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_10.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_11.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_12e81_d926_5.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_14_1.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_14_2.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_16.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_16_1.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_17.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_17_3__5.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_25.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_32.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_33.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_35.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_38.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_39.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_51.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_58.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_60.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_101.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_109.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_119.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_7760_1_.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_7760_13.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\_7760_18_.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\a4-5_.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Balcon10.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\build2.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\c6_.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\e1_.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\g1_.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\g2_.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\g3_.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\h1_.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\h3_.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\h4_.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\h7_.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\h8_.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\h9_.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Image8.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Image19.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\M013_1.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_1.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_2.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_3.png">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_6.png">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_9.png">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_10.png">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_11.png">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_13.png">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_14.png">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_15.png">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_17.png">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_18.png">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_19.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_22.png">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_23.png">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_25.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_30.png">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_31.png">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_39.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_46.png">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_47.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_51.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_52.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_75.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_82.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\material_83.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Metal_Aluminum_Anodized.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\okna1.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\okna-3.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\okna-4.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\okna-30.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\okno05.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Pavers_Flagstone_Gray.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Photo_Texture43_2.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\pomost.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Steel_Brushed_Stainless.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\VA_Beach_Convention_Center-046.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Vegetation_Grass_Original.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\W2.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Washington_Convention_Center_01.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Washington_Convention_Center_04.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\WashingtonConventionCenter_10.JPG">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\WashingtonConventionCenter_13.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\WashingtonConventionCenter_17.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\WashingtonConventionCenter_18.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\WashingtonConventionCenter_030.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\wind10_right1_1.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Windows_balc_left_5_16_3.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="..\..\Resource\Texture\Tropical Islands\Windows_balc_left_5_16_5.jpg">
+      <Filter>19. FBX\1. FBX Resource\3. Tropical islands</Filter>
     </ImageContentTask>
   </ItemGroup>
 </Project>

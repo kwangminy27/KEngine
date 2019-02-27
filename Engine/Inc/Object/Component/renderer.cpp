@@ -1,6 +1,7 @@
 #include "Engine.h"
 #include "renderer.h"
 
+#include "Resource/resource_manager.h"
 #include "Resource/mesh.h"
 #include "Rendering/rendering_manager.h"
 #include "Rendering/shader.h"
@@ -79,27 +80,46 @@ void K::Renderer::set_mesh(std::shared_ptr<Mesh> const& _mesh)
 {
 	mesh_ = _mesh;
 
-	auto const& material = CPTR_CAST<Material>(owner()->FindComponent(TAG{ MATERIAL, 0 }));
+	auto const& mesh_container_vector = mesh_->mesh_container_vector();
+	auto const& materials = ResourceManager::singleton()->FindMaterials(mesh_->name());
 
-	auto const& material_info_2d_vector = mesh_->material_info_2d_vector();
-	for (auto i = 0; i < material_info_2d_vector.size(); ++i)
+	auto const& material_component = CPTR_CAST<Material>(owner()->FindComponent(TAG{ MATERIAL, 0 }));
+
+	for (size_t i = 0; i < mesh_container_vector.size(); ++i)
 	{
-		for (auto j = 0; j < material_info_2d_vector.at(i).size(); ++j)
+		for (size_t j = 0; j < materials.size(); ++j)
 		{
-			auto const& material_info = material_info_2d_vector.at(i).at(j);
+			auto const& material = materials.at(j);
 
-			MaterialConstantBuffer material_CB{};
-			material_CB.ambient = material_info->ambient;
-			material_CB.diffuse = material_info->diffuse;
-			material_CB.specular = material_info->specular;
-			material_CB.emissive = material_info->emissive;
+			if (mesh_container_vector.at(i)->material_name == material->name)
+			{
+				MaterialConstantBuffer material_CB{};
+				material_CB.ambient = material->ambient;
+				material_CB.diffuse = material->diffuse;
+				material_CB.specular = material->specular;
+				material_CB.emissive = material->emissive;
+				material_CB.specular_exp = material->specular_exp;
 
-			material->SetMaterialConstantBuffer(material_CB, i, j);
-			material->SetTexture(material_info->diffuse_texture, 0, i, j);
-			material->SetTexture(material_info->specular_texture, 1, i, j);
-			material->SetTexture(material_info->bump_texture, 2, i, j);
-			material->SetSampler(LINEAR_SAMPLER, 0, i, j);
+				material_component->SetMaterialConstantBuffer(material_CB, static_cast<int>(i), 0);
+
+				if (material->diffuse_maps.empty() == false)
+					material_component->SetTexture(material->diffuse_maps.at(0), 0, static_cast<int>(i), 0);
+				else
+					material_component->SetTexture(mesh_->name() + "_diffuse.dds", 0, static_cast<int>(i), 0);
+
+				if (material->specular_maps.empty() == false)
+					material_component->SetTexture(material->specular_maps.at(0), 1, static_cast<int>(i), 0);
+				else
+					material_component->SetTexture(mesh_->name() + "_specular.dds", 1, static_cast<int>(i), 0);
+
+				if (material->normal_maps.empty() == false)
+					material_component->SetTexture(material->normal_maps.at(0), 2, static_cast<int>(i), 0);
+				else
+					material_component->SetTexture(mesh_->name() + "_normal.dds", 2, static_cast<int>(i), 0);
+			}
 		}
+
+		material_component->SetSampler(LINEAR_SAMPLER, 0, static_cast<int>(i), 0);
 	}
 }
 

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Materials>
+    <Mat>
+        <Name>CH_NPC_MOB_Behemoth_A01_MI_KVN</Name>
+        <Diffuse Maps>
+            <Map>CH_NPC_MOB_Behemoth_A01_D_KVN.dds</Map>
+        </Diffuse Maps>
+        <Specular Maps>
+            <Map>CH_NPC_MOB_Behemoth_A01_SP_KVN.dds</Map>
+        </Specular Maps>
+        <Normal Maps>
+            <Map>CH_NPC_MOB_Behemoth_A01_N_KVN.dds</Map>
+        </Normal Maps>
+        <Ambient>
+            <R>0.588</R>
+            <G>0.588</G>
+            <B>0.588</B>
+            <A>1</A>
+        </Ambient>
+        <Diffuse>
+            <R>0.588</R>
+            <G>0.588</G>
+            <B>0.588</B>
+            <A>1</A>
+        </Diffuse>
+        <Specular>
+            <R>0.89999998</R>
+            <G>0.89999998</G>
+            <B>0.89999998</B>
+            <A>2</A>
+        </Specular>
+        <Emissive>
+            <R>0</R>
+            <G>0</G>
+            <B>0</B>
+            <A>1</A>
+        </Emissive>
+        <Specular Exp>0</Specular Exp>
+    </Mat>
+</Materials>

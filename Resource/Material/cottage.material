@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Materials>
+    <Mat>
+        <Name>cottage_texture</Name>
+      <DiffuseMaps>
+        <Map>cottage_diffuse.dds</Map>
+      </DiffuseMaps>
+        <SpecularMaps/>
+      <NormalMaps>
+        <Map>cottage_normal.dds</Map>
+      </NormalMaps>
+        <Ambient>
+            <R>0.2</R>
+            <G>0.2</G>
+            <B>0.2</B>
+            <A>1</A>
+        </Ambient>
+        <Diffuse>
+            <R>0.80000001</R>
+            <G>0.80000001</G>
+            <B>0.80000001</B>
+            <A>1</A>
+        </Diffuse>
+        <Specular>
+            <R>0.2</R>
+            <G>0.2</G>
+            <B>0.2</B>
+            <A>20</A>
+        </Specular>
+        <Emissive>
+            <R>0</R>
+            <G>0</G>
+            <B>0</B>
+            <A>1</A>
+        </Emissive>
+        <SpecularExp>1</SpecularExp>
+    </Mat>
+</Materials>

@@ -33,6 +33,8 @@ namespace K
 	constexpr auto SHADER_PATH = "ShaderPath";
 	constexpr auto FBX_PATH = "FBXPath";
 	constexpr auto MESH_PATH = "MeshPath";
+	constexpr auto MATERIAL_PATH = "MaterialPath";
+	constexpr auto ANIMATION_PATH = "AnimationPath";
 
 	//////////////////// Mesh Key ////////////////////
 	constexpr auto TEX_RECT = "TexRect";
@@ -238,6 +240,8 @@ namespace K
 		Vector4 diffuse;
 		Vector4 specular;
 		Vector4 emissive;
+		float specular_exp;
+		Vector3 padding;
 	};
 
 	struct LightConstantBuffer

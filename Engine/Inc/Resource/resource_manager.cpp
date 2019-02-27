@@ -13,6 +13,7 @@ std::shared_ptr<K::Mesh> K::ResourceManager::mesh_dummy_{};
 std::shared_ptr<K::Texture> K::ResourceManager::texture_dummy_{};
 std::shared_ptr<K::Sampler> K::ResourceManager::sampler_dummy_{};
 std::shared_ptr<K::ANIMATION_2D_CLIP_DESC> K::ResourceManager::animation_2d_clip_dummy_{};
+std::vector<std::unique_ptr<K::TempMaterial>> K::ResourceManager::materials_dummy_{};
 
 void K::ResourceManager::Initialize()
 {
@@ -191,12 +192,14 @@ void K::ResourceManager::Initialize()
 #pragma endregion
 
 #pragma region FBX
-		//_LoadMesh("Cow", L"Cow.fbx", FBX_PATH);
-		_LoadMesh("Cow", L"Cow.msh", MESH_PATH);
+		// FBX 텍스쳐 추출
+		//FBXLoader::singleton()->Begin(L"Audi R8.fbx", FBX_PATH);
+		//FBXLoader::singleton()->End();
 
-		// Assimp Test
-		auto assimp_loader = std::make_unique<AssimpLoader>(L"Cow.fbx", FBX_PATH);
-		assimp_loader->ExportAsset(L"Cow", MESH_PATH);
+		//auto assimp_loader = std::make_unique<AssimpLoader>(L"Tropical islands.dae", FBX_PATH);
+		//assimp_loader->ExportAsset(L"Tropical islands");
+
+		_LoadAsset("cottage", L"cottage");
 #pragma endregion
 	}
 	catch (std::exception const& _e)
@@ -249,9 +252,25 @@ std::shared_ptr<K::ANIMATION_2D_CLIP_DESC> const& K::ResourceManager::FindAnimat
 	return iter->second;
 }
 
+std::vector<std::unique_ptr<K::TempMaterial>> const& K::ResourceManager::FindMaterials(std::string const& _tag) const
+{
+	auto iter = materials_map_.find(_tag);
+
+	if (iter == materials_map_.end())
+		return materials_dummy_;
+
+	return iter->second;
+}
+
 void K::ResourceManager::_Finalize()
 {
 	FBXLoader::singleton().reset();
+}
+
+void K::ResourceManager::_LoadAsset(std::string const& _tag, std::wstring const& _file_name)
+{
+	_LoadMesh(_tag, _file_name + L".mesh", MESH_PATH);
+	_LoadMaterial(_tag, _file_name + L".material", MATERIAL_PATH);
 }
 
 void K::ResourceManager::_LoadMesh(std::string const& _tag, std::wstring const& _file_name, std::string const& _path_tag)
@@ -263,9 +282,160 @@ void K::ResourceManager::_LoadMesh(std::string const& _tag, std::wstring const& 
 		delete _p;
 	} };
 
-	mesh->_LoadMesh(_file_name, _path_tag);
+	mesh->_LoadMesh(_tag, _file_name, _path_tag);
 
 	mesh_map_.insert(std::make_pair(_tag, std::move(mesh)));
+}
+
+void K::ResourceManager::_LoadMaterial(std::string const& _tag, std::wstring const& _file_name, std::string const& _path_tag)
+{
+	if (FindMaterials(_tag).empty() == false)
+		throw std::exception{ "ResourceManager::_LoadMaterial" };
+
+	auto path_buffer = PathManager::singleton()->FindPath(_path_tag);
+
+	path_buffer /= _file_name;
+
+	auto document = std::make_unique<tinyxml2::XMLDocument>();
+
+	if (tinyxml2::XML_SUCCESS != document->LoadFile(path_buffer.string().c_str()))
+		throw std::exception{ "ResourceManager::_LoadMaterial" };
+
+	auto root_element = document->FirstChildElement();
+	auto mat_element = root_element->FirstChildElement();
+
+	std::vector<std::unique_ptr<TempMaterial>> materials{};
+
+	while (mat_element)
+	{
+		auto material = std::make_unique<TempMaterial>();
+
+		tinyxml2::XMLElement* e{};
+
+		e = mat_element->FirstChildElement();
+		material->name = e->GetText();
+
+		e = e->NextSiblingElement();
+		if (e->FirstChildElement())
+		{
+			e = e->FirstChildElement();
+			while (e)
+			{
+				std::filesystem::path name = e->GetText();
+
+				material->diffuse_maps.push_back(name.string());
+
+				ResourceManager::singleton()->_CreateTexture2D(name.string(), name.wstring(), TEXTURE_PATH);
+
+				if (e->NextSiblingElement())
+					e = e->NextSiblingElement();
+				else
+					break;
+			}
+			e = e->Parent()->ToElement();
+		}
+		
+		e = e->NextSiblingElement();
+		if (e->FirstChildElement())
+		{
+			e = e->FirstChildElement();
+			while (e)
+			{
+				std::filesystem::path name = e->GetText();
+
+				material->specular_maps.push_back(name.string());
+
+				ResourceManager::singleton()->_CreateTexture2D(name.string(), name.wstring(), TEXTURE_PATH);
+
+				if (e->NextSiblingElement())
+					e = e->NextSiblingElement();
+				else
+					break;
+			}
+			e = e->Parent()->ToElement();
+		}
+
+		e = e->NextSiblingElement();
+		if (e->FirstChildElement())
+		{
+			e = e->FirstChildElement();
+			while (e)
+			{
+				std::filesystem::path name = e->GetText();
+
+				material->normal_maps.push_back(name.string());
+
+				ResourceManager::singleton()->_CreateTexture2D(name.string(), name.wstring(), TEXTURE_PATH);
+
+				if (e->NextSiblingElement())
+					e = e->NextSiblingElement();
+				else
+					break;
+			}
+			e = e->Parent()->ToElement();
+		}
+
+		e = e->NextSiblingElement();
+		{
+			e = e->FirstChildElement();
+			material->ambient.x = std::stof(e->GetText());
+			e = e->NextSiblingElement();
+			material->ambient.y = std::stof(e->GetText());
+			e = e->NextSiblingElement();
+			material->ambient.z = std::stof(e->GetText());
+			e = e->NextSiblingElement();
+			material->ambient.w = std::stof(e->GetText());
+		}
+		e = e->Parent()->ToElement();
+
+		e = e->NextSiblingElement();
+		{
+			e = e->FirstChildElement();
+			material->diffuse.x = std::stof(e->GetText());
+			e = e->NextSiblingElement();
+			material->diffuse.y = std::stof(e->GetText());
+			e = e->NextSiblingElement();
+			material->diffuse.z = std::stof(e->GetText());
+			e = e->NextSiblingElement();
+			material->diffuse.w = std::stof(e->GetText());
+		}
+		e = e->Parent()->ToElement();
+
+		e = e->NextSiblingElement();
+		{
+			e = e->FirstChildElement();
+			material->specular.x = std::stof(e->GetText());
+			e = e->NextSiblingElement();
+			material->specular.y = std::stof(e->GetText());
+			e = e->NextSiblingElement();
+			material->specular.z = std::stof(e->GetText());
+			e = e->NextSiblingElement();
+			material->specular.w = std::stof(e->GetText());
+		}
+		e = e->Parent()->ToElement();
+
+		e = e->NextSiblingElement();
+		{
+			e = e->FirstChildElement();
+			material->emissive.x = std::stof(e->GetText());
+			e = e->NextSiblingElement();
+			material->emissive.y = std::stof(e->GetText());
+			e = e->NextSiblingElement();
+			material->emissive.z = std::stof(e->GetText());
+			e = e->NextSiblingElement();
+			material->emissive.w = std::stof(e->GetText());
+		}
+		e = e->Parent()->ToElement();
+
+		e = e->NextSiblingElement();
+		material->specular_exp = std::stof(e->GetText());
+
+		materials.push_back(std::move(material));
+
+		mat_element = mat_element->NextSiblingElement();
+	}
+
+	materials_map_.insert(std::make_pair(_tag, std::move(materials)));
 }
 
 void K::ResourceManager::_CreateMesh(

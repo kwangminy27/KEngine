@@ -13,7 +13,8 @@ void K::PathManager::Initialize()
 		_CreatePath(TEXTURE_PATH, "Texture\\");
 		_CreatePath(SHADER_PATH, "Shader\\");
 		_CreatePath(FBX_PATH, "FBX\\");
-		_CreatePath(MESH_PATH, "MESH\\");
+		_CreatePath(MESH_PATH, "Mesh\\");
+		_CreatePath(MATERIAL_PATH, "Material\\");
 	}
 	catch (std::exception const& _e)
 	{

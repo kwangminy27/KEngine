@@ -75,7 +75,7 @@ void K::GUIManager::Render()
 		}
 
 		ImGui::SliderFloat3("Rotation", &rotation.x, 0.f, 360.f);
-		ImGui::SliderFloat3("Translation", &local_translation.x, -100.f, 100.f);
+		ImGui::SliderFloat3("Translation", &local_translation.x, -50.f, 50.f);
 
 		transform->set_local_rotation(local_rotation * Quaternion::CreateFromYawPitchRoll(DirectX::XMConvertToRadians(rotation.y), DirectX::XMConvertToRadians(rotation.x), DirectX::XMConvertToRadians(rotation.z)));
 		transform->set_local_translation(local_translation);
@@ -141,7 +141,7 @@ void K::GUIManager::Render()
 		ImGui::SliderFloat3("Attenuation", &attenuation.x, 0.1f, 1.f);
 		ImGui::SliderFloat("Falloff", &falloff, 0.1f, 10.f);
 		ImGui::SliderInt("Type", &type, 0, 2);
-		ImGui::SliderFloat("range", &range, 0.f, 10.f);
+		ImGui::SliderFloat("range", &range, 0.f, 100.f);
 
 		light->set_ambient(ambient);
 		light->set_diffuse(diffuse);

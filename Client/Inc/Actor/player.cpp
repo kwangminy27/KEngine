@@ -17,7 +17,7 @@ void K::Player::Initialize()
 		CPTR_CAST<Transform>(transform)->set_local_scaling(Vector3::One);
 
 		auto const& renderer = FindComponent(TAG{ RENDERER, 0 });
-		CPTR_CAST<Renderer>(renderer)->set_mesh(resource_manager->FindMesh("Cow"));
+		CPTR_CAST<Renderer>(renderer)->set_mesh(resource_manager->FindMesh("cottage"));
 		CPTR_CAST<Renderer>(renderer)->set_shader(rendering_manager->FindShader(BUMP_MAPPING_SHADER));
 
 		set_render_group_type(RENDER_GROUP_TYPE::NORMAL);

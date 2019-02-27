@@ -45,13 +45,13 @@ void K::FBXLoader::Begin(std::wstring const& _file_name, std::string const& _pat
 
 	fbx_importer_->Import(fbx_scene.get());
 
-	FbxGeometryConverter fbx_geometry_converter{ fbx_manager_.get() };
-	fbx_geometry_converter.Triangulate(fbx_scene.get(), true);
+	//FbxGeometryConverter fbx_geometry_converter{ fbx_manager_.get() };
+	//fbx_geometry_converter.Triangulate(fbx_scene.get(), true);
 
-	auto root_node = fbx_scene->GetRootNode();
+	//auto root_node = fbx_scene->GetRootNode();
 
-	_LoadMesh(root_node);
-	_LoadMaterial(root_node);
+	//_LoadMesh(root_node);
+	//_LoadMaterial(root_node);
 }
 
 void K::FBXLoader::End()

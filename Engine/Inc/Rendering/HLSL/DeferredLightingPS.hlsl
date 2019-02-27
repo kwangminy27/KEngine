@@ -33,18 +33,20 @@ PS_OUTPUT_LIGHT DeferredLightingPS(VS_OUTPUT_POSITION _input)
     float4 diffuse = DecompressColor(material.g);
     float4 specular = DecompressColor(material.b);
 
+	float specular_exp = normal.w;
+
     LightingInfo lighting = (LightingInfo)0;
 
     switch(g_light_type)
     {
         case DIRECTIONAL:
-            lighting = ComputeDirectionalLight(normalV, to_cameraV, ambient, diffuse, specular);
+            lighting = ComputeDirectionalLight(normalV, to_cameraV, ambient, diffuse, specular, specular_exp);
             break;
         case POINT:
-            lighting = ComputePointLight(positionV, normalV, to_cameraV, ambient, diffuse, specular);
+            lighting = ComputePointLight(positionV, normalV, to_cameraV, ambient, diffuse, specular, specular_exp);
             break;
         case SPOT:
-            lighting = ComputeSpotLight(positionV, normalV, to_cameraV, ambient, diffuse, specular);
+            lighting = ComputeSpotLight(positionV, normalV, to_cameraV, ambient, diffuse, specular, specular_exp);
             break;
     }
 
